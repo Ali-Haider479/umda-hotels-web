@@ -1,0 +1,76 @@
+/* Navbar styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding-inline-start: 4em;
+    padding-inline-end: 4em;
+    border-bottom: 2px solid #ccc;
+}
+
+.navbar-link {
+    text-decoration: none;
+    display: flex;
+}
+
+.navbar-item {
+    display: flex;
+    align-items: center;
+    padding-right: 18px;
+    padding-left: 16px;
+}
+
+.navbar-item.hover-effect {
+    background-color: #f0f0f0; /* Light grey background on hover */
+    cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
+    transition: background-color 0.3s; /* Smooth transition for the background color */
+}
+
+/* .navbar-item:first-child {
+    border-left: 1px solid gray;
+    padding-left: 14px;
+} */
+
+.navbar-item:nth-child(2), .navbar-item:nth-child(3) {
+    border-left: 1px solid gray;
+    padding-left: 14px;
+}
+
+.icon-spacing {
+    margin-block-start: 14px;
+    margin-block-end: 14px;
+    padding-inline-end: 10px;
+    color: black;
+}
+
+.navbar-text {
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+}
+
+.navbar-text-call {
+    margin-block-start: 14px;
+    margin-block-end: 0;
+    font-weight: bolder;
+}
+
+.navbar-text-description {
+    margin-block-start: 0;
+    margin-block-end: 14px;
+    font-size: 14px;
+    color: rgba(0, 0, 0, .54);
+}
+
+.flex-center {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.umda-hotel-logo {
+    width: 30px;
+    height: 30px;
+    margin-block-start: 12px;
+    margin-block-end: 14px;
+    padding-inline-end: 8px;
+}

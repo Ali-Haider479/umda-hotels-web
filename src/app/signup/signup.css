@@ -1,0 +1,6 @@
+.signup-navbar {
+    display: flex;
+    justify-content: space-between;
+    padding-inline-start: 4em;
+    padding-inline-end: 4em;
+}
