@@ -1,51 +1,130 @@
 "use client";
 
-import {
-  LocalizationProvider,
-  DateRangePicker,
-  DateRange,
-} from "@mui/x-date-pickers-pro";
+// import {
+//   LocalizationProvider,
+//   DateRangePicker,
+//   DateRange,
+// } from "@mui/x-date-pickers-pro";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import {
+  Autocomplete,
   Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
   Grid,
   MenuItem,
   TextField,
   Typography,
+  styled,
 } from "@mui/material";
-import { useState } from "react";
+import { createContext, useContext, useState } from "react";
 import HeroImage from "@/public/assets/images/hero-image.webp";
 import React from "react";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { PickersDay, PickersDayProps } from "@mui/x-date-pickers";
+
+const HighlightedDaysContext = createContext<{
+  highlightedDays: string[];
+  startDate: string | null;
+  endDate: string | null;
+}>({ highlightedDays: [], startDate: null, endDate: null });
+
+const HighlightedDay = styled(PickersDay)(({ theme }) => ({
+  "&.Mui-selected": {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+  },
+  "&.Mui-selectedStart": {
+    backgroundColor: theme.palette.primary.dark,
+    color: theme.palette.primary.contrastText,
+  },
+  "&.Mui-selectedEnd": {
+    backgroundColor: theme.palette.primary.dark,
+    color: theme.palette.primary.contrastText,
+  },
+  "&.Mui-inRange": {
+    backgroundColor: theme.palette.primary.light,
+    color: theme.palette.primary.contrastText,
+  },
+}));
+
+const CustomDay = (props: PickersDayProps<Dayjs>) => {
+  const { day, outsideCurrentMonth, ...other } = props;
+  const { highlightedDays, startDate, endDate } = useContext(
+    HighlightedDaysContext
+  );
+
+  const isStartDate =
+    !outsideCurrentMonth && day.format("YYYY-MM-DD") === startDate;
+  const isEndDate =
+    !outsideCurrentMonth && day.format("YYYY-MM-DD") === endDate;
+  const isInRange =
+    !outsideCurrentMonth && highlightedDays.includes(day.format("YYYY-MM-DD"));
+
+  return (
+    <HighlightedDay
+      {...other}
+      outsideCurrentMonth={outsideCurrentMonth}
+      day={day}
+      className={
+        isStartDate
+          ? "Mui-selectedStart"
+          : isEndDate
+          ? "Mui-selectedEnd"
+          : isInRange
+          ? "Mui-inRange"
+          : ""
+      }
+      selected={isStartDate || isEndDate || isInRange}
+    />
+  );
+};
 
 const SearchBar = () => {
   const [city, setCity] = useState<string>("");
-  const [dates, setDates] = useState<DateRange<Dayjs>>([null, null]);
+  const [startDate, setStartDate] = useState<Dayjs | null>(null);
+  const [endDate, setEndDate] = useState<Dayjs | null>(null);
   const [guests, setGuests] = useState<number | string>("");
-  const [open, setOpen] = useState<boolean>(false);
+
+  const today = dayjs();
 
   const handleSearch = () => {
     // Implement search functionality here
     console.log({
       city,
-      checkInDate: dates[0],
-      checkOutDate: dates[1],
+      checkInDate: startDate,
+      checkOutDate: endDate,
       guests,
     });
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const getHighlightedDays = () => {
+    if (!startDate || !endDate)
+      return { highlightedDays: [], startDate: null, endDate: null };
+    const dates = [];
+    let current = startDate.startOf("day");
+    while (current.isBefore(endDate.startOf("day"))) {
+      dates.push(current.format("YYYY-MM-DD"));
+      current = current.add(1, "day");
+    }
+    return {
+      highlightedDays: dates,
+      startDate: startDate.format("YYYY-MM-DD"),
+      endDate: endDate.format("YYYY-MM-DD"),
+    };
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const {
+    highlightedDays,
+    startDate: start,
+    endDate: end,
+  } = getHighlightedDays();
 
   return (
     <Box
@@ -74,52 +153,99 @@ const SearchBar = () => {
           sx={{ width: "100%", maxWidth: 1000, mx: "auto", px: 2, py: 3 }}
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Grid container spacing={2} alignItems="center">
-              <Grid item xs={12} sm={6} md={3}>
-                <TextField
-                  fullWidth
-                  label="City"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                />
+            <HighlightedDaysContext.Provider
+              value={{ highlightedDays, startDate: start, endDate: end }}
+            >
+              <Grid container spacing={2} alignItems="center">
+                <Grid item xs={12} sm={6} md={3}>
+                  <Autocomplete
+                    disablePortal
+                    options={[
+                      "Abbottabad",
+                      "Islamabad",
+                      "Murree",
+                      "Nathia Gali",
+                    ]}
+                    fullWidth
+                    renderInput={(params) => (
+                      <TextField {...params} label="City" />
+                    )}
+                    key={city}
+                    defaultValue={city || null}
+                    onChange={(_, newValue) => {
+                      setCity(newValue ?? "");
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  <Box sx={{ display: "flex", gap: 2 }}>
+                    <Box sx={{ flex: 1 }}>
+                      <DatePicker
+                        label="Start Date"
+                        value={startDate}
+                        onChange={(newValue: Dayjs | null) => {
+                          setStartDate(newValue);
+                        }}
+                        slots={{
+                          textField: (params) => <TextField {...params} />,
+                          day: CustomDay,
+                        }}
+                        minDate={today}
+                        views={["month", "day"]}
+                      />
+                    </Box>
+                    <Divider orientation="vertical" flexItem />
+                    <Box sx={{ flex: 1 }}>
+                      <DatePicker
+                        label="End Date"
+                        value={endDate}
+                        onChange={(newValue: Dayjs | null) => {
+                          setEndDate(newValue);
+                        }}
+                        slots={{
+                          textField: (params) => <TextField {...params} />,
+                          day: CustomDay,
+                        }}
+                        minDate={startDate ?? undefined} // Prevent selecting an end date before the start date
+                        disableHighlightToday
+                        views={["month", "day"]}
+                      />
+                    </Box>
+                  </Box>
+                </Grid>
+                <Grid item xs={12} sm={6} md={2}>
+                  <TextField
+                    select
+                    fullWidth
+                    label="Guests"
+                    value={guests}
+                    onChange={(e) => setGuests(e.target.value)}
+                  >
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    onClick={handleSearch}
+                    size="large"
+                    sx={{
+                      height: "100%",
+                      paddingTop: "14px",
+                      paddingBottom: "14px",
+                    }}
+                  >
+                    Search
+                  </Button>
+                </Grid>
               </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <DateRangePicker
-                  localeText={{ start: "Check-in", end: "Check-out" }}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={2}>
-                <TextField
-                  select
-                  fullWidth
-                  label="Guests"
-                  value={guests}
-                  onChange={(e) => setGuests(e.target.value)}
-                >
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((option) => (
-                    <MenuItem key={option} value={option}>
-                      {option}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                  onClick={handleSearch}
-                  size="large"
-                  sx={{
-                    height: "100%",
-                    paddingTop: "14px",
-                    paddingBottom: "14px",
-                  }}
-                >
-                  Search
-                </Button>
-              </Grid>
-            </Grid>
+            </HighlightedDaysContext.Provider>
           </LocalizationProvider>
         </Box>
       </Box>

@@ -5,13 +5,21 @@ import { Box } from "@mui/material";
 import SearchBar from "@/components/searchbar/SearchBar";
 import WelcomeCard from "@/components/welcomecard/WelcomeCard";
 import Testimonials from "@/components/testimonials/Testimonials";
+import NewsLetterCard from "@/components/newsletter/NewsLetterCard";
+import Features from "@/components/features/Features";
+import OurHotels from "@/components/ourhotels/OurHotels";
 
 const Home = () => {
   return (
     <Box>
       <SearchBar />
-      <WelcomeCard />
+      <Features />
+      {/* <WelcomeCard /> */}
+      <OurHotels />
       <Testimonials />
+      <Box paddingBottom={10}>
+        <NewsLetterCard />
+      </Box>
     </Box>
   );
 };

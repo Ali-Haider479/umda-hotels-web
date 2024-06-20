@@ -2,6 +2,10 @@
 import { Box, Typography } from "@mui/material";
 import TestimonialCard from "./TestimonialCard";
 import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import MagicSliderDots from "react-magic-slider-dots";
+import "react-magic-slider-dots/dist/magic-dots.css";
 
 const testimonials = [
   {
@@ -49,13 +53,17 @@ const Testimonials = () => {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
-    adaptiveHeight: true,
+    // adaptiveHeight: true,
     centerMode: true,
     centerPadding: "60px",
+    arrow: false,
+    appendDots: (dots: any) => {
+      return <MagicSliderDots dots={dots} numDotsToShow={5} dotWidth={30} />;
+    },
   };
 
   return (
-    <Box paddingY={10}>
+    <Box paddingBottom={10}>
       <Typography textAlign={"center"} variant="h3" fontWeight={"bold"}>
         Hear From Our Customers
       </Typography>

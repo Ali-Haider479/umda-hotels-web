@@ -23,6 +23,7 @@ const TestimonialCard = ({
         maxWidth: 600,
         mx: "auto",
         marginY: 5,
+        // marginX: 2,
       }}
     >
       <Box display="flex" alignItems="flex-start" marginBottom={2}>
