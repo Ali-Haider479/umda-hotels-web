@@ -1,11 +1,14 @@
+"use client"
 import SubHeader from "@/components/ui/SubHeader";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useMediaQuery } from "@mui/material";
 
 const CancellationPolicyPage = () => {
+  const isMobScreen = useMediaQuery("(max-width: 500px)");
+
   return (
     <>
       <SubHeader heading={"Cancellation Policy"} />
-      <Box paddingX={15} paddingY={8}>
+      <Box paddingX={isMobScreen ? 3 : 15} paddingY={8}>
         <Typography variant="h6" gutterBottom fontWeight={"bold"}>
           GENERAL CANCELLATION POLICIES
         </Typography>

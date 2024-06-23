@@ -1,5 +1,8 @@
 "use client";
 import "./Navbar.css";
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useState } from "react";
+
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -8,9 +11,18 @@ import UmdaLogo from "@/public/assets/icons/logo.svg";
 import HotelsDropdownButton from "./HotelsDropdownButton";
 import CallUsButton from "./CallUsButton";
 import LoginSignupButton from "./LoginSignupButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Navbar = () => {
   const pathname = usePathname();
+  const isMobScreen = useMediaQuery('(max-width: 500px)');
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
   console.log(pathname);
   if (pathname !== "/login" && pathname !== "/signup") {
     return (
@@ -28,11 +40,24 @@ const Navbar = () => {
             Umda Hotels
           </p>
         </Link>
-        <div style={{ display: "flex" }}>
-          <HotelsDropdownButton />
-          <CallUsButton />
-          <LoginSignupButton />
-        </div>
+        {isMobScreen ? (
+          <div className="hamburger-menu" onClick={toggleMenu}>
+            {menuOpen ? <CloseIcon fontSize="large" /> : <MenuIcon fontSize="large" />}
+          </div>
+        ) : (
+          <div style={{ display: "flex" }}>
+            <HotelsDropdownButton />
+            <CallUsButton />
+            <LoginSignupButton />
+          </div>
+        )}
+        {isMobScreen && menuOpen && (
+          <div className="mobile-menu">
+            <HotelsDropdownButton />
+            <CallUsButton />
+            <LoginSignupButton />
+          </div>
+        )}
       </nav>
     );
   } else {

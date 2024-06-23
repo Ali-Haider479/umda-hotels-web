@@ -3,10 +3,9 @@
 import {
   Box,
   Typography,
-  TextField,
-  Button,
   IconButton,
   Link,
+  useMediaQuery,
 } from "@mui/material";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import YouTubeIcon from "@mui/icons-material/YouTube";
@@ -16,7 +15,8 @@ import { usePathname } from "next/navigation";
 
 const Footer = () => {
   const pathname = usePathname();
-  console.log(pathname);
+  const isMobScreen = useMediaQuery("(max-width: 500px)");
+
   if (pathname !== "/login" && pathname !== "/signup") {
     return (
       <Box
@@ -32,27 +32,16 @@ const Footer = () => {
         <Box
           sx={{
             display: "flex",
-            justifyContent: "space-between",
-            width: "100%",
+            justifyContent: isMobScreen ? "center" : "space-between",
+            flexDirection: isMobScreen ? "column" : "row",
+            width: isMobScreen ? "98%" : "100%",
             maxWidth: "1200px",
             flexWrap: "wrap",
-            marginBottom: "20px",
+            marginBottom: "10px", // Reduced margin bottom
+            alignItems: isMobScreen ? "center" : "flex-start",
           }}
         >
-          {/* <Box sx={{ flex: "1 1 300px", padding: "10px" }}>
-            <Box>
-              <Image
-                src={UmdaLogo}
-                alt="Umda Company Logo"
-                className="umda-hotel-logo"
-              />
-              <p style={{ fontSize: 20, fontWeight: "bold" }}>Umda Hotels</p>
-              <Typography variant="h6" fontWeight="bold">
-                Pakistan's leading chain of hotels
-              </Typography>
-            </Box>
-          </Box> */}
-          <Box sx={{ flex: "1 1 300px", padding: "10px" }}>
+          <Box sx={{ flex: "1 1 300px", padding: "10px", textAlign: isMobScreen ? "center" : "left", marginBottom: isMobScreen ? "-130px" : "0" }}>
             <Typography variant="body1" fontWeight="bold" gutterBottom>
               ABOUT US
             </Typography>
@@ -84,7 +73,7 @@ const Footer = () => {
               FAQs
             </Link>
           </Box>
-          <Box sx={{ flex: "1 1 300px", padding: "10px" }}>
+          <Box sx={{ flex: "1 1 300px", padding: "10px", textAlign: isMobScreen ? "center" : "left", marginBottom: isMobScreen ? "-130px" : "0" }}>
             <Typography variant="body1" fontWeight="bold" gutterBottom>
               ASSISTANCE
             </Typography>
@@ -116,7 +105,7 @@ const Footer = () => {
               Cancellation Policy
             </Link>
           </Box>
-          <Box sx={{ flex: "1 1 300px", padding: "10px" }}>
+          <Box sx={{ flex: "1 1 300px", padding: "10px", textAlign: isMobScreen ? "center" : "left" ,  marginBottom: isMobScreen ? "-130px" : "0"}}>
             <Typography variant="body1" fontWeight="bold" gutterBottom>
               Our Hotels
             </Typography>
@@ -152,14 +141,16 @@ const Footer = () => {
         <Box
           sx={{
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: isMobScreen ? "center" : "space-between",
             alignItems: "center",
             width: "100%",
             maxWidth: "1200px",
             flexWrap: "wrap",
+            textAlign: "center",
+            marginBottom: "10px", // Reduced margin bottom
           }}
         >
-          <Box display="flex" alignItems="center">
+          <Box display="flex" justifyContent={isMobScreen ? "center" : "flex-start"} alignItems="center" mb={isMobScreen ? 2 : 0}>
             <IconButton href="#" color="inherit">
               <InstagramIcon />
             </IconButton>
@@ -180,29 +171,6 @@ const Footer = () => {
             Copyright © 2024 by Umda: Pakistan #1 Hotel Chain. All rights
             reserved.
           </Typography>
-          {/* <Box display="flex" alignItems="center">
-            <Image
-              src="/path/to/canada-flag-icon.png"
-              alt="Canada"
-              width={24}
-              height={16}
-            />
-            <Typography variant="body2" sx={{ marginLeft: "8px" }}>
-              Canada (CAD $)
-            </Typography>
-            <Typography variant="body2" sx={{ marginLeft: "8px" }}>
-              English
-            </Typography>
-          </Box> */}
-          {/* <Box display="flex" alignItems="center" sx={{ marginTop: "10px" }}>
-            <Image src="/path/to/payment-icon1.png" alt="Payment Method 1" width={24} height={16} />
-            <Image src="/path/to/payment-icon2.png" alt="Payment Method 2" width={24} height={16} />
-            <Image src="/path/to/payment-icon3.png" alt="Payment Method 3" width={24} height={16} />
-            <Image src="/path/to/payment-icon4.png" alt="Payment Method 4" width={24} height={16} />
-            <Image src="/path/to/payment-icon5.png" alt="Payment Method 5" width={24} height={16} />
-            <Image src="/path/to/payment-icon6.png" alt="Payment Method 6" width={24} height={16} />
-            <Image src="/path/to/payment-icon7.png" alt="Payment Method 7" width={24} height={16} />
-          </Box> */}
         </Box>
       </Box>
     );

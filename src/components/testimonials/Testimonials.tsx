@@ -6,6 +6,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import MagicSliderDots from "react-magic-slider-dots";
 import "react-magic-slider-dots/dist/magic-dots.css";
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const testimonials = [
   {
@@ -45,6 +46,8 @@ const testimonials = [
 ];
 
 const Testimonials = () => {
+  const isMobScreen = useMediaQuery('(max-width: 500px)');
+
   const settings = {
     dots: true,
     infinite: true,
@@ -53,10 +56,9 @@ const Testimonials = () => {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
-    // adaptiveHeight: true,
-    centerMode: true,
-    centerPadding: "60px",
-    arrow: false,
+    centerMode: !isMobScreen,
+    centerPadding: isMobScreen ? "0px" : "60px",
+    arrows: false,
     appendDots: (dots: any) => {
       return <MagicSliderDots dots={dots} numDotsToShow={5} dotWidth={30} />;
     },
