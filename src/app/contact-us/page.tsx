@@ -5,6 +5,7 @@ import { Box, Typography, TextField, Button } from "@mui/material";
 import Image from "next/image";
 import SubHeader from "@/components/ui/SubHeader";
 import AboutUsGlobe from "@/public/assets/images/about-us-globe.webp";
+import { LoadingButton } from "@mui/lab";
 
 const ContactUsPage = () => {
   const [formValues, setFormValues] = useState({
@@ -20,6 +21,9 @@ const ContactUsPage = () => {
     emailFormat: false,
   });
 
+  const [buttonLoading, setButtonLoading] = useState(false);
+  const [serverMessage, setServerMessage] = useState<string>("");
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormValues({
@@ -33,7 +37,7 @@ const ContactUsPage = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -50,8 +54,35 @@ const ContactUsPage = () => {
     const hasErrors = Object.values(newErrors).some((error) => error);
 
     if (!hasErrors) {
+      setButtonLoading(true);
       console.log("Form Values:", formValues);
       // You can add further form submission logic here (e.g., send data to server)
+      try {
+        const response = await fetch(`/api/send-mail`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formValues),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          setServerMessage(data.message || "Form submitted successfully.");
+          setFormValues({ name: "", email: "", message: "" });
+        } else {
+          setServerMessage(data.message || "Failed to submit the form.");
+        }
+
+        setButtonLoading(false);
+      } catch (error) {
+        setServerMessage(
+          "An error occurred while submitting the form. Please try again."
+        );
+
+        setButtonLoading(false);
+      }
     }
   };
 
@@ -111,14 +142,19 @@ const ContactUsPage = () => {
                 error={errors.message}
                 helperText={errors.message ? "Message is required" : ""}
               />
-              <Button
+              {serverMessage && (
+                <div style={{ color: "green" }}>{serverMessage}</div>
+              )}
+              <LoadingButton
+                loading={buttonLoading}
+                loadingIndicator="Loading…"
                 variant="contained"
                 color="primary"
                 type="submit"
                 sx={{ mt: 2 }}
               >
                 Submit
-              </Button>
+              </LoadingButton>
             </form>
           </Box>
           <Box flex={1}>

@@ -18,17 +18,50 @@ import {
   InputAdornment,
   TextField,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
-import { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useEffect, useState } from "react";
+import {
+  signIn,
+  signOut,
+  useSession,
+  getSession,
+  getProviders,
+  LiteralUnion,
+  ClientSafeProvider,
+} from "next-auth/react";
+import { BuiltInProviderType } from "next-auth/providers/index";
+import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
+  const router = useRouter();
+  const { data: session } = useSession();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({
+    email: false,
+    password: false,
+  });
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const [providers, setProviders] = useState<Record<
+    LiteralUnion<BuiltInProviderType, string>,
+    ClientSafeProvider
+  > | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const res = await getProviders();
+      console.log("Response", res);
+      setProviders(res);
+    })();
+  }, []);
 
   const handleChange =
     (prop: string) => (event: { target: { value: any } }) => {
@@ -42,6 +75,45 @@ const LoginPage = () => {
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
   };
+
+  const handleLogIn = async () => {
+    const emailError =
+      formData.email.length === 0 || !validateEmail(formData.email);
+    const passwordError = formData.password.length === 0;
+
+    setErrors({
+      email: emailError,
+      password: passwordError,
+    });
+
+    if (!emailError && !passwordError) {
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: formData.email,
+        password: formData.password,
+      });
+      console.log(res);
+
+      if (res && res.ok) {
+        setErrorMessage("");
+
+        const session = await getSession();
+        console.log(session);
+
+        if (session && session.user.isVerified) {
+          router.push("/");
+        } else {
+          router.push("/verify-email");
+        }
+      } else if (res && res.error) {
+        setErrorMessage(res.error);
+      }
+    } else {
+      // Set an appropriate error message
+      setErrorMessage("Please fill in all fields correctly.");
+    }
+  };
+
   return (
     <div
       style={{
@@ -94,12 +166,12 @@ const LoginPage = () => {
               sx={{ marginBottom: "16px" }}
               value={formData.email}
               onChange={handleChange("email")}
-              error={
-                !validateEmail(formData.email) && formData.email.length > 0
-              }
+              error={errors.email}
               helperText={
-                !validateEmail(formData.email) && formData.email.length > 0
-                  ? "Invalid email address"
+                errors.email
+                  ? formData.email.length === 0
+                    ? "Email is required"
+                    : "Invalid email address"
                   : ""
               }
             />
@@ -123,6 +195,8 @@ const LoginPage = () => {
                   </InputAdornment>
                 ),
               }}
+              error={errors.password}
+              helperText={errors.password ? "Password is required" : ""}
               sx={{ marginBottom: "16px" }}
             />
           </CardContent>
@@ -134,9 +208,21 @@ const LoginPage = () => {
               fullWidth
               size="large"
               sx={{ marginBottom: 2 }}
+              onClick={handleLogIn}
             >
               Continue
             </Button>
+            {errorMessage && (
+              <Typography color="error" variant="body2">
+                {errorMessage}
+              </Typography>
+            )}
+
+            <Link href="/forget-password" passHref>
+              <Button variant="text" color="primary" sx={{ marginBottom: 1 }}>
+                Forgot Password?
+              </Button>
+            </Link>
             <Box
               sx={{
                 display: "flex",
@@ -152,15 +238,23 @@ const LoginPage = () => {
               <Divider sx={{ flexGrow: 1 }} />{" "}
               {/* This allows the divider to grow and fill the space */}
             </Box>
-            <Button
-              variant="outlined"
-              fullWidth
-              size="large"
-              startIcon={<GoogleIcon />}
-              sx={{ marginTop: 2 }}
-            >
-              Continue with Google
-            </Button>
+            {providers ? (
+              <Button
+                variant="outlined"
+                fullWidth
+                size="large"
+                startIcon={<GoogleIcon />}
+                sx={{ marginTop: 2 }}
+                key={"Google"}
+                onClick={() => {
+                  signIn("google");
+                }}
+              >
+                Continue with Google
+              </Button>
+            ) : (
+              <CircularProgress />
+            )}
           </CardActions>
           <Box
             sx={{
