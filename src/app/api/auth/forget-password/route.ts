@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     existingUser.resetToken = passwordResetToken;
     existingUser.resetTokenExpiry = passwordResetExpires;
 
-    const resetUrl = `${process.env.BASE_URL}/reset-password/${resetToken}`;
+    const resetUrl = `${process.env.VERCEL_URL}/reset-password/${resetToken}`;
 
     console.log(resetUrl);
 
