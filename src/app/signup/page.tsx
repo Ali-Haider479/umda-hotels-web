@@ -13,6 +13,7 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  CircularProgress,
   Divider,
   IconButton,
   InputAdornment,
@@ -20,10 +21,22 @@ import {
   Typography,
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
-import { useState } from "react";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useEffect, useState } from "react";
+import {
+  signIn,
+  signOut,
+  useSession,
+  getProviders,
+  LiteralUnion,
+  ClientSafeProvider,
+} from "next-auth/react";
+import { BuiltInProviderType } from "next-auth/providers/index";
+
+import { useRouter } from "next/navigation";
 
 const signUpPage = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -31,6 +44,25 @@ const signUpPage = () => {
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+
+  const [providers, setProviders] = useState<Record<
+    LiteralUnion<BuiltInProviderType, string>,
+    ClientSafeProvider
+  > | null>(null);
+  const [errors, setErrors] = useState({
+    firstName: false,
+    lastName: false,
+    email: false,
+    password: false,
+  });
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      const res = await getProviders();
+      setProviders(res);
+    })();
+  }, []);
 
   const handleChange =
     (prop: string) => (event: { target: { value: any } }) => {
@@ -44,6 +76,47 @@ const signUpPage = () => {
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
   };
+  const handleRegister = async () => {
+    const firstNameError = formData.firstName.length === 0;
+    const lastNameError = formData.lastName.length === 0;
+    const emailError =
+      formData.email.length === 0 || !validateEmail(formData.email);
+    const passwordError = formData.password.length === 0;
+
+    setErrors({
+      firstName: firstNameError,
+      lastName: lastNameError,
+      email: emailError,
+      password: passwordError,
+    });
+
+    if (!firstNameError && !lastNameError && !emailError && !passwordError) {
+      console.log("Sending data:", formData);
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      let data = null;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("Failed to parse JSON response:", err);
+      }
+
+      if (res.ok) {
+        router.push("/login");
+      } else {
+        setErrorMessage(data.message || "An error occurred");
+      }
+    } else {
+      setErrorMessage("Please fill in all fields correctly.");
+    }
+  };
+
   return (
     <div
       style={{
@@ -105,6 +178,8 @@ const signUpPage = () => {
                 sx={{ width: "calc(50% - 8px)" }} // Adjust width to account for the gap
                 value={formData.firstName}
                 onChange={handleChange("firstName")}
+                error={errors.firstName}
+                helperText={errors.firstName ? "First Name is required" : ""}
               />
               <TextField
                 fullWidth
@@ -114,6 +189,8 @@ const signUpPage = () => {
                 sx={{ width: "calc(50% - 8px)" }} // Adjust width to account for the gap
                 value={formData.lastName}
                 onChange={handleChange("lastName")}
+                error={errors.lastName}
+                helperText={errors.lastName ? "Last Name is required" : ""}
               />
             </Box>
             <TextField
@@ -124,12 +201,12 @@ const signUpPage = () => {
               sx={{ marginBottom: "16px" }}
               value={formData.email}
               onChange={handleChange("email")}
-              error={
-                !validateEmail(formData.email) && formData.email.length > 0
-              }
+              error={errors.email}
               helperText={
-                !validateEmail(formData.email) && formData.email.length > 0
-                  ? "Invalid email address"
+                errors.email
+                  ? formData.email.length === 0
+                    ? "Email is required"
+                    : "Invalid email address"
                   : ""
               }
             />
@@ -153,6 +230,8 @@ const signUpPage = () => {
                   </InputAdornment>
                 ),
               }}
+              error={errors.password}
+              helperText={errors.password ? "Password is required" : ""}
               sx={{ marginBottom: "16px" }}
             />
           </CardContent>
@@ -164,9 +243,15 @@ const signUpPage = () => {
               fullWidth
               size="large"
               sx={{ marginBottom: 2 }}
+              onClick={handleRegister}
             >
               Continue
             </Button>
+            {errorMessage && (
+              <Typography color="error" variant="body2">
+                {errorMessage}
+              </Typography>
+            )}
             <Box
               sx={{
                 display: "flex",
@@ -182,15 +267,23 @@ const signUpPage = () => {
               <Divider sx={{ flexGrow: 1 }} />{" "}
               {/* This allows the divider to grow and fill the space */}
             </Box>
-            <Button
-              variant="outlined"
-              fullWidth
-              size="large"
-              startIcon={<GoogleIcon />}
-              sx={{ marginTop: 2 }}
-            >
-              Continue with Google
-            </Button>
+            {providers ? (
+              <Button
+                variant="outlined"
+                fullWidth
+                size="large"
+                startIcon={<GoogleIcon />}
+                sx={{ marginTop: 2 }}
+                key={"Google"}
+                onClick={() => {
+                  signIn("google");
+                }}
+              >
+                Continue with Google
+              </Button>
+            ) : (
+              <CircularProgress />
+            )}
           </CardActions>
           <Box
             sx={{
@@ -203,7 +296,7 @@ const signUpPage = () => {
           >
             <Typography>Already have an account?</Typography>
             <Link
-              href={"/signup"}
+              href={"/login"}
               style={{ color: "black", fontWeight: "bolder", paddingTop: 3 }}
             >
               Log In

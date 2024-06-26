@@ -1,35 +1,57 @@
 import { Schema, model, models } from "mongoose";
 
-const UserSchema = new Schema({
-  email: {
-    type: String,
-    unique: [true, "Email already exists!"],
-    required: [true, "Email is required!"],
+const UserSchema = new Schema(
+  {
+    email: {
+      type: String,
+      unique: [true, "Email already exists!"],
+      required: [true, "Email is required!"],
+    },
+    password: {
+      type: String,
+      required: [true, "Password is required!"],
+    },
+    firstName: {
+      type: String,
+    },
+    lastName: {
+      type: String,
+    },
+    telephone: {
+      type: String,
+    },
+    address: {
+      type: String,
+    },
+    image: {
+      type: String,
+    },
+    newsletterSub: {
+      type: String,
+      default: false,
+    },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    verificationCode: {
+      type: Number,
+    },
+    resetToken: {
+      type: String,
+      required: false,
+    },
+    resetTokenExpiry: {
+      type: Date,
+      required: false,
+    },
   },
-  username: {
-    type: String,
-    required: [true, "Username is required!"],
-    match: [
-      /^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/,
-      "Username invalid, it should contain 8-20 alphanumeric letters and be unique!",
-    ],
-  },
-  password: {
-    type: String,
-  },
-  firstName: {
-    type: String,
-  },
-  lastName: {
-    type: String,
-  },
-  telephone: {
-    type: String,
-  },
-  isVerified: {
-    type: Boolean,
-  },
-});
+  { timestamps: true }
+);
 
 const User = models.User || model("User", UserSchema);
 

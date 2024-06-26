@@ -1,6 +1,6 @@
 "use client";
 import "./Navbar.css";
-import useMediaQuery from '@mui/material/useMediaQuery';
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { useState } from "react";
 
 import Image from "next/image";
@@ -13,10 +13,15 @@ import CallUsButton from "./CallUsButton";
 import LoginSignupButton from "./LoginSignupButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import MyProfileDropdownButton from "./MyProfileDropdownButton";
+
+import { useSession } from "next-auth/react";
 
 const Navbar = () => {
+  const { data: session } = useSession();
+  console.log("Session", session);
   const pathname = usePathname();
-  const isMobScreen = useMediaQuery('(max-width: 500px)');
+  const isMobScreen = useMediaQuery("(max-width: 500px)");
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -24,7 +29,13 @@ const Navbar = () => {
   };
 
   console.log(pathname);
-  if (pathname !== "/login" && pathname !== "/signup") {
+  if (
+    pathname !== "/login" &&
+    pathname !== "/signup" &&
+    pathname !== "/verify-email" &&
+    pathname !== "/forget-password" &&
+    !pathname.startsWith("/reset-password/")
+  ) {
     return (
       <nav className="navbar">
         <Link href={"/"} className="navbar-link">
@@ -42,20 +53,40 @@ const Navbar = () => {
         </Link>
         {isMobScreen ? (
           <div className="hamburger-menu" onClick={toggleMenu}>
-            {menuOpen ? <CloseIcon fontSize="large" /> : <MenuIcon fontSize="large" />}
+            {menuOpen ? (
+              <CloseIcon fontSize="large" />
+            ) : (
+              <MenuIcon fontSize="large" />
+            )}
           </div>
         ) : (
           <div style={{ display: "flex" }}>
             <HotelsDropdownButton />
             <CallUsButton />
-            <LoginSignupButton />
+            {session?.user ? (
+              <>
+                <MyProfileDropdownButton />
+              </>
+            ) : (
+              <>
+                <LoginSignupButton />
+              </>
+            )}
           </div>
         )}
         {isMobScreen && menuOpen && (
           <div className="mobile-menu">
             <HotelsDropdownButton />
             <CallUsButton />
-            <LoginSignupButton />
+            {session?.user ? (
+              <>
+                <MyProfileDropdownButton />
+              </>
+            ) : (
+              <>
+                <LoginSignupButton />
+              </>
+            )}
           </div>
         )}
       </nav>
