@@ -8,7 +8,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 const HotelsDropdownButton = () => {
-  const isMobScreen = useMediaQuery('(max-width: 500px)');
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
 
   const [hover, setHover] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);

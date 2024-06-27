@@ -8,14 +8,14 @@ interface SubHeaderProps {
 }
 
 const SubHeader = ({ heading }: SubHeaderProps) => {
-  const isMobScreen = useMediaQuery("(max-width: 500px)");
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
 
   return (
     <Box
       sx={{
         backgroundImage: `url(${HeroImage.src})`,
         backgroundRepeat: "no-repeat",
-        backgroundSize: isMobScreen ? "inherit" : "cover" , 
+        backgroundSize: isMobScreen ? "cover" : "cover" , 
         backgroundPosition: "center center",
         width: "100%",
         height: "auto",

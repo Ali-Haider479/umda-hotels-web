@@ -3,7 +3,7 @@ import SubHeader from "@/components/ui/SubHeader";
 import { Box, Typography, useMediaQuery } from "@mui/material";
 
 const CancellationPolicyPage = () => {
-  const isMobScreen = useMediaQuery("(max-width: 500px)");
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
 
   return (
     <>

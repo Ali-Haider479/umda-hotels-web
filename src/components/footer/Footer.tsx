@@ -15,7 +15,7 @@ import { usePathname } from "next/navigation";
 
 const Footer = () => {
   const pathname = usePathname();
-  const isMobScreen = useMediaQuery("(max-width: 500px)");
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
 
   if (pathname !== "/login" && pathname !== "/signup") {
     return (

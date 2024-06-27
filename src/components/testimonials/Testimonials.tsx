@@ -46,7 +46,7 @@ const testimonials = [
 ];
 
 const Testimonials = () => {
-  const isMobScreen = useMediaQuery('(max-width: 500px)');
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
 
   const settings = {
     dots: true,

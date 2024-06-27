@@ -3,7 +3,7 @@ import SubHeader from "@/components/ui/SubHeader";
 import { Box, List, ListItem, ListItemText, Typography, useMediaQuery } from "@mui/material";
 
 const TermsAndConditionsPage = () => {
-  const isMobScreen = useMediaQuery("(max-width: 500px)");
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
 
   return (
     <>

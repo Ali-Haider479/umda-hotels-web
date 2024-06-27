@@ -89,7 +89,7 @@ const CustomDay = (props: PickersDayProps<Dayjs>) => {
 };
 
 const SearchBar = () => {
-  const isMobScreen = useMediaQuery('(max-width: 500px)');
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
 
   const [city, setCity] = useState<string>("");
   const [startDate, setStartDate] = useState<Dayjs | null>(null);

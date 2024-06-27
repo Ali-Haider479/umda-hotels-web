@@ -6,7 +6,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { NoEncryption } from "@mui/icons-material";
 
 const NewsLetterCard = () => {
-  const isMobScreen = useMediaQuery("(max-width: 500px)");
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
 
   return (
     <Box
@@ -53,11 +53,12 @@ const NewsLetterCard = () => {
         alignItems="center"
         justifyContent="space-between"
         width="100%"
+        padding= "30px"
       >
         <TextField
           label="Your Email"
           placeholder="e.g., john@email.com"
-          sx={{ width: isMobScreen ? "80%" : "400px", mb: isMobScreen ? 2 : 0 }}
+          sx={{ width: isMobScreen ? "50%" : "400px", mb: isMobScreen ? 2 : 0 }}
         />
         <Button
           variant="contained"
@@ -66,7 +67,7 @@ const NewsLetterCard = () => {
           sx={{
             height: isMobScreen ? "auto" : "100%",
             paddingTop: isMobScreen ? "12px" : "14px",
-            paddingBottom: isMobScreen ? "12px" : "14px",
+            paddingBottom: isMobScreen ? "15px" : "14px",
             width: isMobScreen ? "80%" : "auto",
             ml: isMobScreen ? 0 : 2,
           }}

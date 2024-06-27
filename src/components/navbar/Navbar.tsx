@@ -21,7 +21,7 @@ const Navbar = () => {
   const { data: session } = useSession();
   console.log("Session", session);
   const pathname = usePathname();
-  const isMobScreen = useMediaQuery("(max-width: 500px)");
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {

@@ -27,7 +27,7 @@ const ContactUsPage = () => {
     emailFormat: false,
   });
 
-  const isMobScreen = useMediaQuery("(max-width: 500px)");
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
   const [buttonLoading, setButtonLoading] = useState(false);
   const [serverMessage, setServerMessage] = useState<string>("");
 

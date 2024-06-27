@@ -1,10 +1,15 @@
-import { Box, Typography, Grid } from "@mui/material";
+"use client";
+import { Box, Typography, Grid, useMediaQuery } from "@mui/material";
 import HotelCard from "./HotelCard";
 import HotelMontanaImage from "@/public/assets/images/hotel-montana.webp";
 import HotelGalaxyImage from "@/public/assets/images/hotel-galaxy.webp";
 import HotelHorizonImage from "@/public/assets/images/hotel-horizan.webp";
-
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 const OurHotels = () => {
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
+
   const hotelsArray = [
     {
       name: "Umda Hotel Montana",
@@ -27,23 +32,48 @@ const OurHotels = () => {
     },
   ];
 
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000, 
+  };
+  
   return (
     <Box paddingY={10}>
       <Typography textAlign={"center"} variant="h3" fontWeight={"bold"}>
         Our Hotels
       </Typography>
-      <Grid container spacing={4} justifyContent="center">
-        {hotelsArray.map((hotel, index) => (
-          <Grid item key={index} xs={12} sm={6} md={4}>
-            <HotelCard
-              name={hotel.name}
-              address={hotel.address}
-              phone={hotel.phone}
-              images={hotel.images}
-            />
-          </Grid>
-        ))}
-      </Grid>
+      {isMobScreen ? (
+        <Slider {...sliderSettings}>
+          {hotelsArray.map((hotel, index) => (
+            <Box key={index} padding={2}>
+              <HotelCard
+                name={hotel.name}
+                address={hotel.address}
+                phone={hotel.phone}
+                images={hotel.images}
+              />
+            </Box>
+          ))}
+        </Slider>
+      ) : (
+        <Grid container spacing={4} justifyContent="center">
+          {hotelsArray.map((hotel, index) => (
+            <Grid item key={index} xs={12} sm={6} md={4}>
+              <HotelCard
+                name={hotel.name}
+                address={hotel.address}
+                phone={hotel.phone}
+                images={hotel.images}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      )}
     </Box>
   );
 };

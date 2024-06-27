@@ -67,7 +67,7 @@ const faqs = [
 ];
 
 const FAQsPage = () => {
-  const isMobScreen = useMediaQuery("(max-width: 500px)");
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
 
   return (
     <>
