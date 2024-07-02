@@ -53,12 +53,12 @@ const NewsLetterCard = () => {
         alignItems="center"
         justifyContent="space-between"
         width="100%"
-        padding= "30px"
+        padding= "30px 0px"
       >
         <TextField
           label="Your Email"
           placeholder="e.g., john@email.com"
-          sx={{ width: isMobScreen ? "50%" : "400px", mb: isMobScreen ? 2 : 0 }}
+          sx={{ width: isMobScreen ? "50%" : "400px", mb: isMobScreen ? 2 : 0,  }}
         />
         <Button
           variant="contained"

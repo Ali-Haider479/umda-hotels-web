@@ -76,6 +76,7 @@ const FAQsPage = () => {
         paddingY={isMobScreen ? 2 : 10}
         paddingX={isMobScreen ? 2 : 30}
         paddingBottom={0}
+        sx={{marginBottom: isMobScreen ? "120px" : "0px" }}
       >
         {faqs.map((faq, index) => (
           <Accordion

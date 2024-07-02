@@ -31,13 +31,14 @@ const AboutUsPage = () => {
                 the Umda Hotel Montana.
               </Typography>
             </Box>
-            <Box flex={1}>
+            <Box flex={1} sx={{marginBottom: isMobScreen ? "70px" : "0px" }}>
               <Image
                 src={AboutUsGlobe}
                 alt="about us globe"
                 layout="responsive"
                 width={600}
                 height={400}
+              
               />
             </Box>
           </>

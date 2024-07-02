@@ -65,25 +65,27 @@ const Testimonials = () => {
   };
 
   return (
-    <Box paddingBottom={10}>
-      <Typography textAlign={"center"} variant="h3" fontWeight={"bold"}>
-        Hear From Our Customers
-      </Typography>
-      <Box paddingY={5} paddingX={5}>
-        <Slider {...settings}>
-          {testimonials.map((testimonial, index) => (
-            <Box key={index} paddingY={3}>
-              <TestimonialCard
-                name={testimonial.name}
-                image={testimonial.image}
-                testimonial={testimonial.testimonial}
-                rating={testimonial.rating}
-              />
-            </Box>
-          ))}
-        </Slider>
-      </Box>
+    <>
+    {isMobScreen ? null :  <Box paddingBottom={10}>
+    <Typography textAlign={"center"} variant="h3" fontWeight={"bold"}>
+      Hear From Our Customers
+    </Typography>
+    <Box paddingY={5} paddingX={5}>
+      <Slider {...settings}>
+        {testimonials.map((testimonial, index) => (
+          <Box key={index} paddingY={3}>
+            <TestimonialCard
+              name={testimonial.name}
+              image={testimonial.image}
+              testimonial={testimonial.testimonial}
+              rating={testimonial.rating}
+            />
+          </Box>
+        ))}
+      </Slider>
     </Box>
+  </Box>}
+   </>
   );
 };
 

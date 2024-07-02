@@ -160,13 +160,14 @@ const ContactUsPage = () => {
                 </Button>
               </form>
             </Box>
-            <Box flex={1} marginTop={4}>
+            <Box flex={1} marginTop={4} sx={{marginBottom: isMobScreen ? "70px" : "0px" }}>
               <Image
                 src={AboutUsGlobe}
                 alt="about us globe"
                 layout="responsive"
                 width={600}
                 height={400}
+              
               />
             </Box>
           </>

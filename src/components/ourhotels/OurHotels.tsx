@@ -7,6 +7,7 @@ import HotelHorizonImage from "@/public/assets/images/hotel-horizan.webp";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+
 const OurHotels = () => {
   const isMobScreen = useMediaQuery("(max-width: 950px)");
 
@@ -39,18 +40,18 @@ const OurHotels = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 3000, 
+    autoplaySpeed: 3000,
   };
-  
+
   return (
-    <Box paddingY={10}>
+    <Box paddingY={10}  sx={{ width: "70%", height: "50%", ml:7}}>
       <Typography textAlign={"center"} variant="h3" fontWeight={"bold"}>
         Our Hotels
       </Typography>
       {isMobScreen ? (
         <Slider {...sliderSettings}>
           {hotelsArray.map((hotel, index) => (
-            <Box key={index} padding={2}>
+            <Box key={index} padding={0}>
               <HotelCard
                 name={hotel.name}
                 address={hotel.address}

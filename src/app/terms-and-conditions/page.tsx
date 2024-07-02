@@ -283,7 +283,7 @@ const TermsAndConditionsPage = () => {
         <Typography variant="h6" fontWeight={"bold"}>
           Our liability
         </Typography>
-        <Typography variant="body2" paragraph>
+        <Typography variant="body2" paragraph sx={{marginBottom: isMobScreen ? "50px" : "0px" }}>
           Umda does not accept liability for failure to meet any of our
           obligations to you if the failure is due to events beyond our
           reasonable control. If we fail to meet any of our obligations we shall
