@@ -44,11 +44,12 @@ const OurHotels = () => {
   };
 
   return (
-    <Box paddingY={10}  sx={{ width: "70%", height: "50%", ml:7}}>
-      <Typography textAlign={"center"} variant="h3" fontWeight={"bold"}>
-        Our Hotels
-      </Typography>
+  <>
       {isMobScreen ? (
+         <Box paddingY={10}  sx={{ width: "70%", height: "50%", ml:7}}>
+         <Typography textAlign={"center"} variant="h5" fontWeight={"bold"}>
+           Our Hotels
+         </Typography>
         <Slider {...sliderSettings}>
           {hotelsArray.map((hotel, index) => (
             <Box key={index} padding={0}>
@@ -61,7 +62,12 @@ const OurHotels = () => {
             </Box>
           ))}
         </Slider>
+        </Box>
       ) : (
+        <Box paddingY={10} paddingX={20}  sx={{ width: "70%", height: "50%", ml:7}}>
+        <Typography textAlign={"center"} variant="h3" fontWeight={"bold"}>
+          Our Hotels
+        </Typography>
         <Grid container spacing={4} justifyContent="center">
           {hotelsArray.map((hotel, index) => (
             <Grid item key={index} xs={12} sm={6} md={4}>
@@ -74,8 +80,9 @@ const OurHotels = () => {
             </Grid>
           ))}
         </Grid>
-      )}
-    </Box>
+        </Box>
+
+      )}</>
   );
 };
 

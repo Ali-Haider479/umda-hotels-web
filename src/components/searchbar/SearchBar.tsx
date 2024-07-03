@@ -131,29 +131,23 @@ const SearchBar = () => {
   } = getHighlightedDays();
 
   return (
-    <Box
-      sx={{
-        backgroundImage: `url(${HeroImage.src})`,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        backgroundPosition: "center center",
-        width: "100%",
-        height: "auto",
-      }}
-    >
-      <Box paddingY={"100px"}>
-        <Typography
-          textAlign={"center"}
-          color={"white"}
-          variant="h4"
-          fontWeight={"bold"}
-        >
-          Where do you wanna go ?
-        </Typography>
-        {isMobScreen ? (  <Box
+    <>
+        {isMobScreen ? ( 
+
+<Box paddingY={"20px"}>
+<Typography
+  textAlign={"center"}
+  color={"black"}
+  variant="h6"
+  fontWeight={"bold"}
+>
+  Where do you wanna go ?
+</Typography> 
+          
+           <Box
           bgcolor={"white"}
           borderRadius={2}
-          marginTop={4}
+          marginTop={0}
           sx={{ width: "90%", maxWidth: 1000, py: 3, pl:5}}
         >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -250,7 +244,25 @@ const SearchBar = () => {
               </Grid>
             </HighlightedDaysContext.Provider>
           </LocalizationProvider>
-        </Box>) : (  <Box
+        </Box> </Box>) : ( <Box
+          sx={{
+            backgroundImage: `url(${HeroImage.src})`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+            width: "100%",
+            height: "auto",
+          }}
+        >
+          <Box paddingY={"100px"}>
+            <Typography
+              textAlign={"center"}
+              color={"white"}
+              variant="h4"
+              fontWeight={"bold"}
+            >
+              Where do you wanna go ?
+            </Typography>  <Box
           bgcolor={"white"}
           borderRadius={2}
           marginTop={4}
@@ -351,10 +363,11 @@ const SearchBar = () => {
               </Grid>
             </HighlightedDaysContext.Provider>
           </LocalizationProvider>
+        </Box>
+        </Box>
         </Box>)}
       
-      </Box>
-    </Box>
+   </>
   );
 };
 

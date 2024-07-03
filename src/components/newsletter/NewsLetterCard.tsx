@@ -9,7 +9,8 @@ const NewsLetterCard = () => {
   const isMobScreen = useMediaQuery("(max-width: 950px)");
 
   return (
-    <Box
+    <>
+    {isMobScreen ? null : <Box
       display="flex"
       flexDirection="column"
       alignItems="center"
@@ -75,7 +76,8 @@ const NewsLetterCard = () => {
           Notify
         </Button>
       </Box>
-    </Box>
+    </Box>}
+    </>
   );
 };
 

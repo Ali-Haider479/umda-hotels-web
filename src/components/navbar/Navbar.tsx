@@ -52,7 +52,7 @@ const Navbar = () => {
           </p>
         </Link>
         {isMobScreen ? (
-          <div className="hamburger-menu" onClick={toggleMenu}>
+          <div className="hamburger-menu"  onClick={toggleMenu}>
             {menuOpen ? (
               <CloseIcon fontSize="large" />
             ) : (

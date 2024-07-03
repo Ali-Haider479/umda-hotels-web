@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Box, Typography, Avatar, Grid } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 
 const destinations = [
@@ -12,28 +13,32 @@ const destinations = [
 ];
 
 const Explore = () => {
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
+
   return (
-    <Box sx={{ textAlign: 'center', p: 3 }}>
-      <Typography variant="h6" gutterBottom>
-        Explore your next destination
-      </Typography>
-      <Grid container spacing={3} marginTop={1} justifyContent="center">
-        {destinations.map((destination) => (
-          <Grid item key={destination.name}>
-            <Box>
-              <Avatar
-                alt={destination.name}
-                src={destination.src}
-                sx={{ width: 60, height: 60, margin: 'auto' }}
-              />
-              <Typography variant="body2" sx={{ mt: 1 }}>
-                {destination.name}
-              </Typography>
-            </Box>
-          </Grid>
-        ))}
-      </Grid>
-    </Box>
+    <>
+    {isMobScreen ?   <Box sx={{ textAlign: 'center', p: 3 }}>
+    <Typography variant="h6" gutterBottom>
+      Explore your next destination
+    </Typography>
+    <Grid container spacing={3} marginTop={1} justifyContent="center">
+      {destinations.map((destination) => (
+        <Grid item key={destination.name}>
+          <Box>
+            <Avatar
+              alt={destination.name}
+              src={destination.src}
+              sx={{ width: 60, height: 60, margin: 'auto' }}
+            />
+            <Typography variant="body2" sx={{ mt: 1 }}>
+              {destination.name}
+            </Typography>
+          </Box>
+        </Grid>
+      ))}
+    </Grid>
+  </Box> : null}
+   </>
   );
 };
 

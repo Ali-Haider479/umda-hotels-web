@@ -32,7 +32,7 @@ const HotelsDropdownButton = () => {
     >
       <div onClick={handleClick} className="flex-center">
         <CottageOutlinedIcon className="icon-spacing" fontSize="large" />
-        <p className="navbar-text">Our Hotels</p>
+        <p className="navbar-text" style={{ borderBottom:"1px solid black" }}>Our Hotels</p>
         <ArrowDropDownIcon />
       </div>
       {!isMobScreen ? (  <Menu
@@ -55,7 +55,7 @@ const HotelsDropdownButton = () => {
           },
         }}
       >
-        <MenuItem sx={{alignItems:"center"}} onClick={handleClose}>Umda Hotel Montana</MenuItem>
+        <MenuItem sx={{alignItems:"center" }} onClick={handleClose}>Umda Hotel Montana</MenuItem>
         <MenuItem onClick={handleClose}>Umda Hotel Galaxy</MenuItem>
         <MenuItem onClick={handleClose}>Umda Hotel Horizan</MenuItem>
       </Menu>) : 
@@ -81,9 +81,9 @@ const HotelsDropdownButton = () => {
           },
         }}
       >
-      <MenuItem sx={{ borderBottom: "1px solid #e0e0e0", color:"#ff6347" }} onClick={handleClose}>Umda Hotel Montana</MenuItem>
-          <MenuItem sx={{ borderBottom: "1px solid #e0e0e0" , color:"#ff6347"}} onClick={handleClose}>Umda Hotel Galaxy</MenuItem>
-          <MenuItem sx={{ borderBottom: "1px solid #e0e0e0"  , color:"#ff6347"}} onClick={handleClose}>Umda Hotel Horizan</MenuItem>
+      <MenuItem sx={{ borderBottom: "1px solid #e0e0e0", color:"gray" }} onClick={handleClose}>Umda Hotel Montana</MenuItem>
+          <MenuItem sx={{ borderBottom: "1px solid #e0e0e0" , color:"gray"}} onClick={handleClose}>Umda Hotel Galaxy</MenuItem>
+          <MenuItem sx={{ borderBottom: "1px solid #e0e0e0"  , color:"gray"}} onClick={handleClose}>Umda Hotel Horizan</MenuItem>
         </Menu>)}
     
     </div>
