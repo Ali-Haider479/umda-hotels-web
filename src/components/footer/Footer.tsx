@@ -39,12 +39,12 @@ const Footer = () => {
           >
           
             <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width:"2px" }}>
-              <IconButton href="/about-us" color="inherit">
+              <IconButton href="/" color="inherit">
                 <InfoIcon />
               </IconButton>
-              <Typography variant="caption">About US</Typography>
+              <Typography variant="caption">Home</Typography>
             </Box>
-            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" , width:"2px", marginBottom: "15px", marginRight : "10px"}}>
+            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" , width:"2px", marginRight : "10px"}}>
               <IconButton href="/faqs" color="inherit">
                 <QuestionAnswerIcon />
               </IconButton>
@@ -54,26 +54,21 @@ const Footer = () => {
               <IconButton href="/contact-us" color="inherit">
                 <PhoneIcon />
               </IconButton>
-              <Typography variant="caption">Call Us</Typography>
+              <Typography variant="caption">Contact</Typography>
             </Box>
             <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width:"2px", marginRight : "15px"  }}>
               <IconButton href="/terms-and-conditions" color="inherit">
                 <ConstructionIcon  />
               </IconButton>
-              <Typography variant="caption">Terms & Conditions</Typography>
+              <Typography variant="caption">Booking</Typography>
             </Box>
             <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" , width:"2px", marginRight : "15px" }}>
-              <IconButton href="/privacy-policy" color="inherit">
+              <IconButton href="/login" color="inherit">
                 <SecurityIcon />
               </IconButton>
-              <Typography variant="caption">Privacy Policy</Typography>
+              <Typography variant="caption">Account</Typography>
             </Box>
-            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" , width:"2px" , marginRight : "15px" }}>
-              <IconButton href="/cancellation-policy" color="inherit">
-                < BackspaceIcon />
-              </IconButton>
-              <Typography variant="caption">Cancellation Policy</Typography>
-            </Box>
+          
           </Box>
         ) : (
           <Box

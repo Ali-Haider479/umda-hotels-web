@@ -92,7 +92,7 @@ const CancellationPolicyPage = () => {
         <Typography variant="h6" gutterBottom fontWeight={"bold"}>
           PEAK DATES POLICY:
         </Typography>
-        <Typography variant="body1" paragraph>
+        <Typography variant="body2" paragraph sx={{marginBottom: isMobScreen ? "50px" : "0px" }}>
           On some peak dates through the year, different cancellation policies
           will apply to all bookings. Please refer to your booking confirmation
           for further details. Cancellation Policies are mentioned on invoice

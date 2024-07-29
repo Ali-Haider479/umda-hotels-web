@@ -1,4 +1,5 @@
-import { Box, Typography } from "@mui/material";
+"use client"
+import { Box, Typography, useMediaQuery } from "@mui/material";
 import Image from "next/image";
 
 import PigiBankIcon from "@/public/assets/icons/pig-bank.webp";
@@ -6,6 +7,8 @@ import UmbrellaSafetyIcon from "@/public/assets/icons/umberalla.webp";
 import EarthIcon from "@/public/assets/icons/location-earth.webp";
 
 const Features = () => {
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
+
   const featuresList = [
     {
       title: "Best Hotel Rates Guaranteed",
@@ -24,7 +27,8 @@ const Features = () => {
     },
   ];
   return (
-    <Box
+    <>
+    {isMobScreen ? null :  <Box
       sx={{
         display: "flex",
         justifyContent: "space-between",
@@ -58,7 +62,8 @@ const Features = () => {
           </Box>
         </Box>
       ))}
-    </Box>
+    </Box>}
+    </>
   );
 };
 

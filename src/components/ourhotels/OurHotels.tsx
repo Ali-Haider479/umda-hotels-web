@@ -1,5 +1,6 @@
 "use client";
-import { Box, Typography, Grid, useMediaQuery } from "@mui/material";
+import React from "react";
+import { Box, Typography, useMediaQuery } from "@mui/material";
 import HotelCard from "./HotelCard";
 import HotelMontanaImage from "@/public/assets/images/hotel-montana.webp";
 import HotelGalaxyImage from "@/public/assets/images/hotel-galaxy.webp";
@@ -14,8 +15,7 @@ const OurHotels = () => {
   const hotelsArray = [
     {
       name: "Umda Hotel Montana",
-      address:
-        "Main ayubia chok, Ayubia Rd, opposite Chair Lift, Ayubia, 22310",
+      address: "Main ayubia chok, Ayubia Rd, opposite Chair Lift, Ayubia, 22310",
       phone: "0331 9145021",
       images: [HotelMontanaImage, HotelMontanaImage, HotelMontanaImage],
     },
@@ -34,55 +34,37 @@ const OurHotels = () => {
   ];
 
   const sliderSettings = {
-    dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 1,
+    slidesToShow: 1.1,
     slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
+    centerMode: true,
+    centerPadding: '0px',
+    focusOnSelect: true,
   };
 
   return (
-  <>
+    <>
       {isMobScreen ? (
-         <Box paddingY={10}  sx={{ width: "70%", height: "50%", ml:7}}>
-         <Typography textAlign={"center"} variant="h5" fontWeight={"bold"}>
-           Our Hotels
-         </Typography>
-        <Slider {...sliderSettings}>
-          {hotelsArray.map((hotel, index) => (
-            <Box key={index} padding={0}>
-              <HotelCard
-                name={hotel.name}
-                address={hotel.address}
-                phone={hotel.phone}
-                images={hotel.images}
-              />
-            </Box>
-          ))}
-        </Slider>
+        <Box mt={2} mx={2}>
+          <Typography textAlign={"center"} py={2} variant="h5" fontWeight={"bold"}>
+            Our Hotels
+          </Typography>
+          <Slider {...sliderSettings}>
+            {hotelsArray.map((hotel, index) => (
+              <Box key={index} p={0} sx={{ padding: '0 8px' }}>
+                <HotelCard
+                  name={hotel.name}
+                  address={hotel.address}
+                  phone={hotel.phone}
+                  images={hotel.images}
+                />
+              </Box>
+            ))}
+          </Slider>
         </Box>
-      ) : (
-        <Box paddingY={10} paddingX={20}  sx={{ width: "70%", height: "50%", ml:7}}>
-        <Typography textAlign={"center"} variant="h3" fontWeight={"bold"}>
-          Our Hotels
-        </Typography>
-        <Grid container spacing={4} justifyContent="center">
-          {hotelsArray.map((hotel, index) => (
-            <Grid item key={index} xs={12} sm={6} md={4}>
-              <HotelCard
-                name={hotel.name}
-                address={hotel.address}
-                phone={hotel.phone}
-                images={hotel.images}
-              />
-            </Grid>
-          ))}
-        </Grid>
-        </Box>
-
-      )}</>
+      ) : null}
+    </>
   );
 };
 
