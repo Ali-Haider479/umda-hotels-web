@@ -59,7 +59,9 @@ body{
     font-size: 14px;
     color: rgba(0, 0, 0, .54);
 }
-
+.navbar-item.hover-effect {
+    background-color: white;
+}
 .flex-center {
     cursor: pointer;
     display: flex;
@@ -89,7 +91,7 @@ body{
     top: 60px;
     left: 0;
     width: 99%;
-    background-color: rgb(228, 241, 247);
+    background-color: rgb(255, 255, 255);
     border: 2px solid #ccc;
     z-index: 222;
 }
@@ -97,4 +99,7 @@ body{
 .mobile-menu .navbar-item {
     border-left: none;
     padding: 0.5em 0;
+}
+.css-5ukm1w {
+    padding: 25px 0px !important;
 }

@@ -44,23 +44,24 @@ const Footer = () => {
               </IconButton>
               <Typography variant="caption">Home</Typography>
             </Box>
-            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" , width:"2px", marginRight : "10px"}}>
-              <IconButton href="/faqs" color="inherit">
-                <QuestionAnswerIcon />
+            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width:"2px", marginRight : "15px"  }}>
+              <IconButton href="/terms-and-conditions" color="inherit">
+                <ConstructionIcon  />
               </IconButton>
-              <Typography variant="caption">FAQs</Typography>
+              <Typography variant="caption">Booking</Typography>
             </Box>
+            
             <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width:"2px", marginRight : "20px"  }}>
               <IconButton href="/contact-us" color="inherit">
                 <PhoneIcon />
               </IconButton>
               <Typography variant="caption">Contact</Typography>
             </Box>
-            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width:"2px", marginRight : "15px"  }}>
-              <IconButton href="/terms-and-conditions" color="inherit">
-                <ConstructionIcon  />
+            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" , width:"2px", marginRight : "10px"}}>
+              <IconButton href="/faqs" color="inherit">
+                <QuestionAnswerIcon />
               </IconButton>
-              <Typography variant="caption">Booking</Typography>
+              <Typography variant="caption">FAQs</Typography>
             </Box>
             <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" , width:"2px", marginRight : "15px" }}>
               <IconButton href="/login" color="inherit">

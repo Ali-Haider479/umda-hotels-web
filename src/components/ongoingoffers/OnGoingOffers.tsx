@@ -23,6 +23,8 @@ const OnGoingOffers = () => {
         centerMode: true,
         centerPadding: '0px',
         focusOnSelect: true,
+        autoplay: true,
+        autoplaySpeed: 3000, 
     };
 
     return (
