@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import RoomBookingCard from "@/components/roombookingcard/RoomBookingCard";
 import { Box, CircularProgress, Grid, IconButton, Paper } from "@mui/material";
@@ -23,7 +23,7 @@ import isBetween from "dayjs/plugin/isBetween";
 import { decrypt } from "@/utils/crypto";
 dayjs.extend(isBetween);
 
-const RoomPage = () => {
+const RoomContent = () => {
   const roomData = [
     {
       roomName: "Economy Room with Balcony",
@@ -361,5 +361,11 @@ const RoomPage = () => {
     </>
   );
 };
+
+const RoomPage = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <RoomContent />
+  </Suspense>
+);
 
 export default RoomPage;

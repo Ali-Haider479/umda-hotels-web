@@ -5,10 +5,10 @@ import RoomCard from "@/components/roomcard/RoomCard";
 import SearchBar from "@/components/searchbar/SearchBar";
 import { Box, Grid, MenuItem, Select, Typography } from "@mui/material";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import TuneIcon from "@mui/icons-material/Tune";
 
-const SearchPage = () => {
+const SearchContent = () => {
   const searchParams = useSearchParams();
   const [sortValue, setSortValue] = useState("Popularity");
 
@@ -24,7 +24,7 @@ const SearchPage = () => {
       checkOutDate,
       guests,
     });
-  }, []);
+  }, [searchParams]);
 
   const handleSortChange = (event: any) => {
     setSortValue(event.target.value as string);
@@ -87,5 +87,11 @@ const SearchPage = () => {
     </Box>
   );
 };
+
+const SearchPage = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <SearchContent />
+  </Suspense>
+);
 
 export default SearchPage;
