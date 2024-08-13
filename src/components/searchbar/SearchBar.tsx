@@ -28,7 +28,9 @@ import React from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { PickersDay, PickersDayProps } from "@mui/x-date-pickers";
-import useMediaQuery from '@mui/material/useMediaQuery';
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useRouter } from "next/navigation";
+import { encrypt } from "@/utils/crypto";
 
 const HighlightedDaysContext = createContext<{
   highlightedDays: string[];
@@ -89,23 +91,86 @@ const CustomDay = (props: PickersDayProps<Dayjs>) => {
 };
 
 const SearchBar = () => {
-  const isMobScreen = useMediaQuery("(max-width: 950px)");
+  const isMobScreen = useMediaQuery("(max-width: 500px)");
 
+  const router = useRouter();
   const [city, setCity] = useState<string>("");
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
   const [guests, setGuests] = useState<number | string>("");
+  const [errors, setErrors] = useState({
+    city: false,
+    startDate: false,
+    endDate: false,
+    guests: false,
+  });
 
   const today = dayjs();
 
-  const handleSearch = () => {
-    // Implement search functionality here
+  const validateInputs = () => {
+    const newErrors = {
+      city: !city,
+      startDate: !startDate,
+      endDate: !endDate,
+      guests: !guests,
+    };
+    setErrors(newErrors);
+    return !Object.values(newErrors).some((error) => error);
+  };
+
+  const createQueryString = (params: any) => {
+    const queryString = new URLSearchParams(params).toString();
+    return queryString;
+  };
+
+  const getAuthToken = async () => {
+    try {
+      const response = await fetch(`/api/bed-booking/auth-token`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ city }),
+      });
+
+      // Parse the response body only once
+      const data = await response.json();
+
+      // Check if the response was not ok and handle the error
+      if (!response.ok) {
+        throw new Error(`Error: ${data.message || response.statusText}`);
+      }
+
+      console.log("data", data);
+      return data.encryptedToken; // Return the encrypted token if successful
+    } catch (error) {
+      console.error("Failed to fetch auth token:", error);
+      return null; // Return null in case of error
+    }
+  };
+
+  const handleSearch = async () => {
     console.log({
       city,
       checkInDate: startDate,
       checkOutDate: endDate,
       guests,
     });
+    if (validateInputs()) {
+      const encryptedToken = await getAuthToken(); // Get the encrypted token
+      console.log(encryptedToken);
+
+      const queryParams = {
+        city,
+        checkInDate: startDate ? startDate.format("YYYY-MM-DD") : "",
+        checkOutDate: endDate ? endDate.format("YYYY-MM-DD") : "",
+        guests: guests.toString(),
+        token: encodeURIComponent(encryptedToken),
+      };
+      const queryString = new URLSearchParams(queryParams).toString();
+      // Assuming router.push is your method to navigate
+      router.push(`/hotel?${queryString}`);
+    }
   };
 
   const getHighlightedDays = () => {
@@ -131,120 +196,156 @@ const SearchBar = () => {
   } = getHighlightedDays();
 
   return (
-    <>
-        {isMobScreen ? ( 
+    <Box>
+      <Box paddingY={"10px"}>
 
-<Box paddingY={"20px"}>
-<Typography
-  textAlign={"center"}
-  color={"black"}
-  variant="h6"
-  fontWeight={"bold"}
->
-  Where do you wanna go ?
-</Typography> 
+       
+        {isMobScreen ? (
           
-           <Box
-          bgcolor={"white"}
-          borderRadius={2}
-          marginTop={0}
-          sx={{ width: "90%", maxWidth: 1000, py: 3, pl:5}}
-        >
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <HighlightedDaysContext.Provider
-              value={{ highlightedDays, startDate: start, endDate: end }}
+          <Box
+            bgcolor={"white"}
+            borderRadius={2}
+            marginTop={4}
+            sx={{ width: "90%", maxWidth: 1000, py: 3, pl: 5 }}
+          >
+                  <Typography
+              color={"black"}
+              paddingBottom={4}
+      
+              fontSize={14}
+              fontWeight={"bold"}
             >
-              <Grid container spacing={2} alignItems="center">
-                <Grid item xs={10} sm={6} md={3}>
-                  <Autocomplete
-                    disablePortal
-                    options={[
-                      "Abbottabad",
-                      "Islamabad",
-                      "Murree",
-                      "Nathia Gali",
-                    ]}
-                    fullWidth
-                    renderInput={(params) => (
-                      <TextField {...params} label="City" />
-                    )}
-                    key={city}
-                    defaultValue={city || null}
-                    onChange={(_, newValue) => {
-                      setCity(newValue ?? "");
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={10} sm={6} md={4}>
-                  <Box sx={{ display: "flex", gap: 2 }}>
-                    <Box sx={{ flex: 1 }}>
-                      <DatePicker
-                        label="Start Date"
-                        value={startDate}
-                        onChange={(newValue: Dayjs | null) => {
-                          setStartDate(newValue);
-                        }}
-                        slots={{
-                          textField: (params) => <TextField {...params} />,
-                          day: CustomDay,
-                        }}
-                        minDate={today}
-                        views={["month", "day"]}
-                      />
+              Find The Best Deals For Online Hotel Booking
+            </Typography>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <HighlightedDaysContext.Provider
+                value={{ highlightedDays, startDate: start, endDate: end }}
+              >
+                <Grid container spacing={2} alignItems="center">
+                  <Grid item xs={10} sm={6} md={3}>
+                    <Autocomplete
+                      disablePortal
+                      options={[
+                        "Abbottabad",
+                        // "Islamabad",
+                        // "Murree",
+                        // "Nathia Gali",
+                      ]}
+                      fullWidth
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="City"
+                          error={errors.city}
+                          helperText={
+                            errors.city ? "Please select a city." : ""
+                          }
+                        />
+                      )}
+                      key={city}
+                      defaultValue={city || null}
+                      onChange={(_, newValue) => {
+                        setCity(newValue ?? "");
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={10} sm={6} md={4}>
+                    <Box sx={{ display: "flex", gap: 2 }}>
+                      <Box sx={{ flex: 1 }}>
+                        <DatePicker
+                          label="Start Date"
+                          value={startDate}
+                          onChange={(newValue: Dayjs | null) => {
+                            setStartDate(newValue);
+                          }}
+                          slots={{
+                            textField: (params) => (
+                              <TextField
+                                {...params}
+                                error={errors.startDate}
+                                helperText={
+                                  errors.startDate
+                                    ? "Please select a start date."
+                                    : ""
+                                }
+                              />
+                            ),
+                            day: CustomDay,
+                          }}
+                          minDate={today}
+                          views={["month", "day"]}
+                        />
+                      </Box>
+                      <Divider orientation="vertical" flexItem />
+                      <Box sx={{ flex: 1 }}>
+                        <DatePicker
+                          label="End Date"
+                          value={endDate}
+                          onChange={(newValue: Dayjs | null) => {
+                            setEndDate(newValue);
+                          }}
+                          slots={{
+                            textField: (params) => (
+                              <TextField
+                                {...params}
+                                error={errors.endDate}
+                                helperText={
+                                  errors.endDate
+                                    ? "Please select an end date."
+                                    : ""
+                                }
+                              />
+                            ),
+                            day: CustomDay,
+                          }}
+                          minDate={startDate ?? undefined}
+                          views={["month", "day"]}
+                        />
+                      </Box>
                     </Box>
-                    <Divider orientation="vertical" flexItem />
-                    <Box sx={{ flex: 1 }}>
-                      <DatePicker
-                        label="End Date"
-                        value={endDate}
-                        onChange={(newValue: Dayjs | null) => {
-                          setEndDate(newValue);
-                        }}
-                        slots={{
-                          textField: (params) => <TextField {...params} />,
-                          day: CustomDay,
-                        }}
-                        minDate={startDate ?? undefined} 
-                        views={["month", "day"]}
-                      />
-                    </Box>
-                  </Box>
+                  </Grid>
+                  <Grid item xs={10} sm={6} md={2}>
+                    <TextField
+                      select
+                      fullWidth
+                      label="Guests"
+                      value={guests}
+                      onChange={(e) => setGuests(e.target.value)}
+                      error={errors.guests}
+                      helperText={
+                        errors.guests
+                          ? "Please select the number of guests."
+                          : ""
+                      }
+                    >
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((option) => (
+                        <MenuItem key={option} value={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+                  <Grid item xs={10} sm={6} md={3}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      onClick={handleSearch}
+                      size="large"
+                      sx={{
+                        height: "100%",
+                        paddingTop: "14px",
+                        paddingBottom: "14px",
+                      }}
+                    >
+                      Search
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item xs={10} sm={6} md={2}>
-                  <TextField
-                    select
-                    fullWidth
-                    label="Guests"
-                    value={guests}
-                    onChange={(e) => setGuests(e.target.value)}
-                  >
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((option) => (
-                      <MenuItem key={option} value={option}>
-                        {option}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-                <Grid item xs={10} sm={6} md={3}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    onClick={handleSearch}
-                    size="large"
-                    sx={{
-                      height: "100%",
-                      paddingTop: "14px",
-                      paddingBottom: "14px",
-                    }}
-                  >
-                    Search
-                  </Button>
-                </Grid>
-              </Grid>
-            </HighlightedDaysContext.Provider>
-          </LocalizationProvider>
-        </Box> </Box>) : ( <Box
+              </HighlightedDaysContext.Provider>
+            </LocalizationProvider>
+          </Box>
+        ) : ( <Box
           sx={{
             backgroundImage: `url(${HeroImage.src})`,
             backgroundRepeat: "no-repeat",
@@ -262,112 +363,148 @@ const SearchBar = () => {
               fontWeight={"bold"}
             >
               Where do you wanna go ?
-            </Typography>  <Box
-          bgcolor={"white"}
-          borderRadius={2}
-          marginTop={4}
-          
-          sx={{ width: "100%", maxWidth: 1000, mx: "auto", px: 2, py: 3 }}
-        >
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <HighlightedDaysContext.Provider
-              value={{ highlightedDays, startDate: start, endDate: end }}
-            >
-              <Grid container spacing={2} alignItems="center">
-                <Grid item xs={10} sm={6} md={3}>
-                  <Autocomplete
-                    disablePortal
-                    options={[
-                      "Abbottabad",
-                      "Islamabad",
-                      "Murree",
-                      "Nathia Gali",
-                    ]}
-                    fullWidth
-                    renderInput={(params) => (
-                      <TextField {...params} label="City" />
-                    )}
-                    key={city}
-                    defaultValue={city || null}
-                    onChange={(_, newValue) => {
-                      setCity(newValue ?? "");
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={10} sm={6} md={4}>
-                  <Box sx={{ display: "flex", gap: 2 }}>
-                    <Box sx={{ flex: 1 }}>
-                      <DatePicker
-                        label="Start Date"
-                        value={startDate}
-                        onChange={(newValue: Dayjs | null) => {
-                          setStartDate(newValue);
-                        }}
-                        slots={{
-                          textField: (params) => <TextField {...params} />,
-                          day: CustomDay,
-                        }}
-                        minDate={today}
-                        views={["month", "day"]}
-                      />
+            </Typography>
+
+          <Box
+            bgcolor={"white"}
+            borderRadius={2}
+            marginTop={4}
+            sx={{ width: "100%", maxWidth: 1000, mx: "auto", px: 2, py: 3 }}
+          >
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <HighlightedDaysContext.Provider
+                value={{ highlightedDays, startDate: start, endDate: end }}
+              >
+                <Grid container spacing={2} alignItems="center">
+                  <Grid item xs={10} sm={6} md={3}>
+                    <Autocomplete
+                      disablePortal
+                      options={[
+                        "Abbottabad",
+                        // "Islamabad",
+                        // "Murree",
+                        // "Nathia Gali",
+                      ]}
+                      fullWidth
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="City"
+                          error={errors.city}
+                          helperText={
+                            errors.city ? "Please select a city." : ""
+                          }
+                        />
+                      )}
+                      key={city}
+                      defaultValue={city || null}
+                      onChange={(_, newValue) => {
+                        setCity(newValue ?? "");
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={10} sm={6} md={4}>
+                    <Box sx={{ display: "flex", gap: 2 }}>
+                      <Box sx={{ flex: 1 }}>
+                        <DatePicker
+                          label="Start Date"
+                          value={startDate}
+                          onChange={(newValue: Dayjs | null) => {
+                            setStartDate(newValue);
+                          }}
+                          slots={{
+                            textField: (params) => (
+                              <TextField
+                                {...params}
+                                error={errors.startDate}
+                                helperText={
+                                  errors.startDate
+                                    ? "Please select a start date."
+                                    : ""
+                                }
+                              />
+                            ),
+                            day: CustomDay,
+                          }}
+                          minDate={today}
+                          views={["month", "day"]}
+                        />
+                      </Box>
+                      <Divider orientation="vertical" flexItem />
+                      <Box sx={{ flex: 1 }}>
+                        <DatePicker
+                          label="End Date"
+                          value={endDate}
+                          onChange={(newValue: Dayjs | null) => {
+                            setEndDate(newValue);
+                          }}
+                          slots={{
+                            textField: (params) => (
+                              <TextField
+                                {...params}
+                                error={errors.endDate}
+                                helperText={
+                                  errors.endDate
+                                    ? "Please select an end date."
+                                    : ""
+                                }
+                              />
+                            ),
+                            day: CustomDay,
+                          }}
+                          minDate={startDate ?? undefined}
+                          views={["month", "day"]}
+                        />
+                      </Box>
                     </Box>
-                    <Divider orientation="vertical" flexItem />
-                    <Box sx={{ flex: 1 }}>
-                      <DatePicker
-                        label="End Date"
-                        value={endDate}
-                        onChange={(newValue: Dayjs | null) => {
-                          setEndDate(newValue);
-                        }}
-                        slots={{
-                          textField: (params) => <TextField {...params} />,
-                          day: CustomDay,
-                        }}
-                        minDate={startDate ?? undefined} 
-                        views={["month", "day"]}
-                      />
-                    </Box>
-                  </Box>
+                  </Grid>
+                  <Grid item xs={10} sm={6} md={2}>
+                    <TextField
+                      select
+                      fullWidth
+                      label="Guests"
+                      value={guests}
+                      onChange={(e) => setGuests(e.target.value)}
+                      error={errors.guests}
+                      helperText={
+                        errors.guests
+                          ? "Please select the number of guests."
+                          : ""
+                      }
+                    >
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((option) => (
+                        <MenuItem key={option} value={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </Grid>
+                  <Grid item xs={10} sm={6} md={3}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      onClick={handleSearch}
+                      size="large"
+                      sx={{
+                        height: "100%",
+                        paddingTop: "14px",
+                        paddingBottom: "14px",
+                      }}
+                    >
+                      Search
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item xs={10} sm={6} md={2}>
-                  <TextField
-                    select
-                    fullWidth
-                    label="Guests"
-                    value={guests}
-                    onChange={(e) => setGuests(e.target.value)}
-                  >
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((option) => (
-                      <MenuItem key={option} value={option}>
-                        {option}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-                <Grid item xs={10} sm={6} md={3}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    onClick={handleSearch}
-                    size="large"
-                    sx={{
-                      height: "100%",
-                      paddingTop: "14px",
-                      paddingBottom: "14px",
-                    }}
-                  >
-                    Search
-                  </Button>
-                </Grid>
-              </Grid>
-            </HighlightedDaysContext.Provider>
-          </LocalizationProvider>
-        </Box>
-        </Box>
-        </Box>)}
-      
-   </>
+              </HighlightedDaysContext.Provider>
+            </LocalizationProvider>
+          </Box>
+          </Box>
+          </Box>
+
+        )}
+      </Box>
+    </Box>
   );
 };
 

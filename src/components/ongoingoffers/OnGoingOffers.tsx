@@ -41,7 +41,7 @@ const OnGoingOffers = () => {
                                     component="img"
                                     src={offer.imgSrc}
                                     alt={offer.title}
-                                    sx={{ width: '100%', borderRadius: 2 }}
+                                    sx={{ width: '70%', borderRadius: 2 }}
                                 />
                             </Box>
                         ))}
