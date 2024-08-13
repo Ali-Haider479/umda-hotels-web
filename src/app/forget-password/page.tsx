@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import Image from "next/image";
+
 import hotelBackground from "@/public/assets/images/hotel-bg.jpg";
 import UmdaLogo from "@/public/assets/icons/logo.svg";
 import "../login/login.css"

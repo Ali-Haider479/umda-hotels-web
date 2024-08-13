@@ -18,13 +18,13 @@ const OnGoingOffers = () => {
     const settings = {
         infinite: true,
         speed: 500,
-        slidesToShow: 1.1,
+        slidesToShow: 1.2,
         slidesToScroll: 1,
         centerMode: true,
         centerPadding: '0px',
         focusOnSelect: true,
         autoplay: true,
-        autoplaySpeed: 3000, 
+        autoplaySpeed: 3000,
     };
 
     return (
@@ -41,8 +41,14 @@ const OnGoingOffers = () => {
                                     component="img"
                                     src={offer.imgSrc}
                                     alt={offer.title}
-                                    sx={{ width: '70%', borderRadius: 2 }}
+                                    sx={{ width: '70%', borderRadius: 2, marginLeft: "50px" }}
                                 />
+                                <Typography textAlign="center" mt={1} fontWeight="bold">
+                                    {offer.title}
+                                </Typography>
+                                <Typography textAlign="center" color="primary">
+                                    {offer.discount} OFF
+                                </Typography>
                             </Box>
                         ))}
                     </Slider>

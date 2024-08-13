@@ -28,9 +28,10 @@ const HotelCard = ({ images, name, address, phone, sx }: HotelCardProps) => {
         height: 'auto',
         mx: "auto",
         marginY: 2,
+        marginLeft: "60px",
         display: 'flex',
         flexDirection: 'column',
-        ...sx, // Apply custom styles from `sx`
+        ...sx,
       }}
     >
       <Box
@@ -52,6 +53,7 @@ const HotelCard = ({ images, name, address, phone, sx }: HotelCardProps) => {
           style={{
             borderRadius: '8px',
           }}
+          
         />
       </Box>
       <Typography variant={isMobScreen ? "body1" : "h6"} textAlign={"center"} fontWeight={"bold"} noWrap>

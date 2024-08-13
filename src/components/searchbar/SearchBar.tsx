@@ -31,6 +31,7 @@ import { PickersDay, PickersDayProps } from "@mui/x-date-pickers";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useRouter } from "next/navigation";
 import { encrypt } from "@/utils/crypto";
+import "./search.css"
 
 const HighlightedDaysContext = createContext<{
   highlightedDays: string[];
