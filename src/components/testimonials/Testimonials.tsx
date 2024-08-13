@@ -6,6 +6,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import MagicSliderDots from "react-magic-slider-dots";
 import "react-magic-slider-dots/dist/magic-dots.css";
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const testimonials = [
   {
@@ -45,6 +46,8 @@ const testimonials = [
 ];
 
 const Testimonials = () => {
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
+
   const settings = {
     dots: true,
     infinite: true,
@@ -53,35 +56,36 @@ const Testimonials = () => {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3000,
-    // adaptiveHeight: true,
-    centerMode: true,
-    centerPadding: "60px",
-    arrow: false,
+    centerMode: !isMobScreen,
+    centerPadding: isMobScreen ? "0px" : "60px",
+    arrows: false,
     appendDots: (dots: any) => {
       return <MagicSliderDots dots={dots} numDotsToShow={5} dotWidth={30} />;
     },
   };
 
   return (
-    <Box paddingBottom={10}>
-      <Typography textAlign={"center"} variant="h3" fontWeight={"bold"}>
-        Hear From Our Customers
-      </Typography>
-      <Box paddingY={5} paddingX={5}>
-        <Slider {...settings}>
-          {testimonials.map((testimonial, index) => (
-            <Box key={index} paddingY={3}>
-              <TestimonialCard
-                name={testimonial.name}
-                image={testimonial.image}
-                testimonial={testimonial.testimonial}
-                rating={testimonial.rating}
-              />
-            </Box>
-          ))}
-        </Slider>
-      </Box>
+    <>
+    {isMobScreen ? null :  <Box paddingBottom={10}>
+    <Typography textAlign={"center"} variant="h3" fontWeight={"bold"}>
+      Hear From Our Customers
+    </Typography>
+    <Box paddingY={5} paddingX={5}>
+      <Slider {...settings}>
+        {testimonials.map((testimonial, index) => (
+          <Box key={index} paddingY={3}>
+            <TestimonialCard
+              name={testimonial.name}
+              image={testimonial.image}
+              testimonial={testimonial.testimonial}
+              rating={testimonial.rating}
+            />
+          </Box>
+        ))}
+      </Slider>
     </Box>
+  </Box>}
+   </>
   );
 };
 

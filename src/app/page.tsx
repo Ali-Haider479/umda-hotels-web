@@ -8,12 +8,17 @@ import Testimonials from "@/components/testimonials/Testimonials";
 import NewsLetterCard from "@/components/newsletter/NewsLetterCard";
 import Features from "@/components/features/Features";
 import OurHotels from "@/components/ourhotels/OurHotels";
+import Explore from "@/components/explore/explore";
+import OnGoingOffers from "@/components/ongoingoffers/OnGoingOffers";
 
 const Home = () => {
   return (
     <Box>
       <SearchBar />
+      <Explore/>
+
       <Features />
+      <OnGoingOffers/>
       {/* <WelcomeCard /> */}
       <OurHotels />
       <Testimonials />

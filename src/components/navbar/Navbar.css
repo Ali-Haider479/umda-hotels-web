@@ -1,10 +1,14 @@
-/* Navbar styles */
+body{
+    padding-right: 0% !important;
+}
+
 .navbar {
     display: flex;
     justify-content: space-between;
     padding-inline-start: 4em;
     padding-inline-end: 4em;
     border-bottom: 2px solid #ccc;
+    padding-inline: 20px;
 }
 
 .navbar-link {
@@ -24,11 +28,6 @@
     cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
     transition: background-color 0.3s; /* Smooth transition for the background color */
 }
-
-/* .navbar-item:first-child {
-    border-left: 1px solid gray;
-    padding-left: 14px;
-} */
 
 .navbar-item:nth-child(2), .navbar-item:nth-child(3) {
     border-left: 1px solid gray;
@@ -60,7 +59,9 @@
     font-size: 14px;
     color: rgba(0, 0, 0, .54);
 }
-
+.navbar-item.hover-effect {
+    background-color: white;
+}
 .flex-center {
     cursor: pointer;
     display: flex;
@@ -73,4 +74,32 @@
     margin-block-start: 12px;
     margin-block-end: 14px;
     padding-inline-end: 8px;
+}
+
+/* Hamburger menu styles */
+.hamburger-menu {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.mobile-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 99%;
+    background-color: rgb(255, 255, 255);
+    border: 2px solid #ccc;
+    z-index: 222;
+}
+
+.mobile-menu .navbar-item {
+    border-left: none;
+    padding: 0.5em 0;
+}
+.css-5ukm1w {
+    padding: 25px 0px !important;
 }

@@ -21,7 +21,7 @@ const LoginSignupButton = () => {
       onMouseLeave={() => setHover(false)}
     >
       <AccountCircleOutlinedIcon className="icon-spacing" fontSize="large" />
-      <p className="navbar-text" style={{ paddingBlockStart: "4px" }}>
+      <p className="navbar-text" style={{ paddingBlockStart: "4px", borderBottom:"1px solid black" }}>
         Login / Signup
       </p>
     </Link>

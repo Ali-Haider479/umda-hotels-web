@@ -1,3 +1,4 @@
+"use client";
 import SubHeader from "@/components/ui/SubHeader";
 import {
   Accordion,
@@ -5,6 +6,7 @@ import {
   AccordionSummary,
   Box,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
@@ -65,22 +67,29 @@ const faqs = [
 ];
 
 const FAQsPage = () => {
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
+
   return (
     <>
       <SubHeader heading={"Frequently Asked Questions"} />
-      <Box paddingY={10} paddingX={30}>
+      <Box
+        paddingY={isMobScreen ? 2 : 10}
+        paddingX={isMobScreen ? 2 : 30}
+        paddingBottom={0}
+        sx={{marginBottom: isMobScreen ? "120px" : "0px" }}
+      >
         {faqs.map((faq, index) => (
           <Accordion
             key={index}
             sx={{
-              border: "1px solid #ccc", // Add border to Accordion
-              borderRadius: "4px", // Optional: Add border radius
-              marginBottom: "10px", // Optional: Add space between accordions
+              border: "1px solid #ccc",
+              borderRadius: "4px",
+              marginBottom: "10px",
             }}
           >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
-              sx={{ backgroundColor: "#f5f5f5" }} // Set background color for AccordionSummary
+              sx={{ backgroundColor: "#f5f5f5" }}
             >
               <Typography fontWeight={"bold"}>{faq.question}</Typography>
             </AccordionSummary>

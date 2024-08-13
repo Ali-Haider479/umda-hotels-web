@@ -31,6 +31,7 @@ import { PickersDay, PickersDayProps } from "@mui/x-date-pickers";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useRouter } from "next/navigation";
 import { encrypt } from "@/utils/crypto";
+import "./search.css"
 
 const HighlightedDaysContext = createContext<{
   highlightedDays: string[];
@@ -58,6 +59,7 @@ const HighlightedDay = styled(PickersDay)(({ theme }) => ({
 }));
 
 const CustomDay = (props: PickersDayProps<Dayjs>) => {
+
   const { day, outsideCurrentMonth, ...other } = props;
   const { highlightedDays, startDate, endDate } = useContext(
     HighlightedDaysContext
@@ -195,32 +197,27 @@ const SearchBar = () => {
   } = getHighlightedDays();
 
   return (
-    <Box
-      sx={{
-        backgroundImage: `url(${HeroImage.src})`,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        backgroundPosition: "center center",
-        width: "100%",
-        height: "auto",
-      }}
-    >
-      <Box paddingY={"100px"}>
-        <Typography
-          textAlign={"center"}
-          color={"white"}
-          variant="h4"
-          fontWeight={"bold"}
-        >
-          Where do you wanna go ?
-        </Typography>
+    <Box>
+      <Box paddingY={"10px"}>
+
+       
         {isMobScreen ? (
+          
           <Box
             bgcolor={"white"}
             borderRadius={2}
             marginTop={4}
             sx={{ width: "90%", maxWidth: 1000, py: 3, pl: 5 }}
           >
+                  <Typography
+              color={"black"}
+              paddingBottom={4}
+      
+              fontSize={14}
+              fontWeight={"bold"}
+            >
+              Find The Best Deals For Online Hotel Booking
+            </Typography>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <HighlightedDaysContext.Provider
                 value={{ highlightedDays, startDate: start, endDate: end }}
@@ -349,7 +346,26 @@ const SearchBar = () => {
               </HighlightedDaysContext.Provider>
             </LocalizationProvider>
           </Box>
-        ) : (
+        ) : ( <Box
+          sx={{
+            backgroundImage: `url(${HeroImage.src})`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPosition: "center center",
+            width: "100%",
+            height: "auto",
+          }}
+        >
+          <Box paddingY={"100px"}>
+            <Typography
+              textAlign={"center"}
+              color={"white"}
+              variant="h4"
+              fontWeight={"bold"}
+            >
+              Where do you wanna go ?
+            </Typography>
+
           <Box
             bgcolor={"white"}
             borderRadius={2}
@@ -484,6 +500,9 @@ const SearchBar = () => {
               </HighlightedDaysContext.Provider>
             </LocalizationProvider>
           </Box>
+          </Box>
+          </Box>
+
         )}
       </Box>
     </Box>

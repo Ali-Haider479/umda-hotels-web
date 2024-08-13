@@ -1,11 +1,14 @@
+"use client"
 import SubHeader from "@/components/ui/SubHeader";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useMediaQuery } from "@mui/material";
 
 const CancellationPolicyPage = () => {
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
+
   return (
     <>
       <SubHeader heading={"Cancellation Policy"} />
-      <Box paddingX={15} paddingY={8}>
+      <Box paddingX={isMobScreen ? 3 : 15} paddingY={8}>
         <Typography variant="h6" gutterBottom fontWeight={"bold"}>
           GENERAL CANCELLATION POLICIES
         </Typography>
@@ -89,7 +92,7 @@ const CancellationPolicyPage = () => {
         <Typography variant="h6" gutterBottom fontWeight={"bold"}>
           PEAK DATES POLICY:
         </Typography>
-        <Typography variant="body1" paragraph>
+        <Typography variant="body2" paragraph sx={{marginBottom: isMobScreen ? "50px" : "0px" }}>
           On some peak dates through the year, different cancellation policies
           will apply to all bookings. Please refer to your booking confirmation
           for further details. Cancellation Policies are mentioned on invoice

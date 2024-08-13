@@ -1,11 +1,14 @@
+"use client";
 import SubHeader from "@/components/ui/SubHeader";
-import { Box, Link, Typography } from "@mui/material";
+import { Box, Link, Typography, useMediaQuery } from "@mui/material";
 
 const PrivacyPolicyPage = () => {
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
+
   return (
     <>
       <SubHeader heading={"Privacy Policy"} />
-      <Box paddingX={15} paddingY={8}>
+      <Box paddingX={isMobScreen ? 3 : 15} paddingY={8}>
         <Typography variant="body1" paragraph>
           Your privacy is important to us. We value your trust and are committed
           to protecting and safeguarding any personal information you give us.
@@ -363,7 +366,7 @@ const PrivacyPolicyPage = () => {
           Who is responsible for the processing of personal data on the Umda
           website and apps?
         </Typography>
-        <Typography variant="body2" paragraph>
+        <Typography variant="body2" paragraph sx={{marginBottom: isMobScreen ? "50px" : "0px" }}>
           Umda controls the processing of personal data on its websites and
           mobile apps. Umda is a privately registered company with SECP and
           headquartered in Islamabad. If you have any suggestions or comments

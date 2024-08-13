@@ -1,6 +1,9 @@
 .signup-navbar {
-    display: flex;
-    justify-content: space-between;
-    padding-inline-start: 4em;
-    padding-inline-end: 4em;
+  display: flex;
+  justify-content: center; /* Center the content horizontally */
+  align-items: center; /* Center the content vertically */
+  margin: 0 auto; /* Center the navbar itself */
+  padding: 20px; /* Add padding for spacing */
+  max-width: 100%;
 }
+

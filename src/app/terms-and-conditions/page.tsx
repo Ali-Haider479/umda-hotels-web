@@ -1,11 +1,14 @@
+"use client";
 import SubHeader from "@/components/ui/SubHeader";
-import { Box, List, ListItem, ListItemText, Typography } from "@mui/material";
+import { Box, List, ListItem, ListItemText, Typography, useMediaQuery } from "@mui/material";
 
 const TermsAndConditionsPage = () => {
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
+
   return (
     <>
       <SubHeader heading={"Terms And Conditions"} />
-      <Box paddingX={15} paddingY={8}>
+      <Box paddingX={isMobScreen ? 2 : 15} paddingY={8}>
         <Typography variant="h6" fontWeight={"bold"}>
           Book with confidence - Specific Terms & Conditions:
         </Typography>
@@ -31,7 +34,7 @@ const TermsAndConditionsPage = () => {
         </Typography>
         <Typography variant="body2" paragraph>
           All quoted rates include Taxes. Free Wi-Fi and other amenities are
-          incluced in all rates, unless otherwise stated. All rates are NET
+          included in all rates, unless otherwise stated. All rates are NET
           rates and are non-commissionable.
         </Typography>
         <Typography variant="h6" fontWeight={"bold"}>
@@ -57,7 +60,7 @@ const TermsAndConditionsPage = () => {
           Force Majeure:
         </Typography>
         <Typography variant="body2" paragraph>
-          Please note that even in the event of a force majeure the hotels
+          Please note that even in the event of a force majeure the hotel's
           cancellation policy still applies. Cancellations must be made in
           writing and confirmed by Umda to be valid. If you cancel by telephone,
           please ask the customer agent to send a cancellation confirmation and
@@ -154,9 +157,9 @@ const TermsAndConditionsPage = () => {
         </Typography>
         <Typography variant="body2" paragraph>
           Each deluxe and standard room can accommodate maximum 2 persons. A
-          maximum of 3 persons can be accommodated in in the rooms if an extra
-          matress is booked, this includes children. An executive room can
-          accomdate 4 person + 1 person if an extra mattress is booked.
+          maximum of 3 persons can be accommodated in the rooms if an extra
+          mattress is booked, this includes children. An executive room can
+          accommodate 4 persons + 1 person if an extra mattress is booked.
         </Typography>
         <Typography variant="h6" fontWeight={"bold"}>
           Minimum age of guests:
@@ -189,20 +192,20 @@ const TermsAndConditionsPage = () => {
           midnight on the day of arrival.
         </Typography>
         <Typography variant="h6" fontWeight={"bold"}>
-          Extra Matress:
+          Extra Mattress:
         </Typography>
         <Typography variant="body2" paragraph>
-          All extra matresses are subject to availability. Extra matressescan
-          only be placed in all rooms. A maximum of one extra matress can be
-          placed in each room. Please enquiry about the availability of extra
-          matresses before making a reservation.
+          All extra mattresses are subject to availability. Extra mattresses can
+          only be placed in all rooms. A maximum of one extra mattress can be
+          placed in each room. Please enquire about the availability of extra
+          mattresses before making a reservation.
         </Typography>
         <Typography variant="h6" fontWeight={"bold"}>
           Children policy:
         </Typography>
         <Typography variant="body2" paragraph>
           Children 8 years old and younger stay free when using existing
-          bedding, an extra matress is required for children 12 years and
+          bedding, an extra mattress is required for children 12 years and
           younger when sharing a room with parents.
         </Typography>
         <Typography variant="h6" fontWeight={"bold"}>
@@ -219,7 +222,7 @@ const TermsAndConditionsPage = () => {
         <Typography variant="body2" paragraph>
           We are happy to accept group reservations of all sizes at all of our
           hotels. We consider a reservation of 10 rooms or more to be a group
-          reservation however, we might consider smaller number of rooms to be a
+          reservation however, we might consider a smaller number of rooms to be a
           group booking. We might also consider multiple smaller bookings made
           by the same reservation holder a group reservation. Group
           reservations, or reservations considered to be a group reservation,
@@ -273,14 +276,14 @@ const TermsAndConditionsPage = () => {
           Applicable law:
         </Typography>
         <Typography variant="body2" paragraph>
-          Our contract is governed and construed in according with the law of
+          Our contract is governed and construed in accordance with the law of
           Pakistan and both parties submit to the exclusive jurisdiction of the
           Pakistan courts. No other law is applicable.
         </Typography>
         <Typography variant="h6" fontWeight={"bold"}>
           Our liability
         </Typography>
-        <Typography variant="body2" paragraph>
+        <Typography variant="body2" paragraph sx={{marginBottom: isMobScreen ? "50px" : "0px" }}>
           Umda does not accept liability for failure to meet any of our
           obligations to you if the failure is due to events beyond our
           reasonable control. If we fail to meet any of our obligations we shall

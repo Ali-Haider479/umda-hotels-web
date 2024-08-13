@@ -1,4 +1,6 @@
-import { Box, Typography } from "@mui/material";
+"use client";
+
+import { Box, Typography,useMediaQuery } from "@mui/material";
 import HeroImage from "@/public/assets/images/hero-image.webp";
 
 interface SubHeaderProps {
@@ -6,12 +8,14 @@ interface SubHeaderProps {
 }
 
 const SubHeader = ({ heading }: SubHeaderProps) => {
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
+
   return (
     <Box
       sx={{
         backgroundImage: `url(${HeroImage.src})`,
         backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
+        backgroundSize: isMobScreen ? "cover" : "cover" , 
         backgroundPosition: "center center",
         width: "100%",
         height: "auto",

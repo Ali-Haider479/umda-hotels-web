@@ -5,8 +5,11 @@ import CottageOutlinedIcon from "@mui/icons-material/CottageOutlined";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const HotelsDropdownButton = () => {
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
+
   const [hover, setHover] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -29,10 +32,10 @@ const HotelsDropdownButton = () => {
     >
       <div onClick={handleClick} className="flex-center">
         <CottageOutlinedIcon className="icon-spacing" fontSize="large" />
-        <p className="navbar-text">Our Hotels</p>
+        <p className="navbar-text" style={{ borderBottom:"1px solid black" }}>Our Hotels</p>
         <ArrowDropDownIcon />
       </div>
-      <Menu
+      {!isMobScreen ? (  <Menu
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
@@ -52,10 +55,37 @@ const HotelsDropdownButton = () => {
           },
         }}
       >
-        <MenuItem onClick={handleClose}>Umda Hotel Montana</MenuItem>
+        <MenuItem sx={{alignItems:"center" }} onClick={handleClose}>Umda Hotel Montana</MenuItem>
         <MenuItem onClick={handleClose}>Umda Hotel Galaxy</MenuItem>
         <MenuItem onClick={handleClose}>Umda Hotel Horizan</MenuItem>
-      </Menu>
+      </Menu>) : 
+      (  <Menu
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        disableAutoFocusItem
+        PaperProps={{
+          style: {
+            width: "100%",
+            display: "flex",
+              justifyContent: "center",
+          },
+        }}
+      >
+      <MenuItem sx={{ borderBottom: "1px solid #e0e0e0", color:"gray" }} onClick={handleClose}>Umda Hotel Montana</MenuItem>
+          <MenuItem sx={{ borderBottom: "1px solid #e0e0e0" , color:"gray"}} onClick={handleClose}>Umda Hotel Galaxy</MenuItem>
+          <MenuItem sx={{ borderBottom: "1px solid #e0e0e0"  , color:"gray"}} onClick={handleClose}>Umda Hotel Horizan</MenuItem>
+        </Menu>)}
+    
     </div>
   );
 };
