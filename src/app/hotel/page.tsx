@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import RoomBookingCard from "@/components/roombookingcard/RoomBookingCard";
-import { Box, CircularProgress, Grid, IconButton, Paper } from "@mui/material";
+import { Box, CircularProgress, Grid, IconButton, Paper, useMediaQuery } from "@mui/material";
 
 import Image, { StaticImageData } from "next/image";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -24,6 +24,8 @@ import { decrypt } from "@/utils/crypto";
 dayjs.extend(isBetween);
 
 const RoomContent = () => {
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
+
   const roomData = [
     {
       roomName: "Economy Room with Balcony",
@@ -326,7 +328,7 @@ const RoomContent = () => {
         <>
           <HotelCarousel />
           <Grid container spacing={2} sx={{ padding: 2 }} columns={16}>
-            <Grid item xs={8}>
+            <Grid item xs={16} md={8} >
               <HotelDescription />
               <RoomSelector
                 roomData={roomData}
@@ -335,12 +337,14 @@ const RoomContent = () => {
                 onRoomsChange={handleRoomsChange}
                 onGuestsChange={handleGuestsChange}
               />
-              <HotelPolicyInfo />
+              {!isMobScreen && <HotelPolicyInfo />}
             </Grid>
             <Grid
               item
-              xs={8}
-              sx={{ position: "sticky", top: 20, alignSelf: "flex-start" }}
+              md={8}
+              xs={16}
+              sx={{ position: "sticky", top: 20, alignSelf: "flex-start" , paddingBottom: isMobScreen ? "50px" : "0px"}}
+
             >
               <RoomBookingCard
                 roomData={roomData}
@@ -354,6 +358,7 @@ const RoomContent = () => {
                 onGuestsChange={handleGuestsChange}
                 applyDatesChange={applyDatesChange}
               />
+              {isMobScreen && <HotelPolicyInfo />} {/* Display under RoomBookingCard on mobile */}
             </Grid>
           </Grid>
         </>

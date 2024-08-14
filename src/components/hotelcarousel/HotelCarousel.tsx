@@ -1,6 +1,5 @@
-"use client";
 import { useEffect, useState } from "react";
-import { Box, Button } from "@mui/material";
+import { Box, Button, useMediaQuery } from "@mui/material";
 import Image from "next/image";
 import Image1 from "@/public/assets/images/hotel-room-bg.jpg";
 import Image2 from "@/public/assets/images/2.webp";
@@ -19,7 +18,8 @@ const images = [
 ];
 
 const HotelCarousel = () => {
-  const slidesToShow = 3; // Number of images to show at once
+  const isMobile = useMediaQuery("(max-width: 950px)");
+  const slidesToShow = isMobile ? 1 : 3; // Show 1 image on mobile, 3 on larger screens
   const [currentIndex, setCurrentIndex] = useState(slidesToShow);
   const [transitioning, setTransitioning] = useState(false);
 
@@ -68,7 +68,6 @@ const HotelCarousel = () => {
       sx={{
         position: "relative",
         width: "100%",
-        // maxWidth: "1200px",
         margin: "auto",
         overflow: "hidden",
       }}
@@ -95,7 +94,6 @@ const HotelCarousel = () => {
               style={{
                 width: "100%",
                 height: "400px",
-                //   borderRadius: '8px',
                 display: "block",
               }}
             />

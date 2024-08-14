@@ -1,4 +1,5 @@
-import { Box, Button, Typography, Grid } from "@mui/material";
+"use client";
+import { Box, Button, Typography, Grid, useMediaQuery } from "@mui/material";
 import TvIcon from "@mui/icons-material/Tv";
 import WifiIcon from "@mui/icons-material/Wifi";
 import LocalParkingIcon from "@mui/icons-material/LocalParking";
@@ -16,6 +17,8 @@ const amenitiesList = [
 ];
 
 const HotelDescription = () => {
+  const isMobScreen = useMediaQuery("(max-width: 500px)");
+
   const [expanded, setExpanded] = useState(false);
 
   const handleToggle = () => {

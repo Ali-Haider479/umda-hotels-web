@@ -16,12 +16,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RoomCheckbox from "../roomcheckbox/RoomCheckbox";
-
-// //Images imports
-// import HotelMontanaImage from "@/public/assets/images/hotel-montana.webp";
-// import HotelGalaxyImage from "@/public/assets/images/hotel-galaxy.webp";
-// import HotelHorizonImage from "@/public/assets/images/hotel-horizan.webp";
-// const images = [HotelMontanaImage, HotelGalaxyImage, HotelHorizonImage];
+import { useMediaQuery } from "@mui/material";
 
 interface RoomData {
   roomName: string;
@@ -52,6 +47,7 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fadeTransition, setFadeTransition] = useState(false);
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
 
   const handleNext = () => {
     setFadeTransition(true);
@@ -73,9 +69,9 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
 
   return (
     <Card sx={{ maxWidth: 1000, margin: "16px auto", padding: 2 }}>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} direction={isMobScreen ? "column" : "row"}>
         {/* Room Information */}
-        <Grid item xs={8}>
+        <Grid item xs={12} md={8}>
           <CardContent>
             <Typography
               variant="h6"
@@ -144,12 +140,13 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
         </Grid>
 
         {/* Room Image */}
-        <Grid item xs={4} container justifyContent="center" alignItems="center">
+        <Grid item xs={12} md={4} container justifyContent="center" alignItems="center">
           <Box
             sx={{
               position: "relative",
               width: "100%",
-              height: "220px",
+              height: isMobScreen ? "200px" : "220px",
+              marginTop: isMobScreen ? "16px" : "0",
             }}
           >
             <IconButton
