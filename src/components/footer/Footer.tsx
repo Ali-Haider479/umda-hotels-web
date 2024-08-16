@@ -27,7 +27,8 @@ const Footer = () => {
             sx={{
               backgroundColor: "#fff",
               color: "#000",
-              padding: "10px 0",
+              padding: "7px 0",
+              border:"1px solid black",
               display: "flex",
               justifyContent: "space-around",
               alignItems: "center",

@@ -93,7 +93,7 @@ const HotelCarousel = () => {
               alt={image.alt}
               style={{
                 width: "100%",
-                height: "400px",
+                height: isMobile ? "250px": "400px",
                 display: "block",
               }}
             />
