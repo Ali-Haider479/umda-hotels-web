@@ -16,6 +16,7 @@ import {
   styled,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import StarIcon from "@mui/icons-material/Star";
@@ -137,6 +138,8 @@ const RoomBookingCard = ({
   onGuestsChange,
   applyDatesChange,
 }: RoomBookingProps) => {
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
+
   const today = dayjs();
 
   const [showBookingForm, setShowBookingForm] = useState(false);
@@ -198,8 +201,8 @@ const RoomBookingCard = ({
 
   return (
     <Card sx={{ maxWidth: 600, margin: "16px auto", padding: 2 }}>
-      <CardContent>
-        <Grid container alignItems="center" spacing={1}>
+      <CardContent sx={{marginTop: "-30px"}}>
+        <Grid container alignItems="center" spacing={1} sx={{marginLeft: isMobScreen ? "40px" : "0px"}}>
           <Grid item>
             <Box
               sx={{
@@ -212,19 +215,19 @@ const RoomBookingCard = ({
               }}
             >
               <StarIcon fontSize="small" />
-              <Typography variant="body2" sx={{ ml: 0.5 }}>
+              <Typography variant="body2" sx={{ ml: 0.5 }} >
                 4.2
               </Typography>
             </Box>
           </Grid>
-          <Grid item>
+          <Grid item  >
             <Typography variant="h6">Very Good</Typography>
             <Typography variant="body2" color="text.secondary">
               1566 Reviews
             </Typography>
           </Grid>
         </Grid>
-        <Grid container alignItems="center" spacing={1} sx={{ mt: 1 }}>
+        <Grid container alignItems="center" spacing={1} sx={{ mt: 1, marginLeft: isMobScreen ? "40px" : "0px" }}>
           <Grid item>
             <CheckCircleIcon fontSize="small" color="success" />
           </Grid>
@@ -243,51 +246,76 @@ const RoomBookingCard = ({
           <HighlightedDaysContext.Provider
             value={{ highlightedDays, startDate: start, endDate: end }}
           >
-            <Grid container spacing={2} alignItems="center">
-              <Grid item xs={12} md={5}>
-                <DatePicker
-                  label="Start Date"
-                  value={startDate}
-                  onChange={(newValue: Dayjs | null) => {
-                    setStartDate(newValue);
-                  }}
-                  slots={{
-                    textField: (params) => <TextField {...params} />,
-                    day: CustomDay,
-                  }}
-                  minDate={today}
-                />
-              </Grid>
-              <Grid item xs={12} md={5}>
-                <DatePicker
-                  label="End Date"
-                  value={endDate}
-                  onChange={(newValue: Dayjs | null) => {
-                    setEndDate(newValue);
-                  }}
-                  slots={{
-                    textField: (params) => <TextField {...params} />,
-                    day: CustomDay,
-                  }}
-                  minDate={startDate ?? undefined}
-                />
-              </Grid>
-              <Grid item xs={12} md={2}>
-                <Box
-                  display="flex"
-                  justifyContent="flex-end"
-                  width="100%"
-                  height={"52px"}
-                >
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={applyDatesChange}
-                  >
-                    Apply
-                  </Button>
-                </Box>
-              </Grid>
+            <Grid container spacing={2} alignItems="center" sx={{marginLeft: isMobScreen ? "5px" : "0px"}} >
+            <Grid item xs={12} md={5}>
+  <DatePicker
+    label="Start Date"
+    value={startDate}
+    onChange={(newValue: Dayjs | null) => {
+      setStartDate(newValue);
+    }}
+    slots={{
+      textField: (params) => (
+        <TextField
+          {...params}
+          sx={{
+            '& .MuiInputBase-root': {
+              fontSize: isMobScreen ? '1.2rem' : '1rem', // Increase font size on mobile
+              padding: isMobScreen ? '12px' : '8px',   // Increase padding on mobile
+            },
+          }}
+        />
+      ),
+      day: CustomDay,
+    }}
+    minDate={today}
+  />
+</Grid>
+<Grid item xs={12} md={5}>
+  <DatePicker
+    label="End Date"
+    value={endDate}
+    onChange={(newValue: Dayjs | null) => {
+      setEndDate(newValue);
+    }}
+    slots={{
+      textField: (params) => (
+        <TextField
+          {...params}
+          sx={{
+            '& .MuiInputBase-root': {
+              fontSize: isMobScreen ? '1.2rem' : '1rem', // Increase font size on mobile
+              padding: isMobScreen ? '12px' : '8px',   // Increase padding on mobile
+            },
+          }}
+        />
+      ),
+      day: CustomDay,
+    }}
+    minDate={startDate ?? undefined}
+  />
+</Grid>
+<Grid item xs={12} md={2} sx={{ marginRight: isMobScreen ? "80px" : "0px" }}>
+  <Box
+    display="flex"
+    justifyContent="flex-end"
+    width="100%"
+    height={"52px"}
+  >
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={applyDatesChange}
+      sx={{
+        width: isMobScreen ? "80%" : "auto", // Increase width to full on mobile view
+        // fontSize: isMobScreen ? "1.2rem" : "1rem", // Optional: Increase font size on mobile view
+      }}
+    >
+      Apply
+    </Button>
+  </Box>
+</Grid>
+
             </Grid>
           </HighlightedDaysContext.Provider>
         </LocalizationProvider>
