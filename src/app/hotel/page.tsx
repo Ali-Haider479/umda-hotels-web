@@ -330,7 +330,7 @@ const RoomContent = () => {
           <Grid container spacing={2} sx={{ padding: 2 }} columns={16}>
             <Grid item xs={16} md={8} >
               <HotelDescription />
-              <RoomSelector
+              <RoomSelector 
                 roomData={roomData}
                 selectedRooms={selectedRooms}
                 onRoomSelection={handleRoomSelection}
@@ -359,6 +359,9 @@ const RoomContent = () => {
                 applyDatesChange={applyDatesChange}
               />
               {isMobScreen && <HotelPolicyInfo />} {/* Display under RoomBookingCard on mobile */}
+
+  
+
             </Grid>
           </Grid>
         </>

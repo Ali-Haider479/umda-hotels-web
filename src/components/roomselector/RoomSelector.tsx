@@ -35,7 +35,7 @@ const RoomSelector = ({
 }: RoomSelectorProps) => {
   return (
     <Box sx={{ maxWidth: 800, margin: "32px auto", padding: 2 }}>
-      <Typography variant="h4" fontWeight={"bold"}>
+      <Typography  fontWeight={"bold"}>
         Choose your room
       </Typography>
       {roomData.map((room, index) => (

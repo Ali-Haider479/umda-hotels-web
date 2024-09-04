@@ -48,8 +48,8 @@ const OurHotels = () => {
   return (
 <>
       {isMobScreen ? (
-        <Box mt={2} mx={2}>
-        <Typography textAlign={"center"} py={2} fontSize={25} fontWeight={"bold"}>
+        <Box mt={2} mx={2} >
+        <Typography pb={2} py={2}  sx={{marginBottom:"-25px"}}  fontWeight={"bold"}>
           Our Hotels
         </Typography>
         <Slider {...sliderSettings}>
@@ -82,7 +82,7 @@ const OurHotels = () => {
         </Box>
       ) : (
         <Box mt={2} mx={2}>
-        <Typography textAlign={"center"} py={2} variant="h2" fontWeight={"bold"}>
+        <Typography textAlign={"center"} py={2} variant="h4" fontWeight={"bold"}>
           Our Hotels
         </Typography>
         <Grid container spacing={2}>

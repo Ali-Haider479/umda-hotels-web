@@ -10,15 +10,15 @@ const OnGoingOffers = () => {
     const isMobScreen = useMediaQuery("(max-width: 950px)");
 
     const offers = [
-        { imgSrc: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQE-IL-nu_C-GTzdrfpgcJugfjwhY45zI9YcQ&s', title: 'Offer 1', discount: '20%' },
-        { imgSrc: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ0nECPdhHsFDAKNfdhuyxYH3mj5u-K9jZOA&s', title: 'Offer 2', discount: '50%' },
-        { imgSrc: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUWnT9s3Zcs5tHKECB1HHHAcTNmRfwvb2nrFPquWAc1btloasCtJvQMTXWa2y5cGJ5aAo&usqp=CAU', title: 'Offer 3', discount: '70%' }
+        { imgSrc: 'https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg', title: 'Offer 1', discount: '20%' },
+        { imgSrc: "https://www.usatoday.com/gcdn/-mm-/05b227ad5b8ad4e9dcb53af4f31d7fbdb7fa901b/c=0-64-2119-1259/local/-/media/USATODAY/USATODAY/2014/08/13/1407953244000-177513283.jpg", title: 'Offer 2', discount: '50%' },
+        { imgSrc: 'https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg', title: 'Offer 3', discount: '70%' }
     ];
-
+    
     const settings = {
         infinite: true,
         speed: 500,
-        slidesToShow: 1.2,
+        slidesToShow: 1.1,
         slidesToScroll: 1,
         centerMode: true,
         centerPadding: '0px',
@@ -31,7 +31,7 @@ const OnGoingOffers = () => {
         <>
             {isMobScreen ? (
                 <Box mt={2} mx={2}>
-                    <Typography textAlign={"center"} py={2} variant="h5" fontWeight={"bold"}>
+                    <Typography  py={2} pb={2} fontWeight={"bold"}>
                         Ongoing Offers
                     </Typography>
                     <Slider {...settings}>
@@ -41,12 +41,12 @@ const OnGoingOffers = () => {
                                     component="img"
                                     src={offer.imgSrc}
                                     alt={offer.title}
-                                    sx={{ width: '70%', borderRadius: 2, marginLeft: "50px" }}
+                                    sx={{ width: '350px', height:"200px", borderRadius: 2, paddingLeft:"20px"}}
                                 />
-                                <Typography textAlign="center" mt={1} fontWeight="bold">
+                                <Typography textAlign="center" mt={1} ml={2} fontWeight="bold">
                                     {offer.title}
                                 </Typography>
-                                <Typography textAlign="center" color="primary">
+                                <Typography textAlign="center"  ml={2} color="primary">
                                     {offer.discount} OFF
                                 </Typography>
                             </Box>

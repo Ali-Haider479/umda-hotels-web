@@ -6,10 +6,10 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 
 const destinations = [
-  { name: "Near me", src: "/path/to/near_me_icon.png" },
-  { name: "Islamabad", src: "/path/to/islamabad_icon.png" },
-  { name: "Ayubia", src: "/path/to/ayubia_icon.png" },
-  { name: "Nathia Gali", src: "/path/to/nathia_gali_icon.png" }
+  { name: "Near me", src: "https://umdahotels.com/home_images/30.webp" },
+  { name: "Islamabad", src: "https://islamabad.comsats.edu.pk/assets/img/islamabad.jpeg" },
+  { name: "Ayubia", src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhUMiTmldAfupPr46OVswfbo2aX8HembGvvw&s.jpeg" },
+  { name: "Nathia Gali", src: "https://res.cloudinary.com/www-travelpakistani-com/image/upload/w_400,h_250,c_fill/v1617894191/landmark_images/xdhyud9loen3emrumbvh.jpeg" }
 ];
 
 const Explore = () => {
@@ -17,8 +17,8 @@ const Explore = () => {
 
   return (
     <>
-    {isMobScreen ?   <Box sx={{ textAlign: 'center', p: 3 }}>
-    <Typography variant="h6" gutterBottom>
+    {isMobScreen ?   <Box >
+    <Typography pl={2} pb={1} fontWeight={"bold"} gutterBottom>
       Explore your next destination
     </Typography>
     <Grid container spacing={3} marginTop={1} justifyContent="center">
