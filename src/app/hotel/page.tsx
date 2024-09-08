@@ -4,7 +4,14 @@ import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import RoomBookingCard from "@/components/roombookingcard/RoomBookingCard";
-import { Box, CircularProgress, Grid, IconButton, Paper, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Grid,
+  IconButton,
+  Paper,
+  useMediaQuery,
+} from "@mui/material";
 
 import Image, { StaticImageData } from "next/image";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -37,7 +44,7 @@ const RoomContent = () => {
       discountPercentage: 20,
       images: [HotelMontanaImage, HotelGalaxyImage, HotelHorizonImage],
       availableRooms: 5,
-      rooms: ["1317801", "1317802", "1317803", "1317804", "1317805"],
+      roomsIds: ["1317801", "1317802", "1317803", "1317804", "1317805"],
     },
     {
       roomName: "Deluxe Room Twin Bed with Balcony",
@@ -49,7 +56,7 @@ const RoomContent = () => {
       discountPercentage: 20,
       images: [HotelGalaxyImage, HotelHorizonImage, HotelMontanaImage],
       availableRooms: 4,
-      rooms: ["1317795", "1317796", "1317797", "1317798"],
+      roomsIds: ["1317795", "1317796", "1317797", "1317798"],
     },
     {
       roomName: "Deluxe Room with Balcony",
@@ -61,7 +68,14 @@ const RoomContent = () => {
       discountPercentage: 20,
       images: [HotelHorizonImage, HotelMontanaImage, HotelGalaxyImage],
       availableRooms: 6,
-      rooms: ["1317788", "1317789", "1317790", "1317791", "1317792", "1317794"],
+      roomsIds: [
+        "1317788",
+        "1317789",
+        "1317790",
+        "1317791",
+        "1317792",
+        "1317794",
+      ],
     },
     {
       roomName: "Executive Family Room with Bunk Beds",
@@ -73,7 +87,7 @@ const RoomContent = () => {
       discountPercentage: 20,
       images: [HotelHorizonImage, HotelMontanaImage, HotelGalaxyImage],
       availableRooms: 2,
-      rooms: ["1317786", "1317787"],
+      roomsIds: ["1317786", "1317787"],
     },
   ];
 
@@ -206,7 +220,7 @@ const RoomContent = () => {
     checkOutDate: string | null
   ) => {
     const updatedRoomData = roomData.map((room) => {
-      const availableRooms = room.rooms.filter((roomId: string) => {
+      const availableRooms = room.roomsIds.filter((roomId: string) => {
         const isBooked = bookedRooms.some((booking) => {
           if (booking.id_room === roomId) {
             const bookingStartDate = convertUnixToDate(booking.start_time);
@@ -328,7 +342,7 @@ const RoomContent = () => {
         <>
           <HotelCarousel />
           <Grid container spacing={2} sx={{ padding: 2 }} columns={16}>
-            <Grid item xs={16} md={8} >
+            <Grid item xs={16} md={8}>
               <HotelDescription />
               <RoomSelector
                 roomData={roomData}
@@ -343,8 +357,12 @@ const RoomContent = () => {
               item
               md={8}
               xs={16}
-              sx={{ position: "sticky", top: 20, alignSelf: "flex-start" , paddingBottom: isMobScreen ? "50px" : "0px"}}
-
+              sx={{
+                position: "sticky",
+                top: 20,
+                alignSelf: "flex-start",
+                paddingBottom: isMobScreen ? "50px" : "0px",
+              }}
             >
               <RoomBookingCard
                 roomData={roomData}
@@ -357,8 +375,10 @@ const RoomContent = () => {
                 onRoomsChange={handleRoomsChange}
                 onGuestsChange={handleGuestsChange}
                 applyDatesChange={applyDatesChange}
+                calendarId={calendarId}
               />
-              {isMobScreen && <HotelPolicyInfo />} {/* Display under RoomBookingCard on mobile */}
+              {isMobScreen && <HotelPolicyInfo />}{" "}
+              {/* Display under RoomBookingCard on mobile */}
             </Grid>
           </Grid>
         </>

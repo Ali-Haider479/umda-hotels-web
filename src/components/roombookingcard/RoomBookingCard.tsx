@@ -104,6 +104,7 @@ interface RoomData {
   discountPercentage: number;
   images: StaticImageData[]; // Assuming images are URLs or paths to the images
   availableRooms: number;
+  roomsIds: string[];
 }
 
 interface RoomBookingProps {
@@ -115,6 +116,7 @@ interface RoomBookingProps {
     discountedPrice: number;
     availableRooms: number;
     roomName: string;
+    roomsIds: string[];
   }[];
   startDate: Dayjs | null;
   endDate: Dayjs | null;
@@ -124,6 +126,7 @@ interface RoomBookingProps {
   onRoomsChange: (index: number, change: number) => void;
   onGuestsChange: (index: number, change: number) => void;
   applyDatesChange: () => void;
+  calendarId: string;
 }
 
 const RoomBookingCard = ({
@@ -137,6 +140,7 @@ const RoomBookingCard = ({
   onRoomsChange,
   onGuestsChange,
   applyDatesChange,
+  calendarId,
 }: RoomBookingProps) => {
   const isMobScreen = useMediaQuery("(max-width: 950px)");
 
@@ -147,7 +151,7 @@ const RoomBookingCard = ({
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [paymentOption, setPaymentOption] = useState("full");
-  const [advancePayment, setAdvancePayment] = useState(0);
+  // const [advancePayment, setAdvancePayment] = useState(0);
 
   const calculateTotalPrice = () => {
     return selectedRooms.reduce((total, room) => {
@@ -162,18 +166,91 @@ const RoomBookingCard = ({
 
   const calculateAdvancePayment = (totalPrice: number) => {
     // Assuming 30% of the total price is required as an advance payment
-    return totalPrice * 0.3;
+    const advancePayment = totalPrice * 0.3;
+    return parseFloat(advancePayment.toFixed(2));
   };
+
+  const advancePayment = calculateAdvancePayment(totalPrice);
 
   const handlePaymentOptionChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const selectedOption = event.target.value;
     setPaymentOption(selectedOption);
-    if (selectedOption === "advance") {
-      setAdvancePayment(calculateAdvancePayment(totalPrice));
-    } else {
-      setAdvancePayment(0);
+    // if (selectedOption === "advance") {
+    //   setAdvancePayment(calculateAdvancePayment(totalPrice));
+    // } else {
+    //   setAdvancePayment(0);
+    // }
+  };
+
+  const handleBookNow = async () => {
+    console.log(selectedRooms);
+
+    const bulkBodies = selectedRooms
+      .filter((room) => room.checked) // Filter only checked rooms
+      .flatMap((selectedRoom) => {
+        // Use flatMap to directly map to array elements
+        const singleRoomAdvancePayment = calculateAdvancePayment(
+          selectedRoom.discountedPrice
+        );
+
+        return selectedRoom.roomsIds.slice(0, selectedRoom.rooms).map((id) => ({
+          client_name: fullName,
+          client_phone: phone,
+          client_email: email,
+          company: {},
+          deleted: 0,
+          start_time: startDate ? startDate.unix() : "", // Convert Dayjs object to Unix timestamp
+          end_time: endDate ? endDate.unix() : "", // Convert Dayjs object to Unix timestamp
+          id_calendar: calendarId,
+          id_room: id,
+          persons: selectedRoom.guests,
+          prepayment_type: 1,
+          price: selectedRoom.discountedPrice,
+          price_type: 2,
+          provision:
+            paymentOption === "advance"
+              ? singleRoomAdvancePayment
+              : selectedRoom.discountedPrice,
+          stage: paymentOption === "advance" ? 3 : 1,
+          service: "OV",
+        }));
+      });
+
+    console.log(bulkBodies);
+    // Iterate over the bulkBodies array and send a POST request for each reservation
+    for (const reservation of bulkBodies) {
+      try {
+        const formData = new URLSearchParams();
+
+        // Convert each field to a string as needed and add to formData
+        Object.entries(reservation).forEach(([key, value]) => {
+          if (value !== undefined && value !== null) {
+            formData.append(key, value.toString());
+          }
+        });
+        const response = await fetch(
+          "https://cors-anywhere.herokuapp.com/https://api.bed-booking.com/api/v2/reservation/index/",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded", // Based on formData format
+              Authorization: "Bearer 6c2f051b9ec28054a3b54117717f5ef839239741", // If an authorization token is required
+            },
+            body: formData.toString(),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        console.log("Reservation added successfully:", result);
+      } catch (error) {
+        console.error("Error adding reservation:", error);
+      }
     }
   };
 
@@ -201,8 +278,13 @@ const RoomBookingCard = ({
 
   return (
     <Card sx={{ maxWidth: 600, margin: "16px auto", padding: 2 }}>
-      <CardContent sx={{marginTop: "-30px"}}>
-        <Grid container alignItems="center" spacing={1} sx={{marginLeft: isMobScreen ? "40px" : "0px"}}>
+      <CardContent sx={{ marginTop: "-30px" }}>
+        <Grid
+          container
+          alignItems="center"
+          spacing={1}
+          sx={{ marginLeft: isMobScreen ? "40px" : "0px" }}
+        >
           <Grid item>
             <Box
               sx={{
@@ -215,19 +297,24 @@ const RoomBookingCard = ({
               }}
             >
               <StarIcon fontSize="small" />
-              <Typography variant="body2" sx={{ ml: 0.5 }} >
+              <Typography variant="body2" sx={{ ml: 0.5 }}>
                 4.2
               </Typography>
             </Box>
           </Grid>
-          <Grid item  >
+          <Grid item>
             <Typography variant="h6">Very Good</Typography>
             <Typography variant="body2" color="text.secondary">
               1566 Reviews
             </Typography>
           </Grid>
         </Grid>
-        <Grid container alignItems="center" spacing={1} sx={{ mt: 1, marginLeft: isMobScreen ? "40px" : "0px" }}>
+        <Grid
+          container
+          alignItems="center"
+          spacing={1}
+          sx={{ mt: 1, marginLeft: isMobScreen ? "40px" : "0px" }}
+        >
           <Grid item>
             <CheckCircleIcon fontSize="small" color="success" />
           </Grid>
@@ -246,76 +333,85 @@ const RoomBookingCard = ({
           <HighlightedDaysContext.Provider
             value={{ highlightedDays, startDate: start, endDate: end }}
           >
-            <Grid container spacing={2} alignItems="center" sx={{marginLeft: isMobScreen ? "5px" : "0px"}} >
-            <Grid item xs={12} md={5}>
-  <DatePicker
-    label="Start Date"
-    value={startDate}
-    onChange={(newValue: Dayjs | null) => {
-      setStartDate(newValue);
-    }}
-    slots={{
-      textField: (params) => (
-        <TextField
-          {...params}
-          sx={{
-            '& .MuiInputBase-root': {
-              fontSize: isMobScreen ? '1.2rem' : '1rem', // Increase font size on mobile
-              padding: isMobScreen ? '12px' : '8px',   // Increase padding on mobile
-            },
-          }}
-        />
-      ),
-      day: CustomDay,
-    }}
-    minDate={today}
-  />
-</Grid>
-<Grid item xs={12} md={5}>
-  <DatePicker
-    label="End Date"
-    value={endDate}
-    onChange={(newValue: Dayjs | null) => {
-      setEndDate(newValue);
-    }}
-    slots={{
-      textField: (params) => (
-        <TextField
-          {...params}
-          sx={{
-            '& .MuiInputBase-root': {
-              fontSize: isMobScreen ? '1.2rem' : '1rem', // Increase font size on mobile
-              padding: isMobScreen ? '12px' : '8px',   // Increase padding on mobile
-            },
-          }}
-        />
-      ),
-      day: CustomDay,
-    }}
-    minDate={startDate ?? undefined}
-  />
-</Grid>
-<Grid item xs={12} md={2} sx={{ marginRight: isMobScreen ? "80px" : "0px" }}>
-  <Box
-    display="flex"
-    justifyContent="flex-end"
-    width="100%"
-    height={"52px"}
-  >
-    <Button
-      variant="contained"
-      color="primary"
-      onClick={applyDatesChange}
-      sx={{
-        width: isMobScreen ? "80%" : "auto", // Increase width to full on mobile view
-        // fontSize: isMobScreen ? "1.2rem" : "1rem", // Optional: Increase font size on mobile view
-      }}
-    >
-      Apply
-    </Button>
-  </Box>
-</Grid>
-
+            <Grid
+              container
+              spacing={2}
+              alignItems="center"
+              sx={{ marginLeft: isMobScreen ? "5px" : "0px" }}
+            >
+              <Grid item xs={12} md={5}>
+                <DatePicker
+                  label="Start Date"
+                  value={startDate}
+                  onChange={(newValue: Dayjs | null) => {
+                    setStartDate(newValue);
+                  }}
+                  slots={{
+                    textField: (params) => (
+                      <TextField
+                        {...params}
+                        sx={{
+                          "& .MuiInputBase-root": {
+                            fontSize: isMobScreen ? "1.2rem" : "1rem", // Increase font size on mobile
+                            padding: isMobScreen ? "12px" : "8px", // Increase padding on mobile
+                          },
+                        }}
+                      />
+                    ),
+                    day: CustomDay,
+                  }}
+                  minDate={today}
+                />
+              </Grid>
+              <Grid item xs={12} md={5}>
+                <DatePicker
+                  label="End Date"
+                  value={endDate}
+                  onChange={(newValue: Dayjs | null) => {
+                    setEndDate(newValue);
+                  }}
+                  slots={{
+                    textField: (params) => (
+                      <TextField
+                        {...params}
+                        sx={{
+                          "& .MuiInputBase-root": {
+                            fontSize: isMobScreen ? "1.2rem" : "1rem", // Increase font size on mobile
+                            padding: isMobScreen ? "12px" : "8px", // Increase padding on mobile
+                          },
+                        }}
+                      />
+                    ),
+                    day: CustomDay,
+                  }}
+                  minDate={startDate ?? undefined}
+                />
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                md={2}
+                sx={{ marginRight: isMobScreen ? "80px" : "0px" }}
+              >
+                <Box
+                  display="flex"
+                  justifyContent="flex-end"
+                  width="100%"
+                  height={"52px"}
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={applyDatesChange}
+                    sx={{
+                      width: isMobScreen ? "80%" : "auto", // Increase width to full on mobile view
+                      // fontSize: isMobScreen ? "1.2rem" : "1rem", // Optional: Increase font size on mobile view
+                    }}
+                  >
+                    Apply
+                  </Button>
+                </Box>
+              </Grid>
             </Grid>
           </HighlightedDaysContext.Provider>
         </LocalizationProvider>
@@ -419,7 +515,12 @@ const RoomBookingCard = ({
                 Advance Payment: Rs. {advancePayment}
               </Typography>
             )}
-            <Button variant="contained" color="primary" fullWidth>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={handleBookNow}
+            >
               Book Now
             </Button>
           </Box>
