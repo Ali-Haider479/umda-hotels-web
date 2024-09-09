@@ -105,6 +105,9 @@ const RoomContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const [paymentOption, setPaymentOption] = useState("full");
+  const [advancePayment, setAdvancePayment] = useState(0);
+
   useEffect(() => {
     const id = searchParams.get("city");
     const checkInDate = searchParams.get("checkInDate");
@@ -322,6 +325,17 @@ const RoomContent = () => {
 
   console.log(startDate, endDate);
 
+  const calculateTotalPrice = () => {
+    return selectedRooms.reduce((total, room) => {
+      if (room.checked) {
+        return total + room.discountedPrice * room.rooms;
+      }
+      return total;
+    }, 0);
+  };
+
+  const totalPrice = calculateTotalPrice();
+
   return (
     <>
       {pageLoading ? (
@@ -370,6 +384,10 @@ const RoomContent = () => {
                 onRoomsChange={handleRoomsChange}
                 onGuestsChange={handleGuestsChange}
                 applyDatesChange={applyDatesChange}
+                paymentOption={paymentOption}
+                setPaymentOption={setPaymentOption}
+                advancePayment={advancePayment}
+                setAdvancePayment={setAdvancePayment}
               />
               {isMobScreen && <HotelPolicyInfo />}{" "}
               {/* Display under RoomBookingCard on mobile */}
@@ -392,7 +410,10 @@ const RoomContent = () => {
               }}
             >
               <Typography>
-                Total Price: <strong>Rs. 9999</strong>
+                Total Price:{" "}
+                <strong>
+                  Rs. {paymentOption === "full" ? totalPrice : advancePayment}
+                </strong>
               </Typography>
               <Button
                 variant="contained"

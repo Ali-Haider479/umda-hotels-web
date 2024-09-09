@@ -124,6 +124,10 @@ interface RoomBookingProps {
   onRoomsChange: (index: number, change: number) => void;
   onGuestsChange: (index: number, change: number) => void;
   applyDatesChange: () => void;
+  paymentOption: string;
+  setPaymentOption: (value: string) => void;
+  advancePayment: number;
+  setAdvancePayment: (value: number) => void;
 }
 
 const RoomBookingCard = ({
@@ -137,6 +141,10 @@ const RoomBookingCard = ({
   onRoomsChange,
   onGuestsChange,
   applyDatesChange,
+  paymentOption,
+  setPaymentOption,
+  advancePayment,
+  setAdvancePayment,
 }: RoomBookingProps) => {
   const isMobScreen = useMediaQuery("(max-width: 950px)");
 
@@ -146,8 +154,8 @@ const RoomBookingCard = ({
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
-  const [paymentOption, setPaymentOption] = useState("full");
-  const [advancePayment, setAdvancePayment] = useState(0);
+  // const [paymentOption, setPaymentOption] = useState("full");
+  // const [advancePayment, setAdvancePayment] = useState(0);
 
   const calculateTotalPrice = () => {
     return selectedRooms.reduce((total, room) => {
