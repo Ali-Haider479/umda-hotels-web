@@ -67,7 +67,7 @@ const Testimonials = () => {
   return (
     <>
     {isMobScreen ? null :  <Box paddingBottom={10}>
-    <Typography textAlign={"center"} variant="h3" fontWeight={"bold"}>
+    <Typography textAlign={"center"} variant="h4" fontWeight={"bold"}>
       Hear From Our Customers
     </Typography>
     <Box paddingY={5} paddingX={5}>

@@ -6,26 +6,30 @@ import {
   IconButton,
   Link,
   useMediaQuery,
+  Button,
 } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
-import HotelIcon from "@mui/icons-material/Hotel";
 import InfoIcon from "@mui/icons-material/Info";
+import ConstructionIcon from "@mui/icons-material/Construction";
+import PhoneIcon from "@mui/icons-material/Phone";
+import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
+import SecurityIcon from "@mui/icons-material/Security";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import FacebookIcon from "@mui/icons-material/Facebook";
-import SecurityIcon from "@mui/icons-material/Security";
-import ConstructionIcon from "@mui/icons-material/Construction";
-import BackspaceIcon from "@mui/icons-material/Backspace";
-import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
-import PhoneIcon from "@mui/icons-material/Phone";
 import { usePathname } from "next/navigation";
 
 const Footer = () => {
   const pathname = usePathname();
   const isMobScreen = useMediaQuery("(max-width: 950px)");
 
-  if (pathname !== "/login" && pathname !== "/signup") {
+  console.log(pathname);
+
+  if (
+    pathname !== "/login" &&
+    pathname !== "/signup" &&
+    pathname !== "/hotel"
+  ) {
     return (
       <>
         {isMobScreen ? (
@@ -38,9 +42,9 @@ const Footer = () => {
               display: "flex",
               justifyContent: "space-around",
               alignItems: "center",
-              position: "fixed", // Ensure position fixed
-              bottom: 0, // Stick it to the bottom
-              width: "100%", // Ensure it spans the full width
+              position: "fixed",
+              bottom: 0,
+              width: "100%",
               boxShadow: "0 -2px 5px rgba(0,0,0,0.1)",
             }}
           >
@@ -57,20 +61,6 @@ const Footer = () => {
               </IconButton>
               <Typography variant="caption">Home</Typography>
             </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                width: "2px",
-                marginRight: "15px",
-              }}
-            >
-              <IconButton href="/terms-and-conditions" color="inherit">
-                <ConstructionIcon />
-              </IconButton>
-              <Typography variant="caption">Booking</Typography>
-            </Box>
 
             <Box
               sx={{
@@ -78,7 +68,7 @@ const Footer = () => {
                 flexDirection: "column",
                 alignItems: "center",
                 width: "2px",
-                marginRight: "20px",
+                marginRight: "0px",
               }}
             >
               <IconButton href="/contact-us" color="inherit">
@@ -288,7 +278,7 @@ const Footer = () => {
       </>
     );
   } else {
-    return <></>;
+    return null;
   }
 };
 

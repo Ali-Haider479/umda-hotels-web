@@ -1,10 +1,12 @@
-import { Box, Divider, Typography } from "@mui/material";
+import { Box, Divider, List, ListItem, Typography, useMediaQuery } from "@mui/material";
 import Link from "next/link";
 
 const HotelPolicyInfo = () => {
+  const isMobile = useMediaQuery("(max-width: 500px)");
+
   return (
     <Box sx={{ maxWidth: 800, margin: "32px auto", padding: 2 }}>
-      <Typography variant="h6" fontWeight="bold" gutterBottom>
+      <Typography fontSize={isMobile ? "15px" : "20px"} fontWeight="bold" gutterBottom>
         Hotel Policies
       </Typography>
       <Box
@@ -18,10 +20,10 @@ const HotelPolicyInfo = () => {
           alignItems="center"
           sx={{ flex: 1, textAlign: "center" }}
         >
-          <Typography variant="body1" fontWeight="bold" sx={{ mr: 1 }}>
+          <Typography fontSize={isMobile ? "13px" : "20px"}  fontWeight="bold" sx={{ mr: 1 }}>
             Check-in:
           </Typography>
-          <Typography variant="body1" color="primary">
+          <Typography fontSize={isMobile ? "13px" : "20px"}  color="primary">
             02:00 pm
           </Typography>
         </Box>
@@ -31,21 +33,41 @@ const HotelPolicyInfo = () => {
           alignItems="center"
           sx={{ flex: 1, textAlign: "center" }}
         >
-          <Typography variant="body1" fontWeight="bold" sx={{ mr: 1 }}>
+          <Typography fontSize={isMobile ? "13px" : "20px"}  fontWeight="bold" sx={{ mr: 1 }}>
             Check-out:
           </Typography>
-          <Typography variant="body1" color="primary">
+          <Typography fontSize={isMobile ? "13px" : "20px"}  color="primary">
             12:00 pm
           </Typography>
         </Box>
       </Box>
 
-      <Typography>
-        For futther details click here:{" "}
-        <Link href={"/terms-and-conditions"} target="_blank">
-          Terms & Conditions
-        </Link>
-      </Typography>
+    <List style={{ listStyleType: 'disc', paddingLeft: '20px' }}>
+      <ListItem style={{ display: 'list-item' }}>
+        <Typography fontSize={isMobile ? '12px' : 'inherit'} marginBottom={-5}>
+          For further details click here:{" "}
+          <Link href={"/terms-and-conditions"} target="_blank">
+            Terms & Conditions
+          </Link>
+        </Typography>
+      </ListItem>
+      <ListItem style={{ display: 'list-item' }} >
+        <Typography fontSize={isMobile ? '12px' : 'inherit'} marginBottom={-5}>
+          For further details click here:{" "}
+          <Link href={"/cancellation-policy"} target="_blank">
+            Cancellation Policy
+          </Link>
+        </Typography>
+      </ListItem>
+      <ListItem style={{ display: 'list-item' }}>
+        <Typography fontSize={isMobile ? '12px' : 'inherit'}>
+          For further details click here:{" "}
+          <Link href={"/privacy-policy"} target="_blank">
+            Privacy Policy
+          </Link>
+        </Typography>
+      </ListItem>
+    </List>
     </Box>
   );
 };
