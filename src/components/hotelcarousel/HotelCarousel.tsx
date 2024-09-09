@@ -93,7 +93,7 @@ const HotelCarousel = () => {
               alt={image.alt}
               style={{
                 width: "100%",
-                height: isMobile ? "250px": "400px",
+                height: isMobile ? "250px" : "400px",
                 display: "block",
               }}
             />
@@ -104,7 +104,7 @@ const HotelCarousel = () => {
         onClick={prevSlide}
         sx={{
           position: "absolute",
-          top: "50%",
+          top: isMobile ? "40%" : "50%",
           left: "10px",
           transform: "translateY(-50%)",
           backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -123,7 +123,7 @@ const HotelCarousel = () => {
         onClick={nextSlide}
         sx={{
           position: "absolute",
-          top: "50%",
+          top: isMobile ? "40%" : "50%",
           right: "10px",
           transform: "translateY(-50%)",
           backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -138,28 +138,53 @@ const HotelCarousel = () => {
       >
         ›
       </Button>
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
-        {images.map((_, dotIndex) => (
-          <Box
-            key={dotIndex}
-            onClick={() => goToSlide(dotIndex)}
-            sx={{
-              width: 10,
-              height: 10,
-              borderRadius: "50%",
-              backgroundColor:
-                dotIndex === (currentIndex - slidesToShow) % totalSlides
-                  ? "black"
-                  : "grey",
-              margin: "0 5px",
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "black",
-              },
-            }}
-          />
-        ))}
-      </Box>
+      {isMobile ? (
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+          {images.map((image, dotIndex) => (
+            <img
+              key={dotIndex}
+              onClick={() => goToSlide(dotIndex)}
+              src={image.src.src}
+              alt={`Thumbnail ${dotIndex + 1}`}
+              style={{
+                width: "50px",
+                height: "50px",
+                borderRadius: "5px",
+                cursor: "pointer",
+                margin: "0 5px",
+                border:
+                  dotIndex === (currentIndex - slidesToShow) % totalSlides
+                    ? "3px solid #1976D2"
+                    : "3px solid transparent",
+                transition: "border 0.3s ease",
+              }}
+            />
+          ))}
+        </Box>
+      ) : (
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+          {images.map((_, dotIndex) => (
+            <Box
+              key={dotIndex}
+              onClick={() => goToSlide(dotIndex)}
+              sx={{
+                width: 10,
+                height: 10,
+                borderRadius: "50%",
+                backgroundColor:
+                  dotIndex === (currentIndex - slidesToShow) % totalSlides
+                    ? "black"
+                    : "grey",
+                margin: "0 5px",
+                cursor: "pointer",
+                "&:hover": {
+                  backgroundColor: "black",
+                },
+              }}
+            />
+          ))}
+        </Box>
+      )}
     </Box>
   );
 };

@@ -25,47 +25,11 @@ const Footer = () => {
 
   console.log(pathname);
 
-  if (pathname === "/hotel") {
-    return (
-//   <>
-
-//         </>
-
-
-
-<Box
-sx={{
-  backgroundColor: "#fff",
-  color: "#000",
-  padding: "15px 0",
-  border: "1px solid black",
-  display: "flex",
-  justifyContent: "space-around",
-  alignItems: "center",
-  position: "fixed",
-  bottom: 0,
-  width: "100%",
-  boxShadow: "0 -2px 5px rgba(0,0,0,0.1)",
-}}
->
-<Typography>
-          Total Price: <strong>Rs. 9999</strong>
-        </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ padding: '10px 10px', fontSize: '12px', textTransform: 'none' }}
-        >
-          Book Now and Pay Later
-        </Button>
-
-</Box>
-
-) 
-
-  }
-
-  if (pathname !== "/login" && pathname !== "/signup") {
+  if (
+    pathname !== "/login" &&
+    pathname !== "/signup" &&
+    pathname !== "/hotel"
+  ) {
     return (
       <>
         {isMobScreen ? (
@@ -97,7 +61,6 @@ sx={{
               </IconButton>
               <Typography variant="caption">Home</Typography>
             </Box>
-          
 
             <Box
               sx={{

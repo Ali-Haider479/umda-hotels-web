@@ -4,7 +4,16 @@ import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import RoomBookingCard from "@/components/roombookingcard/RoomBookingCard";
-import { Box, CircularProgress, Grid, IconButton, Paper, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  IconButton,
+  Paper,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 
 import Image, { StaticImageData } from "next/image";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -328,9 +337,9 @@ const RoomContent = () => {
         <>
           <HotelCarousel />
           <Grid container spacing={2} sx={{ padding: 2 }} columns={16}>
-            <Grid item xs={16} md={8} >
+            <Grid item xs={16} md={8}>
               <HotelDescription />
-              <RoomSelector 
+              <RoomSelector
                 roomData={roomData}
                 selectedRooms={selectedRooms}
                 onRoomSelection={handleRoomSelection}
@@ -343,8 +352,12 @@ const RoomContent = () => {
               item
               md={8}
               xs={16}
-              sx={{ position: "sticky", top: 20, alignSelf: "flex-start" , paddingBottom: isMobScreen ? "50px" : "0px"}}
-
+              sx={{
+                position: "sticky",
+                top: 20,
+                alignSelf: "flex-start",
+                paddingBottom: isMobScreen ? "50px" : "0px",
+              }}
             >
               <RoomBookingCard
                 roomData={roomData}
@@ -358,12 +371,42 @@ const RoomContent = () => {
                 onGuestsChange={handleGuestsChange}
                 applyDatesChange={applyDatesChange}
               />
-              {isMobScreen && <HotelPolicyInfo />} {/* Display under RoomBookingCard on mobile */}
-
-  
-
+              {isMobScreen && <HotelPolicyInfo />}{" "}
+              {/* Display under RoomBookingCard on mobile */}
             </Grid>
           </Grid>
+          {isMobScreen && (
+            <Box
+              sx={{
+                backgroundColor: "#fff",
+                color: "#000",
+                padding: "15px 0",
+                border: "1px solid black",
+                display: "flex",
+                justifyContent: "space-around",
+                alignItems: "center",
+                position: "fixed",
+                bottom: 0,
+                width: "100%",
+                boxShadow: "0 -2px 5px rgba(0,0,0,0.1)",
+              }}
+            >
+              <Typography>
+                Total Price: <strong>Rs. 9999</strong>
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{
+                  padding: "10px 10px",
+                  fontSize: "12px",
+                  textTransform: "none",
+                }}
+              >
+                Book Now and Pay Later
+              </Button>
+            </Box>
+          )}
         </>
       )}
     </>

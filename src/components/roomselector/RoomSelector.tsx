@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, useMediaQuery } from "@mui/material";
 import RoomSelectorCard from "../roomselectorcard/RoomSelectorCard";
 
 import HotelMontanaImage from "@/public/assets/images/hotel-montana.webp";
@@ -33,11 +33,12 @@ const RoomSelector = ({
   onRoomsChange,
   onGuestsChange,
 }: RoomSelectorProps) => {
+  const isMobScreen = useMediaQuery("(max-width: 950px)");
   return (
-    <Box sx={{ maxWidth: 800, margin: "32px auto", padding: 2 }}>
-      <Typography  fontWeight={"bold"}>
-        Choose your room
-      </Typography>
+    <Box
+      sx={{ maxWidth: 800, margin: "32px auto", padding: isMobScreen ? 0 : 2 }}
+    >
+      <Typography fontWeight={"bold"}>Choose your room</Typography>
       {roomData.map((room, index) => (
         <RoomSelectorCard
           key={index}
