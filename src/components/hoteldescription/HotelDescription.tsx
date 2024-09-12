@@ -46,12 +46,19 @@ const HotelDescription = () => {
   return (
     <Box sx={{ maxWidth: 800, margin: "10px auto", padding: 2 }}>
       {isMobScreen ? (
+        <>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Typography variant="h6" sx={{ marginRight: "8px" }}>
             {4.2}
           </Typography>
           {getStars(4.2)}
         </Box>
+        <Box>
+        <Typography fontSize={13} mt={1} sx={{ marginRight: "8px" }}>
+            4.2 average based on 234 reviews.
+          </Typography>
+        </Box>
+        </>
       ) : null}
 
       <Typography

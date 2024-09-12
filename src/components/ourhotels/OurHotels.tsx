@@ -42,15 +42,15 @@ const OurHotels = () => {
     centerPadding: '0px',
     focusOnSelect: true,
     autoplay: true,
-    autoplaySpeed: 3000,
+    autoplaySpeed: 6000,
   };
 
   return (
 <>
       {isMobScreen ? (
-        <Box mt={2} mx={2} >
-        <Typography pb={2} py={2}  sx={{marginBottom:"-25px"}}  fontWeight={"bold"}>
-          Our Hotels
+                <Box maxWidth={"90%"} mt={4} mx={2}>
+                    <Typography  pl={1} fontSize={16} fontWeight={"bold"}>
+                    Our Hotels
         </Typography>
         <Slider {...sliderSettings}>
           {hotelsArray.map((hotel, index) => (
@@ -60,10 +60,11 @@ const OurHotels = () => {
               sx={{
                 width: '90%',
                 maxWidth: '300px',
-                height: '300px', // Adjust the height to fit your content
+                height: '250px',
                 display: 'flex',
                 justifyContent: 'center',
                 margin: '0 auto',
+                
               }}
             >
               <HotelCard

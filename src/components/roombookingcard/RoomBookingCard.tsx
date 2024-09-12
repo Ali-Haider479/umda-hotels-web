@@ -274,7 +274,7 @@ const RoomBookingCard = ({
               alignItems="center"
               sx={{ marginLeft: isMobScreen ? "5px" : "0px" }}
             >
-              <Grid item xs={12} md={5} ml={isMobScreen ? 5 : 0}>
+              {!isMobScreen ? <> <Grid item xs={12} md={5} ml={isMobScreen ? 5 : 0}>
                 <DatePicker
                   label="Start Date"
                   value={startDate}
@@ -325,8 +325,63 @@ const RoomBookingCard = ({
                   }}
                   minDate={startDate ?? undefined}
                 />
+              </Grid></> : <>   <Typography textAlign={"left"} ml={-2}  fontWeight={"bold"}>Guest Details</Typography>
+              <Box display="flex">
+              <Grid mt={2} item xs={12} md={5} ml={isMobScreen ? -3 : 0}>
+                <DatePicker
+                  label="Start Date"
+                  value={startDate}
+                  onChange={(newValue: Dayjs | null) => {
+                    setStartDate(newValue);
+                  }}
+                  slots={{
+                    textField: (params) => (
+                      <TextField
+                        {...params}
+                        sx={{
+                          "& .MuiInputBase-root": {
+                            fontSize: isMobScreen ? "1rem" : "1rem", // Adjust font size if needed
+                            padding: isMobScreen ? "8px" : "8px", // Adjust padding
+                            width: isMobScreen ? "100%" : "auto", // Decrease width on mobile
+                            height: isMobScreen ? "40px" : "auto", // Adjust height if needed
+                          },
+                        }}
+                      />
+                    ),
+                    day: CustomDay,
+                  }}
+                  minDate={today}
+                />
               </Grid>
+              <Grid item mt={2} xs={12} md={5} ml={isMobScreen ? 5 : 0}>
+                <DatePicker
+                  label="End Date"
+                  value={endDate}
+                  onChange={(newValue: Dayjs | null) => {
+                    setEndDate(newValue);
+                  }}
+                  slots={{
+                    textField: (params) => (
+                      <TextField
+                        {...params}
+                        sx={{
+                          "& .MuiInputBase-root": {
+                            fontSize: isMobScreen ? "1rem" : "1rem", // Adjust font size if needed
+                            padding: isMobScreen ? "8px" : "8px", // Adjust padding
+                            width: isMobScreen ? "100%" : "auto", // Decrease width on mobile
+                            height: isMobScreen ? "40px" : "auto", // Adjust height if needed
+                          },
+                        }}
+                      />
+                    ),
+                    day: CustomDay,
+                  }}
+                  minDate={startDate ?? undefined}
+                />
+              </Grid>
+              </Box> </>}
 
+             
               {!isMobScreen ? (
                 <Grid
                   item
@@ -353,6 +408,7 @@ const RoomBookingCard = ({
                     </Button>
                   </Box>
                 </Grid>
+                
               ) : (
                 <Grid
                   item
@@ -409,8 +465,13 @@ const RoomBookingCard = ({
             </Box>
           ))}
         </Box>
-
-        <Box
+{isMobScreen ? <Box display="flex" justifyContent="space-between"> <Typography fontSize={18} fontWeight="bold" mt={0.5  }>
+              Total Price
+            </Typography> 
+            <Typography variant="h5" color="primary">
+            Rs. {totalPrice}
+          </Typography>
+            </Box>  :    <Box
           display="flex"
           justifyContent="space-between"
           alignItems="center"
@@ -431,11 +492,10 @@ const RoomBookingCard = ({
                 .reduce((total, room) => total + room.guests, 0)}
             </Typography>
           </Box>
-          <Typography variant="h5" color="primary">
-            Rs. {totalPrice}
-          </Typography>
+   
         </Box>
-
+ }
+     
         {showBookingForm ? (
           <Box sx={{ mt: 4 }}>
             <TextField

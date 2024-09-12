@@ -6,7 +6,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import UmdaLogo from "@/public/assets/icons/logo.svg";
+import UmdaLogo from "@/public/assets/icons/logo.png";
 
 import HotelsDropdownButton from "./HotelsDropdownButton";
 import CallUsButton from "./CallUsButton";
@@ -38,18 +38,15 @@ const Navbar = () => {
   ) {
     return (
       <nav className="navbar">
-        <Link href={"/"} className="navbar-link">
-          <Image
-            src={UmdaLogo}
-            alt="Umda Company Logo"
-            className="umda-hotel-logo"
-          />
-          <p
-            className="navbar-text"
-            style={{ fontSize: 20, fontWeight: "bold" }}
-          >
-            Umda Hotels
-          </p>
+        <Link href={"/"}>
+        <Image
+  src={UmdaLogo}
+  alt="Umda Company Logo"
+  className="umda-hotel-logo"
+ 
+/>
+
+        
         </Link>
         {isMobScreen ? (
           <div className="hamburger-menu"  onClick={toggleMenu}>

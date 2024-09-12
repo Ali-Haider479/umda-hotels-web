@@ -38,7 +38,7 @@ const RoomSelector = ({
     <Box
       sx={{ maxWidth: 800, margin: "32px auto", padding: isMobScreen ? 0 : 2 }}
     >
-      <Typography fontWeight={"bold"}>Choose your room</Typography>
+      <Typography ml={isMobScreen ? 2: 0} fontWeight={"bold"} fontSize={isMobScreen ? 16 : 22}>Choose your room</Typography>
       {roomData.map((room, index) => (
         <RoomSelectorCard
           key={index}
