@@ -449,7 +449,7 @@ const RoomBookingCard = ({
                     variant="body1"
                     sx={{ fontSize: isMobScreen ? "0.875rem" : "1rem" }} // Responsive font size
                   >
-                    {`${roomState.roomName} (Price/Night: ${roomState.discountedPrice})`}
+                    {`${roomState.roomName}`}
                   </Typography>
                 }
               />

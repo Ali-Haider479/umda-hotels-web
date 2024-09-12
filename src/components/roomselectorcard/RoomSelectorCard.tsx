@@ -91,7 +91,7 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
   {room.roomName}
 </Typography>
 
-                <Box display="flex" alignItems="center" sx={{ mt: 1 }} paddingBottom={5}>
+                <Box display="flex" alignItems="center">
                   {isMobScreen ? (
                     <BedIcon sx={{ fontSize: 16 }} />
                   ) : (
@@ -160,6 +160,7 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
                     onRoomsChange={(change) => onRoomsChange(change)}
                     onGuestsChange={(change) => onGuestsChange(change)}
                     availableRooms={room.availableRooms}
+                    fontSizeSmall = {true}
                   />
                 )}
               </CardContent>
@@ -187,7 +188,7 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
                   onClick={handlePrev}
                   sx={{
                     position: "absolute",
-                    left: 10,
+                    left: 25,
                     top: "25%",
                     transform: "translateY(-50%)",
                     zIndex: 1,
@@ -199,11 +200,11 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
                 <Box
                   sx={{
                     position: "relative",
-                    width: "165px",
+                    width: "135px",
                     height: "50%",
                     transition: "opacity 0.5s",
                     opacity: fadeTransition ? 0.3 : 1,
-                    marginLeft: "10px",
+                    marginLeft: "30px",
                   }}
                 >
                   <Image

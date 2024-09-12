@@ -7,6 +7,7 @@ interface RoomCheckboxProps {
   availableRooms: number;
   onRoomsChange: (change: number) => void;
   onGuestsChange: (change: number) => void;
+  fontSizeSmall?: boolean; 
 }
 
 const RoomCheckbox: React.FC<RoomCheckboxProps> = ({
@@ -15,6 +16,7 @@ const RoomCheckbox: React.FC<RoomCheckboxProps> = ({
   availableRooms,
   onRoomsChange,
   onGuestsChange,
+  fontSizeSmall,
 }) => {
   const isMobScreen = useMediaQuery("(max-width: 500px)");
 
@@ -25,10 +27,10 @@ const RoomCheckbox: React.FC<RoomCheckboxProps> = ({
       {isMobScreen ? (
         <Box>
      <Box display="flex" alignItems="center" mt={2}>
-     <Box display="flex" alignItems="center" mr={4}>
+     <Box display="flex" alignItems="center" mr={fontSizeSmall ? 2 : 4}>
        <Typography
          variant="body1"
-         sx={{ mr: 2, fontSize: "0.6rem" }} // Adjust font size
+         sx={{ mr: fontSizeSmall? 1: 2, fontSize: fontSizeSmall? "0.6rem": "0.6rem" }} // Adjust font size
        >
          Rooms
        </Typography>
@@ -37,18 +39,20 @@ const RoomCheckbox: React.FC<RoomCheckboxProps> = ({
          onClick={() => onRoomsChange(-1)}
          disabled={isDisabled || rooms <= 0}
          sx={{
-           minWidth: 30,
+           minWidth: fontSizeSmall ? "25px" : "30px",
+          //  minHeight: fontSizeSmall ? "5px" : "20px",
            color: "black",
            borderColor: "black",
            fontSize: "0.6rem",
-           padding: isMobScreen ? "4px" : "8px", // Adjust padding
+           lineHeight : fontSizeSmall ?  "12px" : "15px",
+           padding: "4px" // Adjust padding
          }}
        >
          -
        </Button>
        <Typography
          variant="body1"
-         sx={{ mx: 2, fontSize: "0.6rem" }} // Adjust font size
+         sx={{ ml: fontSizeSmall? 0.5: 2,  mr: fontSizeSmall? 1: 2 ,fontSize: fontSizeSmall? "0.6rem": "0.6rem" }} // Adjust font size
        >
          {rooms}
        </Typography>
@@ -57,10 +61,11 @@ const RoomCheckbox: React.FC<RoomCheckboxProps> = ({
          onClick={() => onRoomsChange(1)}
          disabled={isDisabled || rooms >= availableRooms}
          sx={{
-           minWidth: 30,
-           color: "black",
+          lineHeight : fontSizeSmall ?  "12px" : "15px",
+
+          minWidth: fontSizeSmall ? "25px" : "30px",           color: "black",
            borderColor: "black",
-           fontSize: "0.6rem", // Adjust font size
+           fontSize: isMobScreen ? "0.8rem" : "1rem", // Adjust font size
            padding: isMobScreen ? "4px" : "8px", // Adjust padding
          }}
        >
@@ -69,10 +74,10 @@ const RoomCheckbox: React.FC<RoomCheckboxProps> = ({
      </Box>
    
      {/* Guests Section */}
-     <Box display="flex" alignItems="center">
+     <Box display="flex" alignItems="center"  >
        <Typography
          variant="body1"
-         sx={{ mr: 2, fontSize: "0.6rem" }} // Adjust font size
+         sx={{ mr: fontSizeSmall? 0.5: 2, fontSize: fontSizeSmall? "0.6rem": "0.6rem"}} // Adjust font size
        >
          Guests
        </Typography>
@@ -80,8 +85,9 @@ const RoomCheckbox: React.FC<RoomCheckboxProps> = ({
          variant="outlined"
          onClick={() => onGuestsChange(-1)}
          sx={{
-           minWidth: 30,
-           color: "black",
+          lineHeight : fontSizeSmall ?  "12px" : "15px",
+
+          minWidth: fontSizeSmall ? "25px" : "30px",           color: "black",
            borderColor: "black",
            fontSize: "0.6rem", // Adjust font size
            padding: isMobScreen ? "4px" : "8px", // Adjust padding
@@ -91,7 +97,7 @@ const RoomCheckbox: React.FC<RoomCheckboxProps> = ({
        </Button>
        <Typography
          variant="body1"
-         sx={{ mx: 2, fontSize: isMobScreen ? "0.8rem" : "1rem" }} // Adjust font size
+         sx={{  ml: fontSizeSmall? 0.5: 2,  mr: fontSizeSmall? 0.5: 2, fontSize: isMobScreen ? "0.8rem" : "1rem" }} // Adjust font size
        >
          {guests}
        </Typography>
@@ -99,8 +105,9 @@ const RoomCheckbox: React.FC<RoomCheckboxProps> = ({
          variant="outlined"
          onClick={() => onGuestsChange(1)}
          sx={{
-           minWidth: 30,
-           color: "black",
+          lineHeight : fontSizeSmall ?  "12px" : "15px",
+
+          minWidth: fontSizeSmall ? "25px" : "30px",           color: "black",
            borderColor: "black",
            fontSize: isMobScreen ? "0.8rem" : "1rem", // Adjust font size
            padding: isMobScreen ? "4px" : "8px", // Adjust padding
@@ -111,6 +118,12 @@ const RoomCheckbox: React.FC<RoomCheckboxProps> = ({
      </Box>
   
    </Box>
+   {availableRooms !== 0 && !fontSizeSmall ? (
+    <Typography color="green" sx={{ fontSize: "1rem", mt: 1 }}>
+      Rooms Available
+    </Typography>
+  ) : null}
+   
    {availableRooms === 0 && (
     <Typography color="red" sx={{ fontSize: "1rem", mt: 1 }}>
       Room Not Available
