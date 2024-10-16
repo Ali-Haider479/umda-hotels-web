@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -6,6 +6,7 @@ import {
   CardContent,
   Checkbox,
   Chip,
+  CircularProgress,
   Divider,
   FormControl,
   FormControlLabel,
@@ -27,6 +28,10 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import RoomCheckbox from "../roomcheckbox/RoomCheckbox";
 import { StaticImageData } from "next/image";
+import { useRouter } from "next/navigation";
+
+import { useSession } from "next-auth/react";
+import InputMask from "react-input-mask";
 
 const HighlightedDaysContext = createContext<{
   highlightedDays: string[];
@@ -146,16 +151,35 @@ const RoomBookingCard = ({
   advancePayment,
   setAdvancePayment,
 }: RoomBookingProps) => {
+  const { data: session } = useSession();
+  console.log("Session", session);
   const isMobScreen = useMediaQuery("(max-width: 950px)");
 
   const today = dayjs();
+  const router = useRouter();
 
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [fullName, setFullName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [telephone, setTelephone] = useState("");
   const [email, setEmail] = useState("");
+  const [telephoneError, setTelephoneError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [formError, setFormError] = useState("");
+  const [loading, setLoading] = useState(false); // Loading state
   // const [paymentOption, setPaymentOption] = useState("full");
   // const [advancePayment, setAdvancePayment] = useState(0);
+
+  useEffect(() => {
+    if (session?.user) {
+      setFullName(`${session.user.firstName} ${session.user.lastName}`);
+      setFirstName(session.user.firstName ?? ""); // Default to an empty string if undefined
+      setLastName(session.user.lastName ?? ""); // Default to an empty string if undefined
+      setTelephone(session.user.telephone ?? ""); // Default to an empty string if undefined
+      setEmail(session.user.email ?? ""); // Default to an empty string if undefined
+    }
+  }, [session]);
 
   const calculateTotalPrice = () => {
     return selectedRooms.reduce((total, room) => {
@@ -206,6 +230,101 @@ const RoomBookingCard = ({
     startDate: start,
     endDate: end,
   } = getHighlightedDays();
+
+  // Validate the telephone number format
+  const handleTelephoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTelephone(e.target.value);
+    if (!/^\+92 \d{3} \d{7}$/.test(e.target.value)) {
+      setTelephoneError(true);
+    } else {
+      setTelephoneError(false);
+    }
+  };
+
+  const validateEmail = (email: string) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  const handleBookNow = async () => {
+    // Check if any required fields are empty
+    if (!firstName || !lastName || !telephone || !email) {
+      setFormError("All fields are required.");
+      return;
+    }
+
+    // Check if the telephone is valid
+    if (telephoneError) {
+      setFormError("Please enter a valid telephone number.");
+      return;
+    }
+
+    // Check if the email is valid
+    if (!validateEmail(email)) {
+      setEmailError(true);
+      setFormError("Please enter a valid email address.");
+      return;
+    } else {
+      setEmailError(false);
+    }
+
+    // Check if at least one room is selected (checked = true)
+    const isRoomSelected = selectedRooms.some((room) => room.checked === true);
+
+    if (!isRoomSelected) {
+      setFormError("You must select at least one room to proceed.");
+      return;
+    }
+
+    const userId = session?.user?.id; // Get user ID if available from session
+
+    // If all validations pass, submit the form
+    setFormError("");
+    setLoading(true); // Start loading
+
+    // Prepare booking data
+    const bookingData = {
+      userId,
+      firstName,
+      lastName,
+      telephone,
+      email,
+      selectedRooms,
+      startDate,
+      endDate,
+      totalPrice,
+      paymentType: "onSite",
+    };
+
+    try {
+      // Make the POST request to the booking API endpoint
+      const response = await fetch("/api/booking", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bookingData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        router.push(`/booking-confirmed/${data._id}`);
+        // Handle successful booking
+        console.log("Booking successful:", data);
+        // You can add a success message or redirect to a confirmation page
+      } else {
+        // Handle error response
+        setFormError(data.message || "An error occurred while booking.");
+        console.error("Booking failed:", data);
+      }
+    } catch (error) {
+      setFormError("An unexpected error occurred. Please try again later.");
+      console.error("Booking error:", error);
+    } finally {
+      setLoading(false); // Stop loading after request is complete
+    }
+  };
 
   return (
     <Card sx={{ maxWidth: 600, margin: "16px auto", padding: 2 }}>
@@ -274,58 +393,124 @@ const RoomBookingCard = ({
               alignItems="center"
               sx={{ marginLeft: isMobScreen ? "5px" : "0px" }}
             >
-              <Grid item xs={12} md={5} ml={isMobScreen ? 5 : 0}>
-                <DatePicker
-                  label="Start Date"
-                  value={startDate}
-                  onChange={(newValue: Dayjs | null) => {
-                    setStartDate(newValue);
-                  }}
-                  slots={{
-                    textField: (params) => (
-                      <TextField
-                        {...params}
-                        sx={{
-                          "& .MuiInputBase-root": {
-                            fontSize: isMobScreen ? "1rem" : "1rem", // Adjust font size if needed
-                            padding: isMobScreen ? "8px" : "8px", // Adjust padding
-                            width: isMobScreen ? "100%" : "auto", // Decrease width on mobile
-                            height: isMobScreen ? "auto" : "auto", // Adjust height if needed
-                          },
+              {!isMobScreen ? (
+                <>
+                  {" "}
+                  <Grid item xs={12} md={5} ml={isMobScreen ? 5 : 0}>
+                    <DatePicker
+                      label="Start Date"
+                      value={startDate}
+                      onChange={(newValue: Dayjs | null) => {
+                        setStartDate(newValue);
+                      }}
+                      slots={{
+                        textField: (params) => (
+                          <TextField
+                            {...params}
+                            sx={{
+                              "& .MuiInputBase-root": {
+                                fontSize: isMobScreen ? "1rem" : "1rem", // Adjust font size if needed
+                                padding: isMobScreen ? "8px" : "8px", // Adjust padding
+                                width: isMobScreen ? "100%" : "auto", // Decrease width on mobile
+                                height: isMobScreen ? "auto" : "auto", // Adjust height if needed
+                              },
+                            }}
+                          />
+                        ),
+                        day: CustomDay,
+                      }}
+                      minDate={today}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={5} ml={isMobScreen ? 5 : 0}>
+                    <DatePicker
+                      label="End Date"
+                      value={endDate}
+                      onChange={(newValue: Dayjs | null) => {
+                        setEndDate(newValue);
+                      }}
+                      slots={{
+                        textField: (params) => (
+                          <TextField
+                            {...params}
+                            sx={{
+                              "& .MuiInputBase-root": {
+                                fontSize: isMobScreen ? "1rem" : "1rem", // Adjust font size if needed
+                                padding: isMobScreen ? "8px" : "8px", // Adjust padding
+                                width: isMobScreen ? "100%" : "auto", // Decrease width on mobile
+                                height: isMobScreen ? "auto" : "auto", // Adjust height if needed
+                              },
+                            }}
+                          />
+                        ),
+                        day: CustomDay,
+                      }}
+                      minDate={startDate ?? undefined}
+                    />
+                  </Grid>
+                </>
+              ) : (
+                <>
+                  {" "}
+                  <Typography textAlign={"left"} ml={-2} fontWeight={"bold"}>
+                    Guest Details
+                  </Typography>
+                  <Box display="flex">
+                    <Grid mt={2} item xs={12} md={5} ml={isMobScreen ? -3 : 0}>
+                      <DatePicker
+                        label="Start Date"
+                        value={startDate}
+                        onChange={(newValue: Dayjs | null) => {
+                          setStartDate(newValue);
                         }}
-                      />
-                    ),
-                    day: CustomDay,
-                  }}
-                  minDate={today}
-                />
-              </Grid>
-              <Grid item xs={12} md={5} ml={isMobScreen ? 5 : 0}>
-                <DatePicker
-                  label="End Date"
-                  value={endDate}
-                  onChange={(newValue: Dayjs | null) => {
-                    setEndDate(newValue);
-                  }}
-                  slots={{
-                    textField: (params) => (
-                      <TextField
-                        {...params}
-                        sx={{
-                          "& .MuiInputBase-root": {
-                            fontSize: isMobScreen ? "1rem" : "1rem", // Adjust font size if needed
-                            padding: isMobScreen ? "8px" : "8px", // Adjust padding
-                            width: isMobScreen ? "100%" : "auto", // Decrease width on mobile
-                            height: isMobScreen ? "auto" : "auto", // Adjust height if needed
-                          },
+                        slots={{
+                          textField: (params) => (
+                            <TextField
+                              {...params}
+                              sx={{
+                                "& .MuiInputBase-root": {
+                                  fontSize: isMobScreen ? "1rem" : "1rem", // Adjust font size if needed
+                                  padding: isMobScreen ? "8px" : "8px", // Adjust padding
+                                  width: isMobScreen ? "100%" : "auto", // Decrease width on mobile
+                                  height: isMobScreen ? "40px" : "auto", // Adjust height if needed
+                                },
+                              }}
+                            />
+                          ),
+                          day: CustomDay,
                         }}
+                        minDate={today}
                       />
-                    ),
-                    day: CustomDay,
-                  }}
-                  minDate={startDate ?? undefined}
-                />
-              </Grid>
+                    </Grid>
+                    <Grid item mt={2} xs={12} md={5} ml={isMobScreen ? 5 : 0}>
+                      <DatePicker
+                        label="End Date"
+                        value={endDate}
+                        onChange={(newValue: Dayjs | null) => {
+                          setEndDate(newValue);
+                        }}
+                        slots={{
+                          textField: (params) => (
+                            <TextField
+                              {...params}
+                              sx={{
+                                "& .MuiInputBase-root": {
+                                  fontSize: isMobScreen ? "1rem" : "1rem", // Adjust font size if needed
+                                  padding: isMobScreen ? "8px" : "8px", // Adjust padding
+                                  width: isMobScreen ? "100%" : "auto", // Decrease width on mobile
+                                  height: isMobScreen ? "40px" : "auto", // Adjust height if needed
+                                },
+                              }}
+                            />
+                          ),
+                          day: CustomDay,
+                        }}
+                        minDate={startDate ?? undefined}
+                      />
+                    </Grid>
+                  </Box>{" "}
+                </>
+              )}
 
               {!isMobScreen ? (
                 <Grid
@@ -393,7 +578,7 @@ const RoomBookingCard = ({
                     variant="body1"
                     sx={{ fontSize: isMobScreen ? "0.875rem" : "1rem" }} // Responsive font size
                   >
-                    {`${roomState.roomName} (Price/Night: ${roomState.discountedPrice})`}
+                    {`${roomState.roomName}`}
                   </Typography>
                 }
               />
@@ -409,57 +594,99 @@ const RoomBookingCard = ({
             </Box>
           ))}
         </Box>
-
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          sx={{ mt: 2 }}
-        >
-          <Box>
-            <Typography fontSize={isMobScreen ? "14px" : "18px"}>
-              Recommended For You
+        {isMobScreen ? (
+          <Box display="flex" justifyContent="space-between">
+            {" "}
+            <Typography fontSize={18} fontWeight="bold" mt={0.5}>
+              Total Price
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Total Rooms:{" "}
-              {selectedRooms
-                .filter((room) => room.checked)
-                .reduce((total, room) => total + room.rooms, 0)}{" "}
-              | Total Guests:{" "}
-              {selectedRooms
-                .filter((room) => room.checked)
-                .reduce((total, room) => total + room.guests, 0)}
+            <Typography variant="h5" color="primary">
+              Rs. {totalPrice}
             </Typography>
           </Box>
-          <Typography variant="h5" color="primary">
-            Rs. {totalPrice}
-          </Typography>
-        </Box>
+        ) : (
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            sx={{ mt: 2 }}
+          >
+            <Box>
+              <Typography fontSize={isMobScreen ? "14px" : "18px"}>
+                Recommended For You
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Total Rooms:{" "}
+                {selectedRooms
+                  .filter((room) => room.checked)
+                  .reduce((total, room) => total + room.rooms, 0)}{" "}
+                | Total Guests:{" "}
+                {selectedRooms
+                  .filter((room) => room.checked)
+                  .reduce((total, room) => total + room.guests, 0)}
+              </Typography>
+            </Box>
+            <Typography variant="h5" color="primary">
+              Rs. {totalPrice}
+            </Typography>
+          </Box>
+        )}
 
         {showBookingForm ? (
           <Box sx={{ mt: 4 }}>
-            <TextField
-              fullWidth
-              label="Full Name"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              fullWidth
-              label="Phone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              sx={{ mb: 2 }}
-            />
+            <Grid container spacing={2}>
+              {/* First Name Field */}
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="First Name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  sx={{ mb: isMobScreen ? 0.5 : 2 }}
+                  disabled={session?.user ? true : false}
+                />
+              </Grid>
+
+              {/* Last Name Field */}
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Last Name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  sx={{ mb: 2 }}
+                  disabled={session?.user ? true : false}
+                />
+              </Grid>
+            </Grid>
+            <InputMask
+              mask="+\92 999 9999999"
+              value={telephone}
+              onChange={handleTelephoneChange}
+            >
+              {/* @ts-ignore */}
+              {(inputProps) => (
+                <TextField
+                  {...inputProps}
+                  fullWidth
+                  id="telephone"
+                  label="Telephone"
+                  variant="outlined"
+                  error={telephoneError} // Show error state
+                  helperText={telephoneError ? "Invalid telephone number" : ""} // Show helper text if there's an error
+                  sx={{ mb: 2 }}
+                />
+              )}
+            </InputMask>
             <TextField
               fullWidth
               label="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               sx={{ mb: 2 }}
+              disabled={session?.user ? true : false}
             />
-            <FormControl component="fieldset" sx={{ mb: 2 }}>
+            {/* <FormControl component="fieldset" sx={{ mb: 2 }}>
               <FormLabel component="legend">Payment Option</FormLabel>
               <RadioGroup
                 aria-label="payment"
@@ -483,9 +710,23 @@ const RoomBookingCard = ({
               <Typography variant="h6" color="primary" sx={{ mb: 2 }}>
                 Advance Payment: Rs. {advancePayment}
               </Typography>
+            )} */}
+
+            {/* Error Message Display */}
+            {formError && (
+              <Typography color="error" sx={{ mb: 2 }}>
+                {formError}
+              </Typography>
             )}
-            <Button variant="contained" color="primary" fullWidth>
-              Book Now
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={handleBookNow}
+              disabled={loading} // Disable button when loading
+              startIcon={loading ? <CircularProgress size={20} /> : null}
+            >
+              {loading ? "Booking..." : "Book Now"}
             </Button>
           </Box>
         ) : (

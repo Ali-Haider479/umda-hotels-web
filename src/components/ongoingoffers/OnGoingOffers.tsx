@@ -24,14 +24,14 @@ const OnGoingOffers = () => {
         centerPadding: '0px',
         focusOnSelect: true,
         autoplay: true,
-        autoplaySpeed: 3000,
+        autoplaySpeed: 6000,
     };
 
     return (
         <>
             {isMobScreen ? (
-                <Box mt={2} mx={2}>
-                    <Typography  py={2} pb={2} fontWeight={"bold"}>
+                <Box maxWidth={"90%"} mt={5} mx={2} mb={2}>
+                    <Typography  pl={0} pb={2} fontWeight={"bold"}>
                         Ongoing Offers
                     </Typography>
                     <Slider {...settings}>
@@ -41,14 +41,14 @@ const OnGoingOffers = () => {
                                     component="img"
                                     src={offer.imgSrc}
                                     alt={offer.title}
-                                    sx={{ width: '350px', height:"200px", borderRadius: 2, paddingLeft:"20px"}}
+                                    sx={{ maxWidth: "90%", minWidth: "90%",height:"200px", borderRadius: 2, paddingLeft:"20px"}}
                                 />
-                                <Typography textAlign="center" mt={1} ml={2} fontWeight="bold">
+                                {/* <Typography textAlign="center" mt={1} ml={2} fontWeight="bold">
                                     {offer.title}
                                 </Typography>
                                 <Typography textAlign="center"  ml={2} color="primary">
                                     {offer.discount} OFF
-                                </Typography>
+                                </Typography> */}
                             </Box>
                         ))}
                     </Slider>

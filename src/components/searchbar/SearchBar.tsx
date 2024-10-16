@@ -11,6 +11,7 @@ import {
   Autocomplete,
   Box,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -96,6 +97,7 @@ const SearchBar = () => {
   const isMobScreen = useMediaQuery("(max-width: 500px)");
 
   const router = useRouter();
+  const [loading, setLoading] = useState(false); // Loading state
   const [city, setCity] = useState<string>("");
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
@@ -159,19 +161,27 @@ const SearchBar = () => {
       guests,
     });
     if (validateInputs()) {
-      const encryptedToken = await getAuthToken(); // Get the encrypted token
-      console.log(encryptedToken);
+      setLoading(true); // Start loading
+      try {
+        const encryptedToken = await getAuthToken(); // Get the encrypted token
+        console.log(encryptedToken);
 
-      const queryParams = {
-        city,
-        checkInDate: startDate ? startDate.format("YYYY-MM-DD") : "",
-        checkOutDate: endDate ? endDate.format("YYYY-MM-DD") : "",
-        guests: guests.toString(),
-        token: encodeURIComponent(encryptedToken),
-      };
-      const queryString = new URLSearchParams(queryParams).toString();
-      // Assuming router.push is your method to navigate
-      router.push(`/hotel?${queryString}`);
+        const queryParams = {
+          city,
+          checkInDate: startDate ? startDate.format("YYYY-MM-DD") : "",
+          checkOutDate: endDate ? endDate.format("YYYY-MM-DD") : "",
+          guests: guests.toString(),
+          token: encodeURIComponent(encryptedToken),
+        };
+        const queryString = new URLSearchParams(queryParams).toString();
+
+        // Navigate to the results page
+        router.push(`/hotel?${queryString}`);
+      } catch (error) {
+        console.error("Search failed:", error);
+      } finally {
+        setLoading(false); // Stop loading after search is complete
+      }
     }
   };
 
@@ -205,12 +215,12 @@ const SearchBar = () => {
             bgcolor={"white"}
             borderRadius={2}
             marginTop={4}
-            sx={{ width: "90%", maxWidth: 1000, py: 3, pl: 5 }}
+            sx={{ width: "92%", mr: "auto", ml: "auto" }}
           >
             <Typography
               color={"black"}
-              paddingBottom={4}
-              fontSize={14}
+              paddingBottom={2}
+              fontSize={16}
               fontWeight={"bold"}
             >
               Find The Best Deals For Online Hotel Booking
@@ -220,7 +230,7 @@ const SearchBar = () => {
                 value={{ highlightedDays, startDate: start, endDate: end }}
               >
                 <Grid container spacing={2} alignItems="center">
-                  <Grid item xs={10} sm={6} md={3}>
+                  <Grid item xs={12} sm={6} md={3}>
                     <Autocomplete
                       disablePortal
                       options={[
@@ -247,7 +257,8 @@ const SearchBar = () => {
                       }}
                     />
                   </Grid>
-                  <Grid item xs={10} sm={6} md={4}>
+
+                  <Grid item xs={12} sm={6} md={4}>
                     <Box sx={{ display: "flex", gap: 2 }}>
                       <Box sx={{ flex: 1 }}>
                         <DatePicker
@@ -275,7 +286,9 @@ const SearchBar = () => {
                           views={["month", "day"]}
                         />
                       </Box>
+
                       <Divider orientation="vertical" flexItem />
+
                       <Box sx={{ flex: 1 }}>
                         <DatePicker
                           label="End Date"
@@ -304,7 +317,8 @@ const SearchBar = () => {
                       </Box>
                     </Box>
                   </Grid>
-                  <Grid item xs={10} sm={6} md={2}>
+
+                  <Grid item xs={12} sm={6} md={2}>
                     <TextField
                       select
                       fullWidth
@@ -325,7 +339,8 @@ const SearchBar = () => {
                       ))}
                     </TextField>
                   </Grid>
-                  <Grid item xs={10} sm={6} md={3}>
+
+                  <Grid item xs={12} sm={6} md={3}>
                     <Button
                       variant="contained"
                       color="primary"
@@ -337,8 +352,12 @@ const SearchBar = () => {
                         paddingTop: "14px",
                         paddingBottom: "14px",
                       }}
+                      disabled={loading} // Disable button when loading
+                      startIcon={
+                        loading ? <CircularProgress size={20} /> : null
+                      }
                     >
-                      Search
+                      {loading ? "Searching..." : "Search"}
                     </Button>
                   </Grid>
                 </Grid>
@@ -494,8 +513,12 @@ const SearchBar = () => {
                             paddingTop: "14px",
                             paddingBottom: "14px",
                           }}
+                          disabled={loading} // Disable button when loading
+                          startIcon={
+                            loading ? <CircularProgress size={20} /> : null
+                          }
                         >
-                          Search
+                          {loading ? "Searching..." : "Search"}
                         </Button>
                       </Grid>
                     </Grid>

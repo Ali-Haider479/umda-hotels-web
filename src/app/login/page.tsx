@@ -4,7 +4,7 @@ import Image from "next/image";
 import "./login.css";
 
 import hotelBackground from "@/public/assets/images/hotel-bg.jpg";
-import UmdaLogo from "@/public/assets/icons/logo.svg";
+import UmdaLogo from "@/public/assets/icons/only-logo.png";
 import {
   Box,
   Button,
@@ -134,11 +134,11 @@ const LoginPage = () => {
             <Image
               src={UmdaLogo}
               alt="Umda Company Logo"
-              className="umda-hotel-logo"
+              className="umda-hotel-only-logo"
             />
             <p
               className="navbar-text"
-              style={{ fontSize: 20, fontWeight: "bold", color: "white" }}
+              style={{ fontSize: 21, fontWeight: "bold", color: "white" }}
             >
               Umda Hotels
             </p>
@@ -228,11 +228,7 @@ const LoginPage = () => {
               )}
 
               <Link href="/forget-password" passHref>
-                <Button
-                  variant="text"
-                  color="primary"
-                  sx={{ marginBottom: 1 }}
-                >
+                <Button variant="text" color="primary" sx={{ marginBottom: 1 }}>
                   Forgot Password?
                 </Button>
               </Link>

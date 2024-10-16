@@ -17,8 +17,16 @@ const Explore = () => {
 
   return (
     <>
-    {isMobScreen ?   <Box >
-    <Typography pl={2} pb={1} fontWeight={"bold"} gutterBottom>
+    {isMobScreen ?  
+     <Box sx={{  }}>
+     <Typography
+             color={"black"}
+             fontSize={16}
+             fontWeight={"bold"}
+             textAlign="left"
+             pl={2}
+             mt={2}
+           >
       Explore your next destination
     </Typography>
     <Grid container spacing={3} marginTop={1} justifyContent="center">
@@ -28,7 +36,7 @@ const Explore = () => {
             <Avatar
               alt={destination.name}
               src={destination.src}
-              sx={{ width: 60, height: 60, margin: 'auto' }}
+              sx={{ width: 75, height: 75, margin: 'auto' }}
             />
             <Typography variant="body2" sx={{ mt: 1 }}>
               {destination.name}

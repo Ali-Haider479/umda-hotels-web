@@ -46,7 +46,7 @@ const RoomContent = () => {
       discountPercentage: 20,
       images: [HotelMontanaImage, HotelGalaxyImage, HotelHorizonImage],
       availableRooms: 5,
-      rooms: ["1317801", "1317802", "1317803", "1317804", "1317805"],
+      roomIds: ["1317801", "1317802", "1317803", "1317804", "1317805"],
     },
     {
       roomName: "Deluxe Room Twin Bed with Balcony",
@@ -58,7 +58,7 @@ const RoomContent = () => {
       discountPercentage: 20,
       images: [HotelGalaxyImage, HotelHorizonImage, HotelMontanaImage],
       availableRooms: 4,
-      rooms: ["1317795", "1317796", "1317797", "1317798"],
+      roomIds: ["1317795", "1317796", "1317797", "1317798"],
     },
     {
       roomName: "Deluxe Room with Balcony",
@@ -70,7 +70,14 @@ const RoomContent = () => {
       discountPercentage: 20,
       images: [HotelHorizonImage, HotelMontanaImage, HotelGalaxyImage],
       availableRooms: 6,
-      rooms: ["1317788", "1317789", "1317790", "1317791", "1317792", "1317794"],
+      roomIds: [
+        "1317788",
+        "1317789",
+        "1317790",
+        "1317791",
+        "1317792",
+        "1317794",
+      ],
     },
     {
       roomName: "Executive Family Room with Bunk Beds",
@@ -82,7 +89,7 @@ const RoomContent = () => {
       discountPercentage: 20,
       images: [HotelHorizonImage, HotelMontanaImage, HotelGalaxyImage],
       availableRooms: 2,
-      rooms: ["1317786", "1317787"],
+      roomIds: ["1317786", "1317787"],
     },
   ];
 
@@ -195,7 +202,8 @@ const RoomContent = () => {
         updatedRoomData.map((room) => ({
           ...room,
           checked: false,
-          rooms: room.availableRooms,
+          rooms: 1,
+          // rooms: room.availableRooms,
           guests: 1,
         }))
       );
@@ -218,7 +226,7 @@ const RoomContent = () => {
     checkOutDate: string | null
   ) => {
     const updatedRoomData = roomData.map((room) => {
-      const availableRooms = room.rooms.filter((roomId: string) => {
+      const availableRooms = room.roomIds.filter((roomId: string) => {
         const isBooked = bookedRooms.some((booking) => {
           if (booking.id_room === roomId) {
             const bookingStartDate = convertUnixToDate(booking.start_time);
@@ -388,6 +396,7 @@ const RoomContent = () => {
                 setPaymentOption={setPaymentOption}
                 advancePayment={advancePayment}
                 setAdvancePayment={setAdvancePayment}
+                // calendarId={calendarId}
               />
               {isMobScreen && <HotelPolicyInfo />}{" "}
               {/* Display under RoomBookingCard on mobile */}

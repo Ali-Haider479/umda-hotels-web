@@ -79,7 +79,6 @@ function Row({ booking }: { booking: any }) {
                 <TableHead>
                   <TableRow>
                     <TableCell>Room Name</TableCell>
-                    <TableCell align="right">Room Booked</TableCell>
                     <TableCell align="right">Guests</TableCell>
                     <TableCell align="right">Price</TableCell>
                   </TableRow>
@@ -88,7 +87,6 @@ function Row({ booking }: { booking: any }) {
                   {booking.rooms.map((room: any, index: number) => (
                     <TableRow key={index}>
                       <TableCell>{room.roomName}</TableCell>
-                      <TableCell align="right">{room.roomsBooked}</TableCell>
                       <TableCell align="right">{room.guests}</TableCell>
                       <TableCell align="right">
                         {room.discountedPrice}
@@ -104,7 +102,7 @@ function Row({ booking }: { booking: any }) {
     </React.Fragment>
   );
 }
-const BookingHistoryPage = () => {
+const BookingsPage = () => {
   const { data: session } = useSession();
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -112,9 +110,9 @@ const BookingHistoryPage = () => {
 
   useEffect(() => {
     const fetchBookings = async () => {
-      if (!session || !session.user?.id) return;
+      if (!session || !session.user?.isAdmin) return;
       try {
-        const response = await fetch(`/api/booking/user/${session.user.id}`); // Replace with your dynamic user ID
+        const response = await fetch(`/api/booking`); // Replace with your dynamic user ID
         const data = await response.json();
         console.log(data);
         setBookings(data);
@@ -140,7 +138,7 @@ const BookingHistoryPage = () => {
   return (
     <Box sx={{ padding: 2 }}>
       <Typography variant="h4" fontWeight={"bold"} gutterBottom>
-        Booking History
+        Bookings
       </Typography>
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table">
@@ -168,4 +166,4 @@ const BookingHistoryPage = () => {
   );
 };
 
-export default BookingHistoryPage;
+export default BookingsPage;

@@ -70,90 +70,42 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
   return (
     <>
       {isMobScreen ? (
-        <Card sx={{ maxWidth: 1000, margin: "16px auto " }}>
+        <Card sx={{ maxWidth: 1000, margin: "16px auto ", height: "195px" }}>
           <Grid container mb={2}>
-            {/* Room Information */}
+            {/* Room Details */}
             <Grid item xs={4} md={8}>
-              <CardContent>
+              <Box sx={{ marginTop: "16px", marginLeft: "8px" }}>
                 <Typography
-                  fontSize={"10px"}
+                  fontSize={"14px"}
                   component="div"
-                  sx={{ fontWeight: "bold" }}
+                  sx={{
+                    fontWeight: "bold",
+                    width: "205px",
+                    overflow: "hidden",
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical",
+                    textOverflow: "ellipsis",
+                  }}
                 >
                   {room.roomName}
                 </Typography>
-                <Box display="flex" alignItems="center" sx={{ mt: 1 }}>
-                  {isMobScreen ? (
-                    <BedIcon sx={{ fontSize: 12 }} />
-                  ) : (
-                    <BedIcon />
-                  )}
-                  <Typography fontSize={"10px"} sx={{ mx: 1 }}>
+
+                <Box display="flex" alignItems="center" mt={1}>
+                  <BedIcon sx={{ fontSize: 16 }} />
+                  <Typography fontSize={"16px"} sx={{ mx: 1 }}>
                     x{room.bedCount}
                   </Typography>
-                  {isMobScreen ? (
-                    <PeopleIcon sx={{ fontSize: 12 }} />
-                  ) : (
-                    <PeopleIcon />
-                  )}{" "}
-                  <Typography fontSize={"10px"} sx={{ mx: 1 }}>
+                  <PeopleIcon sx={{ fontSize: 16 }} />
+                  <Typography fontSize={"16px"} sx={{ mx: 1 }}>
                     x{room.peopleCount}
                   </Typography>
-                  {isMobScreen ? (
-                    <ChildCareIcon sx={{ fontSize: 12 }} />
-                  ) : (
-                    <ChildCareIcon />
-                  )}{" "}
-                  <Typography fontSize={"10px"} sx={{ mx: 1 }}>
+                  <ChildCareIcon sx={{ fontSize: 16 }} />
+                  <Typography fontSize={"16px"} sx={{ mx: 1 }}>
                     x{room.childCount}
                   </Typography>
                 </Box>
-                <Typography fontSize={"10px"} sx={{ mt: 1 }}>
-                  <span
-                    style={{ textDecoration: "line-through", color: "grey" }}
-                  >
-                    Rs. {room.originalPrice}
-                  </span>
-                  <span style={{ color: "red", fontWeight: "bold" }}>
-                    {" "}
-                    Rs. {room.discountedPrice}
-                  </span>{" "}
-                  per night{" "}
-                  <span style={{ color: "green", fontWeight: "bold" }}>
-                    {room.discountPercentage}% off!
-                  </span>
-                </Typography>
-                {!isMobScreen ? (
-                  <Button
-                    variant="outlined"
-                    onClick={() => onRoomSelection(!selected.checked)}
-                    sx={{
-                      mt: 2,
-                      display: "inline-block",
-                      width: "150px",
-                      backgroundColor: selected.checked ? "lightgrey" : "white",
-                      borderColor: "grey",
-                    }}
-                  >
-                    {selected.checked ? (
-                      <>
-                        Selected <CheckCircleIcon sx={{ color: "green" }} />
-                      </>
-                    ) : (
-                      "Select Room"
-                    )}
-                  </Button>
-                ) : null}
-                {selected.checked && (
-                  <RoomCheckbox
-                    rooms={selected.rooms}
-                    guests={selected.guests}
-                    onRoomsChange={(change) => onRoomsChange(change)}
-                    onGuestsChange={(change) => onGuestsChange(change)}
-                    availableRooms={room.availableRooms}
-                  />
-                )}
-              </CardContent>
+              </Box>
             </Grid>
 
             {/* Room Image */}
@@ -161,16 +113,16 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
               item
               xs={4}
               md={4}
+              ml={"80px"}
               container
-              justifyContent={!isMobScreen ? "center" : undefined}
-              alignItems={!isMobScreen ? "center" : undefined}
-              ml={!isMobScreen ? "0px" : "80px"}
+              justifyContent="center"
+              alignItems="center"
             >
               <Box
                 sx={{
                   position: "relative",
                   width: "100%",
-                  height: isMobScreen ? "200px" : "220px",
+                  height: "120px",
                   marginTop: isMobScreen ? "16px" : "0",
                 }}
               >
@@ -178,8 +130,8 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
                   onClick={handlePrev}
                   sx={{
                     position: "absolute",
-                    left: 10,
-                    top: "40%",
+                    left: 25,
+                    top: "50%",
                     transform: "translateY(-50%)",
                     zIndex: 1,
                     color: "white",
@@ -190,11 +142,11 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
                 <Box
                   sx={{
                     position: "relative",
-                    width: "165px",
-                    height: "75%",
+                    width: "135px",
+                    height: "100%",
                     transition: "opacity 0.5s",
                     opacity: fadeTransition ? 0.3 : 1,
-                    marginLeft: "10px",
+                    marginLeft: "30px",
                   }}
                 >
                   <Image
@@ -213,7 +165,7 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
                   sx={{
                     position: "absolute",
                     right: -45,
-                    top: "40%",
+                    top: "50%",
                     transform: "translateY(-50%)",
                     zIndex: 1,
                     color: "white",
@@ -222,20 +174,34 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
                   <ArrowForwardIosIcon />
                 </IconButton>
               </Box>
-              {isMobScreen ? (
+            </Grid>
+
+            {/* New Row for Checkbox and Button */}
+            <Grid container spacing={2} alignItems="center">
+              {/* Room Checkbox */}
+              <Grid item xs={8}>
+                {selected.checked && (
+                  <RoomCheckbox
+                    rooms={selected.rooms}
+                    guests={selected.guests}
+                    onRoomsChange={(change) => onRoomsChange(change)}
+                    onGuestsChange={(change) => onGuestsChange(change)}
+                    availableRooms={room.availableRooms}
+                    fontSizeSmall={true}
+                  />
+                )}
+              </Grid>
+
+              {/* Select Room Button */}
+              <Grid item xs={4} container mt={2}>
                 <Button
                   variant="outlined"
                   onClick={() => onRoomSelection(!selected.checked)}
                   sx={{
-                    mt: -4,
-                    ml: 4,
                     backgroundColor: selected.checked ? "lightgrey" : "white",
-                    fontSize: 12,
-                    padding: "4px 8px", // Adjust padding if needed
-                    display: "flex",
-                    alignItems: "center",
-                    minWidth: "120px", // Ensure enough width to fit the content
-                    whiteSpace: "nowrap", // Prevent text from wrapping
+                    fontSize: 9,
+                    px: 1,
+                    whiteSpace: "nowrap",
                   }}
                 >
                   {selected.checked ? (
@@ -249,7 +215,7 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
                     "Select Room"
                   )}
                 </Button>
-              ) : null}
+              </Grid>
             </Grid>
           </Grid>
         </Card>
@@ -319,6 +285,7 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
                     "Select Room"
                   )}
                 </Button>
+
                 {selected.checked && (
                   <RoomCheckbox
                     rooms={selected.rooms}
@@ -344,7 +311,7 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
                 sx={{
                   position: "relative",
                   width: "100%",
-                  height: isMobScreen ? "200px" : "220px",
+                  height: isMobScreen ? "300px" : "220px",
                   marginTop: isMobScreen ? "16px" : "0",
                 }}
               >
