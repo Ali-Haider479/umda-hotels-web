@@ -15,7 +15,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import hotelBackground from "@/public/assets/images/hotel-bg.jpg";
-import UmdaLogo from "@/public/assets/icons/logo.svg";
+import UmdaLogo from "@/public/assets/icons/only-logo.png";
 import { useState } from "react";
 import { MuiOtpInput } from "mui-one-time-password-input";
 import { useRouter } from "next/navigation";
@@ -127,11 +127,11 @@ const VerifyEmailPage = () => {
           <Image
             src={UmdaLogo}
             alt="Umda Company Logo"
-            className="umda-hotel-logo"
+            className="umda-hotel-only-logo"
           />
           <p
             className="navbar-text"
-            style={{ fontSize: 20, fontWeight: "bold", color: "white" }}
+            style={{ fontSize: 21, fontWeight: "bold", color: "white" }}
           >
             Umda Hotels
           </p>

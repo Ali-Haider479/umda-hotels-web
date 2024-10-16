@@ -83,6 +83,7 @@ const handler = NextAuth({
         token.email = user.email;
         token.firstName = user.firstName;
         token.lastName = user.lastName;
+        token.telephone = user.telephone;
         token.isVerified = user.isVerified;
         token.isAdmin = user.isAdmin;
       }
@@ -93,6 +94,7 @@ const handler = NextAuth({
       session.user.email = token.email;
       session.user.firstName = token.firstName;
       session.user.lastName = token.lastName;
+      session.user.telephone = token.telephone;
       session.user.isVerified = token.isVerified;
       session.user.isAdmin = token.isAdmin;
       return session;

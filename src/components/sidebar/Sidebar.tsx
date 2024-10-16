@@ -11,8 +11,10 @@ import { useRouter } from "next/navigation";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import HistoryIcon from "@mui/icons-material/History";
 import EmailIcon from "@mui/icons-material/Email";
+import { useSession } from "next-auth/react";
 
 const Sidebar = () => {
+  const { data: session } = useSession();
   const router = useRouter();
   return (
     <Box
@@ -42,9 +44,11 @@ const Sidebar = () => {
             path: "/account/my-profile",
           },
           {
-            text: "Booking History",
+            text: session?.user?.isAdmin ? "Bookings" : "Booking History",
             icon: <HistoryIcon />,
-            path: "/account/booking-history",
+            path: session?.user?.isAdmin
+              ? "/account/bookings"
+              : "/account/booking-history",
           },
           { text: "Email Notifications", icon: <EmailIcon />, path: "#" },
         ].map((item, index) => (

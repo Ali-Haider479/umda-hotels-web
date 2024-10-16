@@ -1,7 +1,7 @@
 "use client";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import Image from "next/image";
-import UmdaLogo from "@/public/assets/icons/logo.svg";
+import UmdaLogo from "@/public/assets/icons/logo.png";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { NoEncryption } from "@mui/icons-material";
 

@@ -4,9 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import "./signup.css";
 
-
 import hotelBackground from "@/public/assets/images/hotel-bg.jpg";
-import UmdaLogo from "@/public/assets/icons/logo.svg";
+import UmdaLogo from "@/public/assets/icons/only-logo.png";
 import {
   Box,
   Button,
@@ -20,7 +19,7 @@ import {
   InputAdornment,
   TextField,
   Typography,
-  useMediaQuery
+  useMediaQuery,
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
@@ -38,8 +37,7 @@ import { useRouter } from "next/navigation";
 const SignUpPage = () => {
   const isMobScreen = useMediaQuery("(max-width: 950px)");
   const isMobHeight = useMediaQuery("(max-height: 750px)");
-  const isFormHeight = useMediaQuery("(max-height:500px)")
-  
+  const isFormHeight = useMediaQuery("(max-height:500px)");
 
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -127,10 +125,10 @@ const SignUpPage = () => {
       {isMobScreen ? (
         <div
           style={{
-            height: isFormHeight ? "max-content" :  "100vh",
+            height: isFormHeight ? "max-content" : "100vh",
             backgroundSize: "inherit",
             backgroundImage: `url(${hotelBackground.src})`,
-            backgroundPosition: "cover"
+            backgroundPosition: "cover",
           }}
         >
           <nav className="signup-navbar">
@@ -138,11 +136,11 @@ const SignUpPage = () => {
               <Image
                 src={UmdaLogo}
                 alt="Umda Company Logo"
-                className="umda-hotel-logo"
+                className="umda-hotel-only-logo"
               />
               <p
                 className="navbar-text"
-                style={{ fontSize: 20, fontWeight: "bold", color: "white" }}
+                style={{ fontSize: 21, fontWeight: "bold", color: "white" }}
               >
                 Umda Hotels
               </p>
@@ -157,7 +155,13 @@ const SignUpPage = () => {
               overflow: "auto",
             }}
           >
-            <Card sx={{ maxWidth: "90%", padding: 5 , paddingTop : isMobHeight ? 18 : 0}}>
+            <Card
+              sx={{
+                maxWidth: "90%",
+                padding: 5,
+                paddingTop: isMobHeight ? 18 : 0,
+              }}
+            >
               <CardHeader
                 title={"Register"}
                 titleTypographyProps={{ textAlign: "center" }}
@@ -168,7 +172,9 @@ const SignUpPage = () => {
                   <Typography textAlign={"center"}>
                     Welcome to Umda Hotels
                   </Typography>
-                  <Typography textAlign={"center"}>Create an Account!</Typography>
+                  <Typography textAlign={"center"}>
+                    Create an Account!
+                  </Typography>
                 </Box>
                 <Box
                   sx={{
@@ -188,7 +194,9 @@ const SignUpPage = () => {
                     value={formData.firstName}
                     onChange={handleChange("firstName")}
                     error={errors.firstName}
-                    helperText={errors.firstName ? "First Name is required" : ""}
+                    helperText={
+                      errors.firstName ? "First Name is required" : ""
+                    }
                   />
                   <TextField
                     fullWidth
@@ -306,7 +314,11 @@ const SignUpPage = () => {
                 <Typography>Already have an account?</Typography>
                 <Link
                   href={"/login"}
-                  style={{ color: "black", fontWeight: "bolder", paddingTop: 3 }}
+                  style={{
+                    color: "black",
+                    fontWeight: "bolder",
+                    paddingTop: 3,
+                  }}
                 >
                   Log In
                 </Link>
@@ -327,11 +339,11 @@ const SignUpPage = () => {
               <Image
                 src={UmdaLogo}
                 alt="Umda Company Logo"
-                className="umda-hotel-logo"
+                className="umda-hotel-only-logo"
               />
               <p
                 className="navbar-text"
-                style={{ fontSize: 20, fontWeight: "bold", color: "white" }}
+                style={{ fontSize: 21, fontWeight: "bold", color: "white" }}
               >
                 Umda Hotels
               </p>
@@ -356,7 +368,9 @@ const SignUpPage = () => {
                   <Typography textAlign={"center"}>
                     Welcome to Umda Hotels
                   </Typography>
-                  <Typography textAlign={"center"}>Create an Account!</Typography>
+                  <Typography textAlign={"center"}>
+                    Create an Account!
+                  </Typography>
                 </Box>
                 <Box
                   sx={{
@@ -376,7 +390,9 @@ const SignUpPage = () => {
                     value={formData.firstName}
                     onChange={handleChange("firstName")}
                     error={errors.firstName}
-                    helperText={errors.firstName ? "First Name is required" : ""}
+                    helperText={
+                      errors.firstName ? "First Name is required" : ""
+                    }
                   />
                   <TextField
                     fullWidth
@@ -494,7 +510,11 @@ const SignUpPage = () => {
                 <Typography>Already have an account?</Typography>
                 <Link
                   href={"/login"}
-                  style={{ color: "black", fontWeight: "bolder", paddingTop: 3 }}
+                  style={{
+                    color: "black",
+                    fontWeight: "bolder",
+                    paddingTop: 3,
+                  }}
                 >
                   Log In
                 </Link>

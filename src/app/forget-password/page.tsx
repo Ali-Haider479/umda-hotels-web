@@ -17,8 +17,8 @@ import Link from "next/link";
 import Image from "next/image";
 
 import hotelBackground from "@/public/assets/images/hotel-bg.jpg";
-import UmdaLogo from "@/public/assets/icons/logo.png";
-import "../login/login.css"
+import UmdaLogo from "@/public/assets/icons/only-logo.png";
+import "../login/login.css";
 import { useState } from "react";
 
 const ForgetPasswordPage = () => {
@@ -99,11 +99,11 @@ const ForgetPasswordPage = () => {
               <Image
                 src={UmdaLogo}
                 alt="Umda Company Logo"
-                className="umda-hotel-logo"
+                className="umda-hotel-only-logo"
               />
               <p
                 className="navbar-text"
-                style={{ fontSize: 20, fontWeight: "bold", color: "white" }}
+                style={{ fontSize: 21, fontWeight: "bold", color: "white" }}
               >
                 Umda Hotels
               </p>
@@ -118,7 +118,13 @@ const ForgetPasswordPage = () => {
               overflow: "auto",
             }}
           >
-            <Card sx={{ maxWidth: "90%", padding: 5, paddingTop: isMobHeight ? 15 : 0 }}>
+            <Card
+              sx={{
+                maxWidth: "90%",
+                padding: 5,
+                paddingTop: isMobHeight ? 15 : 0,
+              }}
+            >
               <CardHeader
                 title={"Forgot Password"}
                 titleTypographyProps={{ textAlign: "center" }}
@@ -187,7 +193,11 @@ const ForgetPasswordPage = () => {
                 <Typography>Already have an account?</Typography>
                 <Link
                   href={"/login"}
-                  style={{ color: "black", fontWeight: "bolder", paddingTop: 3 }}
+                  style={{
+                    color: "black",
+                    fontWeight: "bolder",
+                    paddingTop: 3,
+                  }}
                 >
                   Log In
                 </Link>
@@ -208,11 +218,11 @@ const ForgetPasswordPage = () => {
               <Image
                 src={UmdaLogo}
                 alt="Umda Company Logo"
-                className="umda-hotel-logo"
+                className="umda-hotel-only-logo"
               />
               <p
                 className="navbar-text"
-                style={{ fontSize: 20, fontWeight: "bold", color: "white" }}
+                style={{ fontSize: 21, fontWeight: "bold", color: "white" }}
               >
                 Umda Hotels
               </p>
@@ -295,7 +305,11 @@ const ForgetPasswordPage = () => {
                 <Typography>Already have an account?</Typography>
                 <Link
                   href={"/login"}
-                  style={{ color: "black", fontWeight: "bolder", paddingTop: 3 }}
+                  style={{
+                    color: "black",
+                    fontWeight: "bolder",
+                    paddingTop: 3,
+                  }}
                 >
                   Log In
                 </Link>

@@ -11,6 +11,7 @@ declare module "next-auth" {
       lastName?: string;
       isVerified?: boolean;
       isAdmin?: boolean;
+      telephone?: string;
     } & DefaultSession["user"];
   }
 
@@ -21,5 +22,6 @@ declare module "next-auth" {
     lastName?: string;
     isVerified?: boolean;
     isAdmin?: boolean;
+    telephone?: string;
   }
 }
