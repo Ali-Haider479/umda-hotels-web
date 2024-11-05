@@ -106,7 +106,7 @@ const BookingConfirmedContent = () => {
       <Box display="flex" alignItems="center" justifyContent="center" mb={2}>
         <CheckCircleIcon sx={{ color: "green", fontSize: 40 }} />
         <Typography variant="h6" fontWeight="bold" ml={1}>
-          Booking Confirmed
+          Booking is Pending
         </Typography>
       </Box>
 
@@ -120,7 +120,8 @@ const BookingConfirmedContent = () => {
       >
         <CardContent>
           <Typography variant="body2">
-            Congratulations! You have successfully booked your stay at Umda.
+            Your booking request has been received and is currently pending
+            confirmation. You will receive an update soon.
           </Typography>
           <Typography variant="body2" mt={1}>
             <strong>Booking ID:</strong> {bookingData.referenceNo}

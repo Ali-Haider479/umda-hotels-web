@@ -139,7 +139,7 @@ const RoomCheckbox: React.FC<RoomCheckboxProps> = ({
           </Box>
           {availableRooms !== 0 && !fontSizeSmall ? (
             <Typography color="green" sx={{ fontSize: "1rem", mt: 1 }}>
-              Rooms Available
+              Rooms {availableRooms} Available
             </Typography>
           ) : null}
 
@@ -233,6 +233,11 @@ const RoomCheckbox: React.FC<RoomCheckboxProps> = ({
               +
             </Button>
           </Box>
+          {availableRooms !== 0 && !fontSizeSmall ? (
+            <Typography color="green" sx={{ fontSize: "1rem", mt: 1 }}>
+              Rooms {availableRooms} Available
+            </Typography>
+          ) : null}
           {availableRooms === 0 && (
             <Typography color={"red"}>Room Not Avaiable</Typography>
           )}

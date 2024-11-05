@@ -4,7 +4,7 @@ import { encrypt } from "@/utils/crypto";
 export async function POST(req: Request) {
   try {
     // Extract the hotel name or city from the request
-    const { city } = await req.json();
+    const { city } = (await req.json()) as { city: string };
 
     // Validate that hotelName or city is provided
     if (!city) {
@@ -17,17 +17,35 @@ export async function POST(req: Request) {
       );
     }
 
-    // Determine the correct environment variables based on the hotel name or city
-    let email, password;
-    if (city === "Abbottabad") {
-      email = process.env.HOTEL_MONTANA_EMAIL;
-      password = process.env.HOTEL_MONTANA_PASSWORD;
-    }
-    // Add other hotel cases as needed
+    // Map city names to corresponding environment variables
+    const cityConfig: Record<
+      string,
+      { email: string | undefined; password: string | undefined }
+    > = {
+      Abbottabad: {
+        email: process.env.HOTEL_MONTANA_EMAIL,
+        password: process.env.HOTEL_MONTANA_PASSWORD,
+      },
+      Islamabad: {
+        email: process.env.HOTEL_SAFARI_EMAIL,
+        password: process.env.HOTEL_SAFARI_PASSWORD,
+      },
+      "Nathia Gali": {
+        email: process.env.HOTEL_GALAXY_EMAIL,
+        password: process.env.HOTEL_GALAXY_PASSWORD,
+      },
+      // Add other city configurations as needed
+    };
 
-    if (!email || !password) {
+    // Get email and password based on the city
+    const config = cityConfig["Abbottabad"];
+
+    // Validate if the city configuration exists
+    if (!config || !config.email || !config.password) {
       throw new Error("Invalid hotel name or city");
     }
+
+    const { email, password } = config;
 
     // Hash the password using SHA-1
     const hashedPassword = crypto

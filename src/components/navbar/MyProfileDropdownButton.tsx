@@ -9,10 +9,11 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { Typography } from "@mui/material";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 const MyProfileDropdownButton = () => {
+  const { data: session } = useSession();
   const router = useRouter();
   const [hover, setHover] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -63,10 +64,17 @@ const MyProfileDropdownButton = () => {
           <PersonOutlinedIcon fontSize="small" sx={{ marginRight: 2 }} />
           <Typography>My Profile</Typography>
         </MenuItem>
-        <MenuItem onClick={() => router.push("/account/booking-history")}>
-          <HistoryOutlinedIcon fontSize="small" sx={{ marginRight: 2 }} />
-          <Typography>Booking History</Typography>
-        </MenuItem>
+        {session?.user.isAdmin ? (
+          <MenuItem onClick={() => router.push("/account/bookings")}>
+            <HistoryOutlinedIcon fontSize="small" sx={{ marginRight: 2 }} />
+            <Typography>Bookings</Typography>
+          </MenuItem>
+        ) : (
+          <MenuItem onClick={() => router.push("/account/booking-history")}>
+            <HistoryOutlinedIcon fontSize="small" sx={{ marginRight: 2 }} />
+            <Typography>Booking History</Typography>
+          </MenuItem>
+        )}
         <MenuItem onClick={() => signOut()}>
           <LogoutOutlinedIcon fontSize="small" sx={{ marginRight: 2 }} />
           <Typography>Sign Out</Typography>
