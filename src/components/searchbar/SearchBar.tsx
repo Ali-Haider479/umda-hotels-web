@@ -218,12 +218,13 @@ const SearchBar = () => {
             sx={{ width: "92%", mr: "auto", ml: "auto" }}
           >
             <Typography
+              textAlign={"center"}
               color={"black"}
               paddingBottom={2}
               fontSize={16}
               fontWeight={"bold"}
             >
-              Find The Best Deals For Online Hotel Booking
+              Where do you wanna go ?
             </Typography>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <HighlightedDaysContext.Provider
@@ -235,9 +236,9 @@ const SearchBar = () => {
                       disablePortal
                       options={[
                         "Abbottabad",
-                        // "Islamabad",
+                        "Islamabad",
                         // "Murree",
-                        // "Nathia Gali",
+                        "Nathia Gali",
                       ]}
                       fullWidth
                       renderInput={(params) => (
@@ -401,9 +402,9 @@ const SearchBar = () => {
                           disablePortal
                           options={[
                             "Abbottabad",
-                            // "Islamabad",
+                            "Islamabad",
                             // "Murree",
-                            // "Nathia Gali",
+                            "Nathia Gali",
                           ]}
                           fullWidth
                           renderInput={(params) => (

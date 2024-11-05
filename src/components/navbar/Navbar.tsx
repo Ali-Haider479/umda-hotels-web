@@ -39,17 +39,14 @@ const Navbar = () => {
     return (
       <nav className="navbar">
         <Link href={"/"}>
-        <Image
-  src={UmdaLogo}
-  alt="Umda Company Logo"
-  className="umda-hotel-logo"
- 
-/>
-
-        
+          <Image
+            src={UmdaLogo}
+            alt="Umda Company Logo"
+            className="umda-hotel-logo"
+          />
         </Link>
         {isMobScreen ? (
-          <div className="hamburger-menu"  onClick={toggleMenu}>
+          <div className="hamburger-menu" onClick={toggleMenu}>
             {menuOpen ? (
               <CloseIcon fontSize="large" />
             ) : (

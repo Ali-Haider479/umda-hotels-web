@@ -15,7 +15,8 @@ const OurHotels = () => {
   const hotelsArray = [
     {
       name: "Umda Hotel Montana",
-      address: "Main ayubia chok, Ayubia Rd, opposite Chair Lift, Ayubia, 22310",
+      address:
+        "Main ayubia chok, Ayubia Rd, opposite Chair Lift, Ayubia, 22310",
       phone: "0331 9145021",
       images: [HotelMontanaImage, HotelMontanaImage, HotelMontanaImage],
     },
@@ -26,7 +27,7 @@ const OurHotels = () => {
       images: [HotelGalaxyImage, HotelGalaxyImage, HotelGalaxyImage],
     },
     {
-      name: "Umda Hotel Horizon",
+      name: "Umda Hotel Safari",
       address: "House 13 Street 150, G 13/4, Islamabad Capital Territory 44000",
       phone: "0331 9145021",
       images: [HotelHorizonImage, HotelHorizonImage, HotelHorizonImage],
@@ -39,69 +40,72 @@ const OurHotels = () => {
     slidesToShow: 1.2,
     slidesToScroll: 1,
     centerMode: true,
-    centerPadding: '0px',
+    centerPadding: "0px",
     focusOnSelect: true,
     autoplay: true,
     autoplaySpeed: 6000,
   };
 
   return (
-<>
+    <>
       {isMobScreen ? (
-                <Box maxWidth={"90%"} mt={4} mx={2}>
-                    <Typography  pl={1} fontSize={16} fontWeight={"bold"}>
-                    Our Hotels
-        </Typography>
-        <Slider {...sliderSettings}>
-          {hotelsArray.map((hotel, index) => (
-            <Box
-              key={index}
-              p={1}
-              sx={{
-                width: '90%',
-                maxWidth: '300px',
-                height: '250px',
-                display: 'flex',
-                justifyContent: 'center',
-                margin: '0 auto',
-                
-              }}
-            >
-              <HotelCard
-                name={hotel.name}
-                address={hotel.address}
-                phone={hotel.phone}
-                images={hotel.images}
+        <Box maxWidth={"90%"} mt={4} mx={2}>
+          <Typography pl={1} fontSize={16} fontWeight={"bold"}>
+            Our Hotels
+          </Typography>
+          <Slider {...sliderSettings}>
+            {hotelsArray.map((hotel, index) => (
+              <Box
+                key={index}
+                p={1}
                 sx={{
-                  width: '100%',
-                  height: '200px',
+                  width: "90%",
+                  maxWidth: "300px",
+                  height: "250px",
+                  display: "flex",
+                  justifyContent: "center",
+                  margin: "0 auto",
                 }}
-              />
-            </Box>
-          ))}
-        </Slider>
+              >
+                <HotelCard
+                  name={hotel.name}
+                  address={hotel.address}
+                  phone={hotel.phone}
+                  images={hotel.images}
+                  sx={{
+                    width: "100%",
+                    height: "200px",
+                  }}
+                />
+              </Box>
+            ))}
+          </Slider>
         </Box>
       ) : (
         <Box mt={2} mx={2}>
-        <Typography textAlign={"center"} py={2} variant="h4" fontWeight={"bold"}>
-          Our Hotels
-        </Typography>
-        <Grid container spacing={2}>
-          {hotelsArray.map((hotel, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
-              <HotelCard
-                name={hotel.name}
-                address={hotel.address}
-                phone={hotel.phone}
-                images={hotel.images}
-              />
-            </Grid>
-          ))}
-        </Grid>
+          <Typography
+            textAlign={"center"}
+            py={2}
+            variant="h4"
+            fontWeight={"bold"}
+          >
+            Our Hotels
+          </Typography>
+          <Grid container spacing={2}>
+            {hotelsArray.map((hotel, index) => (
+              <Grid item xs={12} sm={6} md={4} key={index}>
+                <HotelCard
+                  name={hotel.name}
+                  address={hotel.address}
+                  phone={hotel.phone}
+                  images={hotel.images}
+                />
+              </Grid>
+            ))}
+          </Grid>
         </Box>
       )}
     </>
-
   );
 };
 

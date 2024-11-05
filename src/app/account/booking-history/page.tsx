@@ -1,170 +1,235 @@
 "use client";
-import { useEffect, useState } from "react";
-import Box from "@mui/material/Box";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import React from "react";
+import { useCallback, useMemo, useState } from "react";
+import { AgGridReact } from "@ag-grid-community/react";
+import "@ag-grid-community/styles/ag-grid.css";
+import "@ag-grid-community/styles/ag-theme-alpine.css";
+import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
+import {
+  ModuleRegistry,
+  GridReadyEvent,
+  FirstDataRenderedEvent,
+} from "@ag-grid-community/core";
+import { ColumnsToolPanelModule } from "@ag-grid-enterprise/column-tool-panel";
+import { MasterDetailModule } from "@ag-grid-enterprise/master-detail";
+import { MenuModule } from "@ag-grid-enterprise/menu";
 import { useSession } from "next-auth/react";
 import dayjs from "dayjs";
 
-// Row component to display booking details and collapse for room information
-function Row({ booking }: { booking: any }) {
-  const [open, setOpen] = useState(false);
+// Register AG Grid modules
+ModuleRegistry.registerModules([
+  ClientSideRowModelModule,
+  ColumnsToolPanelModule,
+  MasterDetailModule,
+  MenuModule,
+]);
 
-  // Function to render user-friendly strings
-  const formatEnum = (value: string, type: string) => {
-    switch (type) {
-      case "paymentType":
-        return value === "onSite" ? "On-Site" : "Online";
-      case "paymentStatus":
-        return value.charAt(0).toUpperCase() + value.slice(1); // Capitalize first letter
-      case "bookingStatus":
-        return value.charAt(0).toUpperCase() + value.slice(1); // Capitalize first letter
-      default:
-        return value;
-    }
-  };
-
-  return (
-    <React.Fragment>
-      <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-        <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell component="th" scope="row">
-          {booking.rooms.map((room: any) => room.roomName).join(", ")}
-        </TableCell>
-        <TableCell align="right">
-          {dayjs(booking.checkInDate).format("YYYY-MM-DD")}
-        </TableCell>
-        <TableCell align="right">
-          {dayjs(booking.checkOutDate).format("YYYY-MM-DD")}
-        </TableCell>
-        <TableCell align="right">{booking.totalPrice}</TableCell>
-        <TableCell align="right">{booking.referenceNo}</TableCell>
-        <TableCell align="right">
-          {formatEnum(booking.paymentType, "paymentType")}
-        </TableCell>
-        <TableCell align="right">
-          {formatEnum(booking.paymentStatus, "paymentStatus")}
-        </TableCell>
-        <TableCell align="right">
-          {formatEnum(booking.bookingStatus, "bookingStatus")}
-        </TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                Rooms Information
-              </Typography>
-              <Table size="small" aria-label="rooms">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Room Name</TableCell>
-                    <TableCell align="right">Room Booked</TableCell>
-                    <TableCell align="right">Guests</TableCell>
-                    <TableCell align="right">Price</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {booking.rooms.map((room: any, index: number) => (
-                    <TableRow key={index}>
-                      <TableCell>{room.roomName}</TableCell>
-                      <TableCell align="right">{room.roomsBooked}</TableCell>
-                      <TableCell align="right">{room.guests}</TableCell>
-                      <TableCell align="right">
-                        {room.discountedPrice}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </React.Fragment>
-  );
+interface BookingData {
+  fullName: string;
+  telephone: string;
+  email: string;
+  totalPrice: number;
+  referenceNo: string;
+  bookingStatus: string;
+  paymentType: string;
+  checkInDate: string;
+  checkOutDate: string;
+  rooms: RoomData[];
 }
-const BookingHistoryPage = () => {
+
+interface RoomData {
+  roomName: string;
+  originalPrice: number;
+  discountedPrice: number;
+  roomsBooked: number;
+  guests: number;
+}
+
+const BookingHistoryPage: React.FC = () => {
   const { data: session } = useSession();
-  const [bookings, setBookings] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const containerStyle = useMemo(() => ({ width: "103%", height: "80%" }), []);
+  const gridStyle = useMemo(() => ({ height: "100%", width: "100%" }), []);
 
-  useEffect(() => {
-    const fetchBookings = async () => {
-      if (!session || !session.user?.id) return;
-      try {
-        const response = await fetch(`/api/booking/user/${session.user.id}`); // Replace with your dynamic user ID
-        const data = await response.json();
-        console.log(data);
-        setBookings(data);
-        setLoading(false);
-      } catch (err) {
-        console.error("Failed to fetch bookings", err);
-        setError("Failed to fetch bookings");
-        setLoading(false);
-      }
-    };
+  const [rowData, setRowData] = useState<BookingData[]>([]);
 
-    fetchBookings();
-  }, [session]);
+  // Main grid columns for booking data
+  const [columnDefs] = useState([
+    {
+      field: "fullName",
+      headerName: "Full Name",
+      cellRenderer: "agGroupCellRenderer",
+      minWidth: 150,
+      filter: "agTextColumnFilter",
+    },
+    {
+      field: "telephone",
+      headerName: "Telephone",
+      minWidth: 150,
+      filter: "agTextColumnFilter",
+    },
+    {
+      field: "email",
+      headerName: "Email",
+      minWidth: 220,
+      filter: "agTextColumnFilter",
+    },
+    {
+      field: "totalPrice",
+      headerName: "Price",
+      minWidth: 120,
+      valueFormatter: (params: { value: number }) => `Rs. ${params.value}`,
+    },
+    {
+      field: "referenceNo",
+      headerName: "Reference No.",
+      minWidth: 180,
+      filter: "agTextColumnFilter",
+    },
+    {
+      field: "bookingStatus",
+      headerName: "Booking Status",
+      minWidth: 150,
+      cellRenderer: (params: { value: string }) => {
+        let color;
+        switch (params.value) {
+          case "confirmed":
+            color = "green";
+            break;
+          case "pending":
+            color = "orange";
+            break;
+          case "cancelled":
+            color = "red";
+            break;
+          default:
+            color = "black";
+        }
+        return (
+          <span style={{ color, fontWeight: "bold" }}>
+            {params.value.charAt(0).toUpperCase() + params.value.slice(1)}
+          </span>
+        );
+      },
+    },
+    {
+      field: "paymentType",
+      headerName: "Payment Type",
+      minWidth: 150,
 
-  if (loading) {
-    return <Typography>Loading...</Typography>;
-  }
+      cellRenderer: (params: { value: string }) => (
+        <span>{params.value === "onSite" ? "On-Site" : "Online"}</span>
+      ),
+    },
+    {
+      field: "paymentStatus",
+      headerName: "Payment Status",
+      minWidth: 150,
+      cellRenderer: (params: { value: string }) => {
+        let color;
+        switch (params.value) {
+          case "completed":
+            color = "green";
+            break;
+          case "pending":
+            color = "orange";
+            break;
+          case "failed":
+            color = "red";
+            break;
+          default:
+            color = "black";
+        }
+        return (
+          <span style={{ color, fontWeight: "bold" }}>
+            {params.value.charAt(0).toUpperCase() + params.value.slice(1)}
+          </span>
+        );
+      },
+    },
+    {
+      field: "checkInDate",
+      headerName: "Check-in Date",
+      minWidth: 150,
+      valueFormatter: (params: { value: string }) =>
+        dayjs(params.value).format("YYYY-MM-DD"),
+    },
+    {
+      field: "checkOutDate",
+      headerName: "Check-out Date",
+      minWidth: 160,
+      valueFormatter: (params: { value: string }) =>
+        dayjs(params.value).format("YYYY-MM-DD"),
+    },
+  ]);
 
-  if (error) {
-    return <Typography color="error">{error}</Typography>;
-  }
+  const defaultColDef = useMemo(
+    () => ({
+      flex: 1,
+      // minWidth: 100,
+      resizable: true,
+    }),
+    []
+  );
+
+  // Detail grid configuration for rooms
+  const detailCellRendererParams = useMemo(
+    () => ({
+      detailGridOptions: {
+        columnDefs: [
+          {
+            field: "roomName",
+            headerName: "Room Name",
+            flex: 1,
+          }, // Set fixed width for Room Name
+          { field: "roomsBooked", headerName: "Rooms Booked", width: 160 }, // Flex to fill remaining space
+          { field: "guests", headerName: "Guests", width: 120 },
+          {
+            field: "discountedPrice",
+            headerName: "Price",
+            valueFormatter: (params: { value: number }) =>
+              `Rs. ${params.value}`,
+            width: 140,
+          },
+        ],
+        // defaultColDef: { flex: 1, minWidth: 100 },
+      },
+      getDetailRowData: (params: any) => {
+        params.successCallback(params.data.rooms);
+      },
+    }),
+    []
+  );
+
+  const onGridReady = useCallback((params: GridReadyEvent) => {
+    if (!session || !session.user) {
+      console.error("Session or user information is missing.");
+      return;
+    }
+    // Fetch booking data and set to rowData
+    fetch(`/api/booking/user/${session.user.id}`) // Replace with actual endpoint
+      .then((response) => response.json())
+      .then((data: BookingData[]) => setRowData(data))
+      .catch((error) => console.error("Error fetching booking data:", error));
+  }, []);
+
+  const onFirstDataRendered = useCallback((params: FirstDataRenderedEvent) => {
+    // Expand the first row automatically
+    params.api.getDisplayedRowAtIndex(0)?.setExpanded(true);
+  }, []);
 
   return (
-    <Box sx={{ padding: 2 }}>
-      <Typography variant="h4" fontWeight={"bold"} gutterBottom>
-        Booking History
-      </Typography>
-      <TableContainer component={Paper}>
-        <Table aria-label="collapsible table">
-          <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell>Room Name</TableCell>
-              <TableCell align="right">Check-in Date</TableCell>
-              <TableCell align="right">Check-out Date</TableCell>
-              <TableCell align="right">Total Price</TableCell>
-              <TableCell align="right">Reference No.</TableCell>
-              <TableCell align="right">Payment Type</TableCell>
-              <TableCell align="right">Payment Status</TableCell>
-              <TableCell align="right">Booking Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {bookings.map((booking, index) => (
-              <Row key={index} booking={booking} />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
+    <div style={containerStyle}>
+      <div style={gridStyle} className="ag-theme-alpine">
+        <AgGridReact
+          rowData={rowData}
+          columnDefs={columnDefs}
+          defaultColDef={defaultColDef}
+          masterDetail={true}
+          detailCellRendererParams={detailCellRendererParams}
+          onGridReady={onGridReady}
+          onFirstDataRendered={onFirstDataRendered}
+        />
+      </div>
+    </div>
   );
 };
 

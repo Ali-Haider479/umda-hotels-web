@@ -106,6 +106,7 @@ const RoomContent = () => {
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
 
   const [calendarId, setCalendarId] = useState("");
+  const [cityId, setCityId] = useState<string | null>("");
 
   const [pageLoading, setPageLoading] = useState(true);
 
@@ -131,6 +132,7 @@ const RoomContent = () => {
     }
 
     console.log("SLUG", id, checkInDate, checkOutDate, guests);
+    setCityId(id);
     setStartDate(dayjs(checkInDate));
     setEndDate(dayjs(checkOutDate));
   }, [searchParams]);
@@ -360,7 +362,7 @@ const RoomContent = () => {
           <HotelCarousel />
           <Grid container spacing={2} sx={{ padding: 2 }} columns={16}>
             <Grid item xs={16} md={8}>
-              <HotelDescription />
+              <HotelDescription cityId={cityId} />
               <RoomSelector
                 roomData={roomData}
                 selectedRooms={selectedRooms}

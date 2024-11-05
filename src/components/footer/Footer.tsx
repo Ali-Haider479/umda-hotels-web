@@ -218,7 +218,7 @@ const Footer = () => {
                   display="block"
                   gutterBottom
                 >
-                  Umda Hotel Horizon
+                  Umda Hotel Safari
                 </Link>
                 <Link
                   href="#"

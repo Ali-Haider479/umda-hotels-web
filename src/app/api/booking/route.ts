@@ -187,26 +187,23 @@ export async function POST(req: Request) {
       },
     ];
 
-    const message = `
-      Dear ${firstName} ${lastName},
-
-      Thank you for your booking at Umda Hotels! Here are your booking details:
-      
-      - Check-in Date: ${new Date(startDate).toLocaleDateString()}
-      - Check-out Date: ${new Date(endDate).toLocaleDateString()}
-      - Total Price: Rs. ${totalPrice}
-      - Booking Reference No: ${referenceNo}
-
-      We look forward to welcoming you!
-
-      Best regards,
-      Umda Hotels
-    `;
+    const message =
+      `Dear ${firstName} ${lastName},\n\n` +
+      `Thank you for choosing Umda Hotels. Your booking request has been received and is currently pending confirmation.\n` +
+      `We will notify you once your booking is confirmed.\n\n` +
+      `Here are your booking details:\n\n` +
+      `- Check-in Date: ${new Date(startDate).toLocaleDateString()}\n` +
+      `- Check-out Date: ${new Date(endDate).toLocaleDateString()}\n` +
+      `- Total Price: Rs. ${totalPrice}\n` +
+      `- Booking Reference No: ${referenceNo}\n\n` +
+      `We appreciate your patience and look forward to providing you with a wonderful stay!\n\n` +
+      `Best regards,\n` +
+      `Umda Hotels`;
 
     await sendEmail({
       sender,
       recipients,
-      subject: "Booking Confirmation",
+      subject: "Booking Pending Confirmation",
       message,
     });
 
