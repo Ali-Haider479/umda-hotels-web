@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick-theme.css";
 
 import { Box, Fab, useMediaQuery } from "@mui/material";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import CallIcon from "@mui/icons-material/Call";
 import SearchBar from "@/components/searchbar/SearchBar";
 import WelcomeCard from "@/components/welcomecard/WelcomeCard";
 import Testimonials from "@/components/testimonials/Testimonials";
@@ -18,8 +19,12 @@ const Home = () => {
   const handleWhatsAppClick = () => {
     // Open WhatsApp with a default message
     window.open(
-      "https://wa.me/923214747975?text=Hello! I would like to know more about Umda Hotels."
+      "https://wa.me/923319145021?text=Hello! I would like to know more about Umda Hotels."
     );
+  };
+  const handleCallClick = () => {
+    // Implement your call functionality here
+    window.location.href = "tel:+92-321-1111082";
   };
   return (
     <Box>
@@ -34,8 +39,23 @@ const Home = () => {
       <Box paddingBottom={10}>
         <NewsLetterCard />
       </Box>
-
-      {/* WhatsApp Floating Action Button */}
+      <Fab
+        color="success"
+        aria-label="call"
+        onClick={handleCallClick}
+        sx={{
+          position: "fixed",
+          bottom: isMobScreen ? 160 : 100, // Adjust bottom padding here
+          right: isMobScreen ? 19 : 24, // Position on the right side
+          backgroundColor: "#E74C3C",
+          color: "#fff",
+          "&:hover": {
+            backgroundColor: "#C0392B",
+          },
+        }}
+      >
+        <CallIcon />
+      </Fab>
       <Fab
         color="success"
         aria-label="whatsapp"

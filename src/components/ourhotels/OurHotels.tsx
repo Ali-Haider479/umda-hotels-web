@@ -3,8 +3,8 @@ import React from "react";
 import { Box, Grid, Typography, useMediaQuery } from "@mui/material";
 import HotelCard from "./HotelCard";
 import HotelMontanaImage from "@/public/assets/images/hotel-montana.webp";
-import HotelGalaxyImage from "@/public/assets/images/hotel-galaxy.webp";
-import HotelHorizonImage from "@/public/assets/images/hotel-horizan.webp";
+import HotelGalaxyImage from "@/public/assets/galaxy-images/main.webp";
+import HotelSafariImage from "@/public/assets/safari-images/main.webp";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -30,7 +30,7 @@ const OurHotels = () => {
       name: "Umda Hotel Safari",
       address: "House 13 Street 150, G 13/4, Islamabad Capital Territory 44000",
       phone: "0331 9145021",
-      images: [HotelHorizonImage, HotelHorizonImage, HotelHorizonImage],
+      images: [HotelSafariImage, HotelSafariImage, HotelSafariImage],
     },
   ];
 

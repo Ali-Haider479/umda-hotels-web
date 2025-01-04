@@ -199,7 +199,7 @@ const Footer = () => {
               <Box
                 sx={{ flex: "1 1 300px", padding: "10px", textAlign: "left" }}
               >
-                <Typography variant="body1" fontWeight="bold" gutterBottom>
+                {/* <Typography variant="body1" fontWeight="bold" gutterBottom>
                   Our Hotels
                 </Typography>
                 <Link
@@ -228,7 +228,7 @@ const Footer = () => {
                   gutterBottom
                 >
                   Umda Hotel Galaxy
-                </Link>
+                </Link> */}
               </Box>
             </Box>
             <Box

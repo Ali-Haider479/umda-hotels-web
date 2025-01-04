@@ -214,11 +214,11 @@ const SearchBar = () => {
           <Box
             bgcolor={"white"}
             borderRadius={2}
-            marginTop={4}
+            marginTop={0}
             sx={{ width: "92%", mr: "auto", ml: "auto" }}
           >
             <Typography
-              textAlign={"center"}
+              textAlign={"left"}
               color={"black"}
               paddingBottom={2}
               fontSize={16}
@@ -352,6 +352,7 @@ const SearchBar = () => {
                         height: "100%",
                         paddingTop: "14px",
                         paddingBottom: "14px",
+                        backgroundColor: "#5391FA",
                       }}
                       disabled={loading} // Disable button when loading
                       startIcon={
@@ -505,7 +506,7 @@ const SearchBar = () => {
                       <Grid item xs={10} sm={6} md={3}>
                         <Button
                           variant="contained"
-                          color="primary"
+                          // color="primary"
                           fullWidth
                           onClick={handleSearch}
                           size="large"
@@ -513,6 +514,7 @@ const SearchBar = () => {
                             height: "100%",
                             paddingTop: "14px",
                             paddingBottom: "14px",
+                            backgroundColor: "#5391FA",
                           }}
                           disabled={loading} // Disable button when loading
                           startIcon={

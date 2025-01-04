@@ -31,8 +31,8 @@ const Explore = () => {
             color={"black"}
             fontSize={16}
             fontWeight={"bold"}
-            //  textAlign="left"
-            textAlign={"center"}
+            textAlign="left"
+            // textAlign={"center"}
             pl={2}
             mt={2}
           >

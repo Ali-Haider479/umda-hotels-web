@@ -8,12 +8,15 @@ import {
   Box,
   Button,
   CircularProgress,
+  Fab,
   Grid,
   IconButton,
   Paper,
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import CallIcon from "@mui/icons-material/Call";
 
 import Image, { StaticImageData } from "next/image";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -23,6 +26,28 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import HotelMontanaImage from "@/public/assets/images/hotel-montana.webp";
 import HotelGalaxyImage from "@/public/assets/images/hotel-galaxy.webp";
 import HotelHorizonImage from "@/public/assets/images/hotel-horizan.webp";
+//Montana Images
+//Economy Room with Balcony
+import MontanaEcoRoomWithBalconyImg1 from "@/public/assets/montana-images/economy-room-with-balcony/2.webp";
+import MontanaEcoRoomWithBalconyImg2 from "@/public/assets/montana-images/economy-room-with-balcony/4.webp";
+//Deluxe Room Twin Bed with Balcony
+import MontanaDelxRoomWithBalconyImg1 from "@/public/assets/montana-images/deluxe-twin-bed-with-balcony/1.webp";
+import MontanaDelxRoomWithBalconyImg2 from "@/public/assets/montana-images/deluxe-twin-bed-with-balcony/2.webp";
+import MontanaDelxRoomWithBalconyImg3 from "@/public/assets/montana-images/deluxe-twin-bed-with-balcony/3.webp";
+import MontanaDelxRoomWithBalconyImg4 from "@/public/assets/montana-images/deluxe-twin-bed-with-balcony/5.webp";
+import MontanaDelxRoomWithBalconyImg5 from "@/public/assets/montana-images/deluxe-twin-bed-with-balcony/9.webp";
+//Deluxe Room with Balcony
+import MontanaDelxDuoBedRoomWithBalconyImg1 from "@/public/assets/montana-images/deluxe-double-bed-with-balcony/3.webp";
+import MontanaDelxDuoBedRoomWithBalconyImg2 from "@/public/assets/montana-images/deluxe-double-bed-with-balcony/4.webp";
+import MontanaDelxDuoBedRoomWithBalconyImg3 from "@/public/assets/montana-images/deluxe-double-bed-with-balcony/5.webp";
+import MontanaDelxDuoBedRoomWithBalconyImg4 from "@/public/assets/montana-images/deluxe-double-bed-with-balcony/7.webp";
+//Executive Family Room with Bunk Beds
+import MontanaExeRoomImg1 from "@/public/assets/montana-images/executive-family-room/2.webp";
+import MontanaExeRoomImg2 from "@/public/assets/montana-images/executive-family-room/4.webp";
+import MontanaExeRoomImg3 from "@/public/assets/montana-images/executive-family-room/5.webp";
+import MontanaExeRoomImg4 from "@/public/assets/montana-images/executive-family-room/6.webp";
+import MontanaExeRoomImg5 from "@/public/assets/montana-images/executive-family-room/6_1.webp";
+
 import HotelDescription from "@/components/hoteldescription/HotelDescription";
 import RoomSelector from "@/components/roomselector/RoomSelector";
 import HotelPolicyInfo from "@/components/hotelpolicyinfo/HotelPolicyInfo";
@@ -44,7 +69,7 @@ const RoomContent = () => {
       originalPrice: 9999,
       discountedPrice: 7999,
       discountPercentage: 20,
-      images: [HotelMontanaImage, HotelGalaxyImage, HotelHorizonImage],
+      images: [MontanaEcoRoomWithBalconyImg1, MontanaEcoRoomWithBalconyImg2],
       availableRooms: 5,
       roomIds: ["1317801", "1317802", "1317803", "1317804", "1317805"],
     },
@@ -56,7 +81,13 @@ const RoomContent = () => {
       originalPrice: 12500,
       discountedPrice: 9999,
       discountPercentage: 20,
-      images: [HotelGalaxyImage, HotelHorizonImage, HotelMontanaImage],
+      images: [
+        MontanaDelxRoomWithBalconyImg1,
+        MontanaDelxRoomWithBalconyImg2,
+        MontanaDelxRoomWithBalconyImg3,
+        MontanaDelxRoomWithBalconyImg4,
+        MontanaDelxRoomWithBalconyImg5,
+      ],
       availableRooms: 4,
       roomIds: ["1317795", "1317796", "1317797", "1317798"],
     },
@@ -68,7 +99,12 @@ const RoomContent = () => {
       originalPrice: 12500,
       discountedPrice: 9999,
       discountPercentage: 20,
-      images: [HotelHorizonImage, HotelMontanaImage, HotelGalaxyImage],
+      images: [
+        MontanaDelxDuoBedRoomWithBalconyImg1,
+        MontanaDelxDuoBedRoomWithBalconyImg2,
+        MontanaDelxDuoBedRoomWithBalconyImg3,
+        MontanaDelxDuoBedRoomWithBalconyImg4,
+      ],
       availableRooms: 6,
       roomIds: [
         "1317788",
@@ -87,7 +123,13 @@ const RoomContent = () => {
       originalPrice: 12500,
       discountedPrice: 9999,
       discountPercentage: 20,
-      images: [HotelHorizonImage, HotelMontanaImage, HotelGalaxyImage],
+      images: [
+        MontanaExeRoomImg1,
+        MontanaExeRoomImg2,
+        MontanaExeRoomImg3,
+        MontanaExeRoomImg4,
+        MontanaExeRoomImg5,
+      ],
       availableRooms: 2,
       roomIds: ["1317786", "1317787"],
     },
@@ -115,6 +157,23 @@ const RoomContent = () => {
 
   const [paymentOption, setPaymentOption] = useState("full");
   const [advancePayment, setAdvancePayment] = useState(0);
+
+  const handleWhatsAppClick = () => {
+    // Open WhatsApp with a default message
+    if (cityId === "Islamabad") {
+      window.open(
+        "https://wa.me/923045416758?text=Hello! I would like to know more about Umda Hotels."
+      );
+    } else {
+      window.open(
+        "https://wa.me/923319145021?text=Hello! I would like to know more about Umda Hotels."
+      );
+    }
+  };
+  const handleCallClick = () => {
+    // Implement your call functionality here
+    window.location.href = "tel:+92-321-1111082";
+  };
 
   useEffect(() => {
     const id = searchParams.get("city");
@@ -359,7 +418,7 @@ const RoomContent = () => {
         </Box>
       ) : (
         <>
-          <HotelCarousel />
+          <HotelCarousel cityId={cityId} />
           <Grid container spacing={2} sx={{ padding: 2 }} columns={16}>
             <Grid item xs={16} md={8}>
               <HotelDescription cityId={cityId} />
@@ -439,6 +498,41 @@ const RoomContent = () => {
               </Button>
             </Box>
           )}
+
+          <Fab
+            color="success"
+            aria-label="call"
+            onClick={handleCallClick}
+            sx={{
+              position: "fixed",
+              bottom: isMobScreen ? 160 : 100, // Adjust bottom padding here
+              right: isMobScreen ? 19 : 24, // Position on the right side
+              backgroundColor: "#E74C3C",
+              color: "#fff",
+              "&:hover": {
+                backgroundColor: "#C0392B",
+              },
+            }}
+          >
+            <CallIcon />
+          </Fab>
+          <Fab
+            color="success"
+            aria-label="whatsapp"
+            onClick={handleWhatsAppClick}
+            sx={{
+              position: "fixed",
+              bottom: isMobScreen ? 90 : 24, // Adjust bottom padding here
+              right: isMobScreen ? 19 : 24, // Position on the right side
+              backgroundColor: "#25D366",
+              color: "#fff",
+              "&:hover": {
+                backgroundColor: "#1ebe57",
+              },
+            }}
+          >
+            <WhatsAppIcon />
+          </Fab>
         </>
       )}
     </>

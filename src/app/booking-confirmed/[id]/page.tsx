@@ -152,11 +152,11 @@ const BookingConfirmedContent = () => {
         ))}
         <Typography variant="body2">
           <strong>Check-in:</strong>{" "}
-          {new Date(bookingData.checkInDate).toLocaleString()}
+          {new Date(bookingData.checkInDate).toLocaleDateString()} 2:00 PM
         </Typography>
         <Typography variant="body2">
           <strong>Check-out:</strong>{" "}
-          {new Date(bookingData.checkOutDate).toLocaleString()}
+          {new Date(bookingData.checkOutDate).toLocaleDateString()} 12:00 PM
         </Typography>
       </Box>
 

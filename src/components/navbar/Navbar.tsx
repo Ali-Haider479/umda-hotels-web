@@ -55,7 +55,7 @@ const Navbar = () => {
           </div>
         ) : (
           <div style={{ display: "flex" }}>
-            <HotelsDropdownButton />
+            {/* <HotelsDropdownButton /> */}
             <CallUsButton />
             {session?.user ? (
               <>
@@ -69,8 +69,8 @@ const Navbar = () => {
           </div>
         )}
         {isMobScreen && menuOpen && (
-          <div className="mobile-menu">
-            <HotelsDropdownButton />
+          <div className="mobile-menu" style={{ marginTop: "12px" }}>
+            {/* <HotelsDropdownButton /> */}
             <CallUsButton />
             {session?.user ? (
               <>
