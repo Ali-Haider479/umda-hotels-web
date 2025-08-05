@@ -7,57 +7,6 @@ import Image3 from "@/public/assets/images/3.webp";
 import Image4 from "@/public/assets/images/4.webp";
 import Image5 from "@/public/assets/images/5.webp";
 import Image6 from "@/public/assets/images/6.webp";
-//Montana
-import MontanaImage1 from "@/public/assets/montana-images/upper-slider/2_1.webp";
-import MontanaImage2 from "@/public/assets/montana-images/upper-slider/2.webp";
-import MontanaImage3 from "@/public/assets/montana-images/upper-slider/3.webp";
-import MontanaImage4 from "@/public/assets/montana-images/upper-slider/4.webp";
-import MontanaImage5 from "@/public/assets/montana-images/upper-slider/5.webp";
-import MontanaImage6 from "@/public/assets/montana-images/upper-slider/8.webp";
-//Galaxy
-import GalaxyImage1 from "@/public/assets/galaxy-images/upper-slider/1.webp";
-import GalaxyImage2 from "@/public/assets/galaxy-images/upper-slider/2.webp";
-import GalaxyImage3 from "@/public/assets/galaxy-images/upper-slider/3.webp";
-import GalaxyImage4 from "@/public/assets/galaxy-images/upper-slider/4.webp";
-import GalaxyImage5 from "@/public/assets/galaxy-images/upper-slider/5.webp";
-import GalaxyImage6 from "@/public/assets/galaxy-images/upper-slider/6.webp";
-
-//Safari
-import SafariImage1 from "@/public/assets/safari-images/upper-slider/1.webp";
-import SafariImage2 from "@/public/assets/safari-images/upper-slider/2.webp";
-import SafariImage3 from "@/public/assets/safari-images/upper-slider/4.jpg";
-import SafariImage4 from "@/public/assets/safari-images/upper-slider/5.jpg";
-import SafariImage5 from "@/public/assets/safari-images/upper-slider/9.jpg";
-import SafariImage6 from "@/public/assets/safari-images/upper-slider/9.webp";
-import SafariImage7 from "@/public/assets/safari-images/upper-slider/10.webp";
-import SafariImage8 from "@/public/assets/safari-images/upper-slider/19.webp";
-
-const montanaSilderImages = [
-  { src: MontanaImage1, alt: "Montana Hotel view 1" },
-  { src: MontanaImage2, alt: "Montana Hotel view 2" },
-  { src: MontanaImage3, alt: "Montana Hotel view 3" },
-  { src: MontanaImage4, alt: "Montana Hotel view 4" },
-  { src: MontanaImage5, alt: "Montana Hotel view 5" },
-  { src: MontanaImage6, alt: "Montana Hotel view 6" },
-];
-
-const galaxySilderImages = [
-  { src: GalaxyImage6, alt: "Galaxy Hotel view 6" },
-  { src: GalaxyImage1, alt: "Galaxy Hotel view 1" },
-  { src: GalaxyImage2, alt: "Galaxy Hotel view 2" },
-  // { src: GalaxyImage3, alt: "Galaxy Hotel view 3" },
-  { src: GalaxyImage4, alt: "Galaxy Hotel view 4" },
-  { src: GalaxyImage5, alt: "Galaxy Hotel view 5" },
-];
-
-const safariSilderImages = [
-  { src: SafariImage1, alt: "Safari Hotel view 1" },
-  { src: SafariImage2, alt: "Safari Hotel view 2" },
-  { src: SafariImage3, alt: "Safari Hotel view 3" },
-  { src: SafariImage4, alt: "Safari Hotel view 4" },
-  { src: SafariImage5, alt: "Safari Hotel view 5" },
-  { src: SafariImage6, alt: "Safari Hotel view 6" },
-];
 
 const defaultImages = [
   { src: Image1, alt: "Default Hotel view 1" },
@@ -70,24 +19,25 @@ const defaultImages = [
 
 interface HotelCarouselProps {
   cityId: string | null;
+  hotelImages: string[] | undefined;
 }
 
-const HotelCarousel = ({ cityId }: HotelCarouselProps) => {
-  console.log(cityId);
+const HotelCarousel = ({ cityId, hotelImages }: HotelCarouselProps) => {
   const isMobile = useMediaQuery("(max-width: 950px)");
-  const slidesToShow = isMobile ? 1 : 3; // Show 1 image on mobile, 3 on larger screens
+  const slidesToShow = isMobile ? 1 : 3;
   const [currentIndex, setCurrentIndex] = useState(slidesToShow);
   const [transitioning, setTransitioning] = useState(false);
 
-  // Select images based on cityId
-  let selectedImages = defaultImages;
-
-  if (cityId === "Abbottabad") {
-    selectedImages = montanaSilderImages;
-  } else if (cityId === "Islamabad") {
-    selectedImages = safariSilderImages;
-  } else if (cityId === "Nathia Gali") {
-    selectedImages = galaxySilderImages;
+  let selectedImages;
+  if (hotelImages && hotelImages.length > 0) {
+    console.log("props images");
+    selectedImages = hotelImages.map((url, index) => ({
+      src: url,
+      alt: `Hotel image ${index + 1}`,
+    }));
+  } else {
+    console.log("default images");
+    selectedImages = defaultImages;
   }
 
   const totalSlides = selectedImages.length;
@@ -98,9 +48,8 @@ const HotelCarousel = ({ cityId }: HotelCarouselProps) => {
   ];
 
   useEffect(() => {
-    // Reset currentIndex when cityId or slidesToShow changes
     setCurrentIndex(slidesToShow);
-  }, [cityId, slidesToShow, slidesToShow]);
+  }, [cityId, slidesToShow]);
 
   useEffect(() => {
     if (transitioning) return;
@@ -116,7 +65,7 @@ const HotelCarousel = ({ cityId }: HotelCarouselProps) => {
         setCurrentIndex(currentIndex - totalSlides);
       }, 500);
     }
-  }, [currentIndex, transitioning]);
+  }, [currentIndex, transitioning, totalSlides, slidesToShow]);
 
   const prevSlide = () => {
     setTransitioning(false);
@@ -158,15 +107,16 @@ const HotelCarousel = ({ cityId }: HotelCarouselProps) => {
               minWidth: `${100 / slidesToShow}%`,
               boxSizing: "border-box",
               padding: "0 0px",
+              position: "relative",
+              height: isMobile ? "250px" : "400px",
             }}
           >
             <Image
               src={image.src}
               alt={image.alt}
+              fill
               style={{
-                width: "100%",
-                height: isMobile ? "250px" : "400px",
-                display: "block",
+                objectFit: "cover",
               }}
             />
           </Box>
@@ -216,8 +166,8 @@ const HotelCarousel = ({ cityId }: HotelCarouselProps) => {
             <img
               key={dotIndex}
               onClick={() => goToSlide(dotIndex)}
-              src={image.src.src}
-              alt={`Thumbnail ${dotIndex + 1}`}
+              src={typeof image.src === "string" ? image.src : image.src.src}
+              alt={image.alt}
               style={{
                 width: "50px",
                 height: "50px",

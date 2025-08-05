@@ -38,7 +38,7 @@ export async function POST(req: Request) {
     };
 
     // Get email and password based on the city
-    const config = cityConfig["Abbottabad"];
+    const config = cityConfig[city];
 
     // Validate if the city configuration exists
     if (!config || !config.email || !config.password) {

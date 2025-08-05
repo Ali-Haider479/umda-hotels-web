@@ -10,6 +10,7 @@ import {
 import { useRouter } from "next/navigation";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import HistoryIcon from "@mui/icons-material/History";
+import HotelIcon from '@mui/icons-material/Hotel';
 import EmailIcon from "@mui/icons-material/Email";
 import { useSession } from "next-auth/react";
 
@@ -50,6 +51,7 @@ const Sidebar = () => {
               ? "/account/bookings"
               : "/account/booking-history",
           },
+          { text: 'Hotels', icon: <HotelIcon />, path: "/account/hotels" },
           { text: "Email Notifications", icon: <EmailIcon />, path: "#" },
         ].map((item, index) => (
           <ListItem button key={index} onClick={() => router.push(item.path)}>

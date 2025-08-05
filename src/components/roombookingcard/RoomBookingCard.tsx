@@ -112,7 +112,7 @@ interface RoomData {
 }
 
 interface RoomBookingProps {
-  roomData: RoomData[];
+  // roomData: RoomData[];
   selectedRooms: {
     checked: boolean;
     rooms: number;
@@ -136,7 +136,7 @@ interface RoomBookingProps {
 }
 
 const RoomBookingCard = ({
-  roomData,
+  // roomData,
   selectedRooms,
   startDate,
   endDate,
@@ -152,7 +152,7 @@ const RoomBookingCard = ({
   setAdvancePayment,
 }: RoomBookingProps) => {
   const { data: session } = useSession();
-  console.log("Session", session);
+  console.log("Session", session, selectedRooms);
   const isMobScreen = useMediaQuery("(max-width: 950px)");
 
   const today = dayjs();

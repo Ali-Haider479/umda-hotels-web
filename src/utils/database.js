@@ -1,9 +1,13 @@
 import mongoose from "mongoose";
+import '@/models/user';
+import '@/models/hotel';
+import '@/models/room';
+import '@/models/bookings';
 
 let isConnected = false; // track the connection
 
 export const connectToDB = async () => {
-  mongoose.set("strictQuery", true);
+  mongoose.set("strictQuery", false);
 
   if (isConnected) {
     console.log("MongoDB is already connected");

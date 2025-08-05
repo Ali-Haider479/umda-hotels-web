@@ -7,6 +7,7 @@ import HotelHorizonImage from "@/public/assets/images/hotel-horizan.webp";
 import { StaticImageData } from "next/image";
 
 interface RoomData {
+  _id: string;
   roomName: string;
   bedCount: number;
   peopleCount: number;
@@ -14,8 +15,9 @@ interface RoomData {
   originalPrice: number;
   discountedPrice: number;
   discountPercentage: number;
-  images: StaticImageData[]; // Assuming images are URLs or paths to the images
+  images: string[]; // Assuming images are URLs or paths to the images
   availableRooms: number;
+  roomIds: string[];
 }
 
 interface RoomSelectorProps {
@@ -34,6 +36,7 @@ const RoomSelector = ({
   onGuestsChange,
 }: RoomSelectorProps) => {
   const isMobScreen = useMediaQuery("(max-width: 950px)");
+  console.log("ROOM SELECTOR selectedRooms", selectedRooms)
   return (
     <Box
       sx={{ maxWidth: 800, margin: "32px auto", padding: isMobScreen ? 0 : 2 }}

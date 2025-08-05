@@ -23,7 +23,7 @@ import {
   Typography,
   styled,
 } from "@mui/material";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import HeroImage from "@/public/assets/images/hero-image.webp";
 import React from "react";
 import dayjs, { Dayjs } from "dayjs";
@@ -81,10 +81,10 @@ const CustomDay = (props: PickersDayProps<Dayjs>) => {
         isStartDate
           ? "Mui-selectedStart"
           : isEndDate
-          ? "Mui-selectedEnd"
-          : isInRange
-          ? "Mui-inRange"
-          : ""
+            ? "Mui-selectedEnd"
+            : isInRange
+              ? "Mui-inRange"
+              : ""
       }
       selected={isStartDate || isEndDate || isInRange}
     />
@@ -93,11 +93,29 @@ const CustomDay = (props: PickersDayProps<Dayjs>) => {
 
 const dateFormat = "MM-DD-YYYY";
 
+interface Hotel {
+  _id: string;
+  name: string;
+  address: string;
+  city: string;
+  mainImage: string;
+  carouselImages: string[];
+  rooms: Room[];
+}
+
+interface Room {
+  _id: string;
+  roomName: string;
+  images: string[];
+}
+
 const SearchBar = () => {
   const isMobScreen = useMediaQuery("(max-width: 500px)");
 
   const router = useRouter();
   const [loading, setLoading] = useState(false); // Loading state
+  const [hotels, setHotels] = useState<Hotel[]>([]);
+  const [hotelsWithCity, setHotelWithCity] = useState<string[]>([]);
   const [city, setCity] = useState<string>("");
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
@@ -110,6 +128,28 @@ const SearchBar = () => {
   });
 
   const today = dayjs();
+
+  useEffect(() => {
+    const fetchHotels = async () => {
+      try {
+        const hotelsResponse = await fetch('/api/hotel', { method: 'GET' });
+        if (!hotelsResponse.ok) throw new Error('Failed to fetch hotels');
+        const hotelsData = await hotelsResponse.json();
+        setHotels(hotelsData);
+        if(hotelsData && hotelsData.length > 0){
+          const hotelOptions = hotelsData.map((hotel: Hotel)=>{
+            return `${hotel.city}`
+          })
+          setHotelWithCity(hotelOptions);
+        }
+      } catch (error) {
+        console.error('Error fetching hotels:', error);
+      }
+    };
+    fetchHotels();
+  }, [])
+
+  console.log(hotelsWithCity,city)
 
   const validateInputs = () => {
     const newErrors = {
@@ -234,12 +274,7 @@ const SearchBar = () => {
                   <Grid item xs={12} sm={6} md={3}>
                     <Autocomplete
                       disablePortal
-                      options={[
-                        "Abbottabad",
-                        "Islamabad",
-                        // "Murree",
-                        "Nathia Gali",
-                      ]}
+                      options={hotelsWithCity}
                       fullWidth
                       renderInput={(params) => (
                         <TextField
@@ -401,12 +436,7 @@ const SearchBar = () => {
                       <Grid item xs={10} sm={6} md={3}>
                         <Autocomplete
                           disablePortal
-                          options={[
-                            "Abbottabad",
-                            "Islamabad",
-                            // "Murree",
-                            "Nathia Gali",
-                          ]}
+                          options={hotelsWithCity}
                           fullWidth
                           renderInput={(params) => (
                             <TextField

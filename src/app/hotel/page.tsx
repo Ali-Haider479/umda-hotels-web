@@ -57,6 +57,50 @@ import isBetween from "dayjs/plugin/isBetween";
 import { decrypt } from "@/utils/crypto";
 dayjs.extend(isBetween);
 
+type FullRoomType = {
+  _id: string;
+  roomName: string;
+  bedCount: number;
+  peopleCount: number;
+  childCount: number;
+  originalPrice: number;
+  discountedPrice: number;
+  discountPercentage: number;
+  images: string[];
+  availableRooms: number;
+  roomIds: string[];
+  guests: number;
+  rooms: number;
+  checked: boolean;
+};
+
+interface Heading {
+  title: string;
+  description: string;
+}
+
+interface Amenity {
+  name: string;
+  icon: string;
+}
+
+type BaseRoomType = Omit<FullRoomType, "guests" | "rooms" | "checked">;
+
+interface Hotel {
+  name: string;
+  address: string;
+  city: string;
+  headings: Heading[];
+  rating: number;
+  reviews: number;
+  amenities: Amenity[];
+  mainImage: string;
+  carouselImages: string[];
+  rooms: BaseRoomType[];
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 const RoomContent = () => {
   const isMobScreen = useMediaQuery("(max-width: 950px)");
 
@@ -135,14 +179,10 @@ const RoomContent = () => {
     },
   ];
 
-  const [selectedRooms, setSelectedRooms] = useState(
-    roomData.map((room) => ({
-      ...room,
-      checked: false,
-      rooms: 1,
-      guests: 1,
-    }))
-  );
+  const [hotelData, setHotelData] = useState<Hotel | null>(null)
+  const [roomsData, setRoomsData] = useState<BaseRoomType[]>([])
+
+  const [selectedRooms, setSelectedRooms] = useState<FullRoomType[]>([]);
 
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
@@ -184,6 +224,9 @@ const RoomContent = () => {
     console.log(" Token:", encryptedToken);
     // const decryptedToken = decrypt(encryptedToken);
     // console.log("Decrypted Token:", decryptedToken);
+    if (id) {
+      fetchHotelDetails(id)
+    }
     if (encryptedToken) {
       fetchBedBookingCalendarId(encryptedToken);
     } else {
@@ -195,6 +238,28 @@ const RoomContent = () => {
     setStartDate(dayjs(checkInDate));
     setEndDate(dayjs(checkOutDate));
   }, [searchParams]);
+
+  const fetchHotelDetails = async (city: string) => {
+    const response = await fetch(`/api/hotel/find-by-city/${city}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    // Parse the response body only once
+    const data = await response.json();
+    console.log("HOTEL", data,data[0].rooms);
+    setHotelData(data[0])
+    setRoomsData(data[0].rooms)
+    setSelectedRooms(data[0].rooms.map((room: any) => ({
+      ...room,
+      checked: false,
+      rooms: 1,
+      guests: 1,
+    })))
+  }
+
+  console.log("selectedRooms total", selectedRooms)
 
   const fetchBedBookingCalendarId = async (bearerToken: string) => {
     try {
@@ -244,7 +309,6 @@ const RoomContent = () => {
 
       // Parse the response body only once
       const data = await response.json();
-      console.log(data);
 
       // Check if the response was not ok and handle the error
       if (!response.ok) {
@@ -253,7 +317,7 @@ const RoomContent = () => {
 
       console.log("data", data);
       const updatedRoomData = updateRoomAvailability(
-        roomData,
+        roomsData,
         data.items,
         checkInDate,
         checkOutDate
@@ -286,6 +350,7 @@ const RoomContent = () => {
     checkInDate: string | null,
     checkOutDate: string | null
   ) => {
+    console.log("Update rooms", roomData, bookedRooms)
     const updatedRoomData = roomData.map((room) => {
       const availableRooms = room.roomIds.filter((roomId: string) => {
         const isBooked = bookedRooms.some((booking) => {
@@ -418,12 +483,12 @@ const RoomContent = () => {
         </Box>
       ) : (
         <>
-          <HotelCarousel cityId={cityId} />
+          <HotelCarousel cityId={cityId} hotelImages={hotelData?.carouselImages}/>
           <Grid container spacing={2} sx={{ padding: 2 }} columns={16}>
             <Grid item xs={16} md={8}>
-              <HotelDescription cityId={cityId} />
+              <HotelDescription cityId={cityId} hotelData={hotelData}/>
               <RoomSelector
-                roomData={roomData}
+                roomData={roomsData}
                 selectedRooms={selectedRooms}
                 onRoomSelection={handleRoomSelection}
                 onRoomsChange={handleRoomsChange}
@@ -443,7 +508,7 @@ const RoomContent = () => {
               }}
             >
               <RoomBookingCard
-                roomData={roomData}
+                // roomData={roomsData}
                 selectedRooms={selectedRooms}
                 startDate={startDate}
                 endDate={endDate}
@@ -457,7 +522,7 @@ const RoomContent = () => {
                 setPaymentOption={setPaymentOption}
                 advancePayment={advancePayment}
                 setAdvancePayment={setAdvancePayment}
-                // calendarId={calendarId}
+              // calendarId={calendarId}
               />
               {isMobScreen && <HotelPolicyInfo />}{" "}
               {/* Display under RoomBookingCard on mobile */}

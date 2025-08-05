@@ -7,11 +7,11 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BedIcon from "@mui/icons-material/Bed";
 import PeopleIcon from "@mui/icons-material/People";
 import ChildCareIcon from "@mui/icons-material/ChildCare";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -19,6 +19,7 @@ import RoomCheckbox from "../roomcheckbox/RoomCheckbox";
 import { useMediaQuery } from "@mui/material";
 
 interface RoomData {
+  _id: string;
   roomName: string;
   bedCount: number;
   peopleCount: number;
@@ -26,8 +27,9 @@ interface RoomData {
   originalPrice: number;
   discountedPrice: number;
   discountPercentage: number;
-  images: StaticImageData[];
+  images: string[]; // Assuming images are URLs or paths to the images
   availableRooms: number;
+  roomIds: string[];
 }
 
 interface RoomSelectorCardProps {
@@ -48,24 +50,30 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fadeTransition, setFadeTransition] = useState(false);
   const isMobScreen = useMediaQuery("(max-width: 950px)");
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
+  useEffect(() => {
+    const preloadNext = new window.Image();
+    preloadNext.src = room.images[(currentIndex + 1) % room.images.length];
+    const preloadPrev = new window.Image();
+    preloadPrev.src = room.images[(currentIndex - 1 + room.images.length) % room.images.length];
+  }, [currentIndex, room.images]);
+
+  // Handle navigation to the next image
   const handleNext = () => {
     setFadeTransition(true);
-    setTimeout(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % room.images.length);
-      setFadeTransition(false);
-    }, 500);
+    setIsImageLoaded(false);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % room.images.length);
   };
 
+  // Handle navigation to the previous image
   const handlePrev = () => {
     setFadeTransition(true);
-    setTimeout(() => {
-      setCurrentIndex(
-        (prevIndex) => (prevIndex - 1 + room.images.length) % room.images.length
-      );
-      setFadeTransition(false);
-    }, 500);
+    setIsImageLoaded(false);
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + room.images.length) % room.images.length);
   };
+
+  console.log("selected rooms", room, room.images[currentIndex])
 
   return (
     <>
@@ -145,7 +153,7 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
                     width: "135px",
                     height: "100%",
                     transition: "opacity 0.5s",
-                    opacity: fadeTransition ? 0.3 : 1,
+                    opacity: fadeTransition && !isImageLoaded ? 0.3 : 1,
                     marginLeft: "30px",
                   }}
                 >
@@ -154,9 +162,13 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
                     alt={`hotel image ${currentIndex + 1}`}
                     layout="fill"
                     objectFit="cover"
-                    quality={100}
+                    quality={75} // Reduced from 100 to optimize loading
                     style={{
                       borderRadius: 5,
+                    }}
+                    onLoadingComplete={() => {
+                      setIsImageLoaded(true);
+                      setFadeTransition(false);
                     }}
                   />
                 </Box>
@@ -180,7 +192,7 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
             <Grid container spacing={2} alignItems="center">
               {/* Room Checkbox */}
               <Grid item xs={8}>
-                {selected.checked && (
+                {selected?.checked && (
                   <RoomCheckbox
                     rooms={selected.rooms}
                     guests={selected.guests}
@@ -198,13 +210,13 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
                   variant="outlined"
                   onClick={() => onRoomSelection(!selected.checked)}
                   sx={{
-                    backgroundColor: selected.checked ? "lightgrey" : "white",
+                    backgroundColor: selected?.checked ? "lightgrey" : "white",
                     fontSize: 9,
                     px: 1,
                     whiteSpace: "nowrap",
                   }}
                 >
-                  {selected.checked ? (
+                  {selected?.checked ? (
                     <>
                       Selected{" "}
                       <CheckCircleIcon
@@ -273,11 +285,11 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
                     display: "flex",
                     justifyContent: "space-between",
                     width: "150px",
-                    backgroundColor: selected.checked ? "lightgrey" : "white",
+                    backgroundColor: selected?.checked ? "lightgrey" : "white",
                     borderColor: "grey",
                   }}
                 >
-                  {selected.checked ? (
+                  {selected?.checked ? (
                     <>
                       Selected <CheckCircleIcon sx={{ color: "green" }} />
                     </>
@@ -286,7 +298,7 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
                   )}
                 </Button>
 
-                {selected.checked && (
+                {selected?.checked && (
                   <RoomCheckbox
                     rooms={selected.rooms}
                     guests={selected.guests}
@@ -334,7 +346,7 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
                     width: "100%",
                     height: "100%",
                     transition: "opacity 0.5s",
-                    opacity: fadeTransition ? 0.3 : 1,
+                    opacity: fadeTransition && !isImageLoaded ? 0.3 : 1,
                   }}
                 >
                   <Image
@@ -342,9 +354,13 @@ const RoomSelectorCard: React.FC<RoomSelectorCardProps> = ({
                     alt={`hotel image ${currentIndex + 1}`}
                     layout="fill"
                     objectFit="cover"
-                    quality={100}
+                    quality={75} // Reduced from 100 to optimize loading
                     style={{
                       borderRadius: 5,
+                    }}
+                    onLoadingComplete={() => {
+                      setIsImageLoaded(true);
+                      setFadeTransition(false);
                     }}
                   />
                 </Box>

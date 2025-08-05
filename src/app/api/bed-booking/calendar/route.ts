@@ -5,7 +5,7 @@ export async function POST(req: Request) {
     // Extract the hotel name or city from the request
     const { bearerToken } = await req.json();
     const decryptedbearerToken = decrypt(bearerToken);
-    console.log(decrypt);
+    console.log("DECRYPT Token",decryptedbearerToken);
 
     // Fetch data from the API
     const response = await fetch(
