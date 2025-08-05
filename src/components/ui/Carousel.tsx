@@ -1,12 +1,12 @@
 "use client";
 import { Box, IconButton } from "@mui/material";
 import Image, { StaticImageData } from "next/image";
-import Slider, { CustomArrowProps } from "react-slick";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
+const Slider = require("react-slick").default as any;
+import { CustomArrowProps } from "react-slick";
 interface CarouselProps {
   images: StaticImageData[];
   width: string;

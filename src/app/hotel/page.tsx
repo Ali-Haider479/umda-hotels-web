@@ -187,8 +187,9 @@ const RoomContent = () => {
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
 
-  const [calendarId, setCalendarId] = useState("");
+  const [calendarId, setCalendarId] = useState<number | null>(null);
   const [cityId, setCityId] = useState<string | null>("");
+  const [reservationData, setReservationData] = useState<any>(null);
 
   const [pageLoading, setPageLoading] = useState(true);
 
@@ -231,32 +232,94 @@ const RoomContent = () => {
       fetchBedBookingCalendarId(encryptedToken);
     } else {
       console.error("Token is null");
+      // If no token, we won't get reservation data, so stop loading after hotel data loads
+      // This will be handled by the useEffect that watches roomsData
     }
 
     console.log("SLUG", id, checkInDate, checkOutDate, guests);
     setCityId(id);
     setStartDate(dayjs(checkInDate));
     setEndDate(dayjs(checkOutDate));
+    
+    // Set a timeout to stop loading after 10 seconds as a fallback
+    const timeoutId = setTimeout(() => {
+      setPageLoading(false);
+    }, 10000);
+    
+    return () => clearTimeout(timeoutId);
   }, [searchParams]);
 
+  // Apply reservation data when both rooms data and reservation data are available
+  useEffect(() => {
+    if (roomsData && roomsData.length > 0 && reservationData) {
+      const updatedRoomData = updateRoomAvailability(
+        roomsData,
+        reservationData.items,
+        reservationData.checkInDate,
+        reservationData.checkOutDate
+      );
+      console.log("Applying reservation data to rooms:", updatedRoomData);
+      setSelectedRooms(
+        updatedRoomData.map((room) => ({
+          ...room,
+          checked: false,
+          rooms: 1,
+          guests: 1,
+        }))
+      );
+      setPageLoading(false);
+    } else if (roomsData && roomsData.length > 0 && !reservationData) {
+      // If we have rooms data but no reservation data, still show the page
+      setPageLoading(false);
+    }
+  }, [roomsData, reservationData]);
+
   const fetchHotelDetails = async (city: string) => {
-    const response = await fetch(`/api/hotel/find-by-city/${city}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    // Parse the response body only once
-    const data = await response.json();
-    console.log("HOTEL", data,data[0].rooms);
-    setHotelData(data[0])
-    setRoomsData(data[0].rooms)
-    setSelectedRooms(data[0].rooms.map((room: any) => ({
-      ...room,
-      checked: false,
-      rooms: 1,
-      guests: 1,
-    })))
+    try {
+      const response = await fetch(`/api/hotel/find-by-city/${city}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      // Parse the response body only once
+      const data = await response.json();
+      console.log("HOTEL", data,data[0].rooms);
+      setHotelData(data[0])
+      setRoomsData(data[0].rooms)
+      setSelectedRooms(data[0].rooms.map((room: any) => ({
+        ...room,
+        checked: false,
+        rooms: 1,
+        guests: 1,
+      })))
+      
+      // After hotel data is loaded, fetch room reservations if we have a calendar ID
+      if (calendarId !== null) {
+        fetchRoomReservationsList(calendarId);
+      }
+      
+      // If we already have reservation data, apply it immediately
+      if (reservationData) {
+        const updatedRoomData = updateRoomAvailability(
+          data[0].rooms,
+          reservationData.items,
+          reservationData.checkInDate,
+          reservationData.checkOutDate
+        );
+        setSelectedRooms(
+          updatedRoomData.map((room) => ({
+            ...room,
+            checked: false,
+            rooms: 1,
+            guests: 1,
+          }))
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching hotel details:", error);
+      setPageLoading(false);
+    }
   }
 
   console.log("selectedRooms total", selectedRooms)
@@ -281,10 +344,16 @@ const RoomContent = () => {
       }
 
       console.log("data", data);
-      fetchRoomReservationsList(data.items[0].id_calendar);
-      setCalendarId(data.items[0].id_calendar);
+      const newCalendarId = data.items[0].id_calendar;
+      setCalendarId(newCalendarId);
+      
+      // If we already have rooms data, fetch reservations immediately
+      if (roomsData && roomsData.length > 0) {
+        fetchRoomReservationsList(newCalendarId);
+      }
     } catch (error: any) {
       console.error("Failed to fetch auth token:", error);
+      setPageLoading(false);
       return error.message || error; // Return null in case of error
     }
   };
@@ -316,25 +385,37 @@ const RoomContent = () => {
       }
 
       console.log("data", data);
-      const updatedRoomData = updateRoomAvailability(
-        roomsData,
-        data.items,
+      
+      // Store reservation data for later use
+      setReservationData({
+        items: data.items,
         checkInDate,
         checkOutDate
-      );
-      console.log(updatedRoomData);
-      setSelectedRooms(
-        updatedRoomData.map((room) => ({
-          ...room,
-          checked: false,
-          rooms: 1,
-          // rooms: room.availableRooms,
-          guests: 1,
-        }))
-      );
+      });
+      
+      // Only update room availability if we have roomsData
+      if (roomsData && roomsData.length > 0) {
+        const updatedRoomData = updateRoomAvailability(
+          roomsData,
+          data.items,
+          checkInDate,
+          checkOutDate
+        );
+        console.log(updatedRoomData);
+        setSelectedRooms(
+          updatedRoomData.map((room) => ({
+            ...room,
+            checked: false,
+            rooms: 1,
+            // rooms: room.availableRooms,
+            guests: 1,
+          }))
+        );
+      }
       setPageLoading(false);
     } catch (error: any) {
       console.error("Failed to fetch auth token:", error);
+      setPageLoading(false);
       return error.message || error; // Return null in case of error
     }
   };

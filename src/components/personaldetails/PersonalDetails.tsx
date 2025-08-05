@@ -2,7 +2,7 @@
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import InputMask from "react-input-mask";
+const InputMask = require("react-input-mask").default as any;
 
 const PersonalDetails = () => {
   const { data: session } = useSession();
@@ -162,8 +162,7 @@ const PersonalDetails = () => {
             value={formData.telephone}
             onChange={handleChange("telephone")}
           >
-            {/* @ts-ignore */}
-            {(inputProps) => (
+            {(inputProps: any) => (
               <TextField
                 {...inputProps}
                 fullWidth

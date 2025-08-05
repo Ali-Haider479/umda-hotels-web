@@ -5,9 +5,11 @@ import HotelCard from "./HotelCard";
 import HotelMontanaImage from "@/public/assets/images/hotel-montana.webp";
 import HotelGalaxyImage from "@/public/assets/galaxy-images/main.webp";
 import HotelSafariImage from "@/public/assets/safari-images/main.webp";
-import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+// Import Slider with type assertion to avoid TypeScript issues
+const Slider = require('react-slick').default as any;
+
 
 const OurHotels = () => {
   const isMobScreen = useMediaQuery("(max-width: 950px)");

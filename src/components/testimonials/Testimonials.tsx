@@ -1,12 +1,12 @@
 "use client";
 import { Box, Typography } from "@mui/material";
 import TestimonialCard from "./TestimonialCard";
-import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import MagicSliderDots from "react-magic-slider-dots";
 import "react-magic-slider-dots/dist/magic-dots.css";
 import useMediaQuery from '@mui/material/useMediaQuery';
+const Slider = require('react-slick').default as any;
 
 const testimonials = [
   {

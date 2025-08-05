@@ -2,9 +2,11 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+
+// Import Slider with type assertion to avoid TypeScript issues
+const Slider = require('react-slick').default as any;
 
 const OnGoingOffers = () => {
     const isMobScreen = useMediaQuery("(max-width: 950px)");

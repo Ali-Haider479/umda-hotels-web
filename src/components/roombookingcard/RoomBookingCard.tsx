@@ -31,7 +31,7 @@ import { StaticImageData } from "next/image";
 import { useRouter } from "next/navigation";
 
 import { useSession } from "next-auth/react";
-import InputMask from "react-input-mask";
+const InputMask = require("react-input-mask").default as any;
 
 const HighlightedDaysContext = createContext<{
   highlightedDays: string[];
