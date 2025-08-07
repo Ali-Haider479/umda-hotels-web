@@ -10,7 +10,14 @@ export async function GET(req: NextRequest) {
 
         return NextResponse.json(
             hotels,
-            { status: 200 }
+            { 
+                status: 200,
+                headers: {
+                    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0',
+                }
+            }
         );
     } catch (error: any) {
         console.error("Error getting hotel:", error);
