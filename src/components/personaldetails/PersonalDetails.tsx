@@ -2,7 +2,7 @@
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-const InputMask = require("react-input-mask").default as any;
+import { IMaskInput } from 'react-imask';
 
 const PersonalDetails = () => {
   const { data: session } = useSession();
@@ -157,23 +157,23 @@ const PersonalDetails = () => {
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <InputMask
-            mask="+\92 999 9999999"
+          <TextField
+            fullWidth
+            id="telephone"
+            label="Telephone"
+            variant="outlined"
             value={formData.telephone}
             onChange={handleChange("telephone")}
-          >
-            {(inputProps: any) => (
-              <TextField
-                {...inputProps}
-                fullWidth
-                id="telephone"
-                label="Telephone"
-                variant="outlined"
-                error={errors.telephone}
-                helperText={errors.telephone ? "Invalid telephone number" : ""}
-              />
-            )}
-          </InputMask>
+            error={errors.telephone}
+            helperText={errors.telephone ? "Invalid telephone number" : ""}
+            InputProps={{
+              inputComponent: IMaskInput as any,
+              inputProps: {
+                mask: '+92 000 0000000',
+                overwrite: true,
+              },
+            }}
+          />
         </Grid>
       </Grid>
       <Grid container spacing={2}>

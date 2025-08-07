@@ -31,7 +31,7 @@ import { StaticImageData } from "next/image";
 import { useRouter } from "next/navigation";
 
 import { useSession } from "next-auth/react";
-const InputMask = require("react-input-mask").default as any;
+import { IMaskInput } from 'react-imask';
 
 const HighlightedDaysContext = createContext<{
   highlightedDays: string[];
@@ -659,25 +659,24 @@ const RoomBookingCard = ({
                 />
               </Grid>
             </Grid>
-            <InputMask
-              mask="+\92 999 9999999"
+            <TextField
+              fullWidth
+              id="telephone"
+              label="Telephone"
+              variant="outlined"
               value={telephone}
               onChange={handleTelephoneChange}
-            >
-              {/* @ts-ignore */}
-              {(inputProps) => (
-                <TextField
-                  {...inputProps}
-                  fullWidth
-                  id="telephone"
-                  label="Telephone"
-                  variant="outlined"
-                  error={telephoneError} // Show error state
-                  helperText={telephoneError ? "Invalid telephone number" : ""} // Show helper text if there's an error
-                  sx={{ mb: 2 }}
-                />
-              )}
-            </InputMask>
+              error={telephoneError}
+              helperText={telephoneError ? "Invalid telephone number" : ""}
+              sx={{ mb: 2 }}
+              InputProps={{
+                inputComponent: IMaskInput as any,
+                inputProps: {
+                  mask: '+92 000 0000000',
+                  overwrite: true,
+                },
+              }}
+            />
             <TextField
               fullWidth
               label="Email"
